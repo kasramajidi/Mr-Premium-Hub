@@ -101,7 +101,6 @@ export const metadata: Metadata = {
     },
   },
   verification: {
-    // در صورت نیاز می‌توانید verification code را اضافه کنید
     // google: "your-google-verification-code",
     // yandex: "your-yandex-verification-code",
   },
@@ -130,9 +129,7 @@ export default function RootLayout({
       "@type": "PostalAddress",
       addressCountry: "IR",
     },
-    sameAs: [
-      // در صورت وجود صفحات اجتماعی می‌توانید اضافه کنید
-    ],
+    sameAs: [],
   };
 
   const websiteJsonLd = {
