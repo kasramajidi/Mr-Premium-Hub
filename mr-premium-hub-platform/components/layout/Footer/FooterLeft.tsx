@@ -12,7 +12,7 @@ export default function FooterLeft() {
         rel="noopener noreferrer"
         className="flex items-center justify-center"
       >
-        <div className="relative w-16 h-16 md:w-20 md:h-20">
+        <div className="relative w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 lg:w-36 lg:h-36">
           <Image
             src="/Images/enamad-1star.png"
             alt="نماد اعتماد الکترونیکی"
