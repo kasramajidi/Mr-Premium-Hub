@@ -32,10 +32,14 @@ const iransans = localFont({
 
 export const metadata: Metadata = {
   title: {
-    default: "استوک سرور | Stock Server",
-    template: "%s | استوک سرور",
+    default: "Mr Premium Hub",
+    template: "%s | Mr Premium Hub",
   },
-  description: "فروش سرور و تجهیزات شبکه",
+  description: "نقد کردن درآمدهای ارزی و پرداخت ارزی آنلاین",
+  icons: {
+    icon: "/Images/Logo/acee0043-fe87-4b79-bab2-de8e09a1ebd0 (1).png",
+    apple: "/Images/Logo/acee0043-fe87-4b79-bab2-de8e09a1ebd0 (1).png",
+  },
 };
 
 export default function RootLayout({
