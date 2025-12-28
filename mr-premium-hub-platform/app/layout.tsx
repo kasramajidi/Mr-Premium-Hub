@@ -31,20 +31,19 @@ const iransans = localFont({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://mrpremiumhub.com"),
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL || "https://mrpremiumhub.com"
+  ),
   title: {
-    default: "Mr Premium Hub",
-    template: "%s | Mr Premium Hub",
-  },
-  description: "نقد کردن درآمدهای ارزی و پرداخت ارزی آنلاین",
-  icons: {
-    icon: "/Images/Logo/acee0043-fe87-4b79-bab2-de8e09a1ebd0 (1).png",
-    apple: "/Images/Logo/acee0043-fe87-4b79-bab2-de8e09a1ebd0 (1).png",
     default: "مسترپریمیوم هاب | Mr Premium Hub - خدمات پرداخت ارزی و پی پال",
     template: "%s | مسترپریمیوم هاب",
   },
   description:
     "مسترپریمیوم هاب ارائه‌دهنده خدمات پرداخت ارزی، نقد کردن درآمد پی پال، پرداخت هزینه ویزا و سفارت، ثبت نام آزمون‌های بین‌المللی، خرید بلیت هواپیما و هتل",
+  icons: {
+    icon: "/Images/Logo/acee0043-fe87-4b79-bab2-de8e09a1ebd0 (1).png",
+    apple: "/Images/Logo/acee0043-fe87-4b79-bab2-de8e09a1ebd0 (1).png",
+  },
   keywords: [
     "مسترپریمیوم هاب",
     "Mr Premium Hub",
@@ -107,7 +106,8 @@ export const metadata: Metadata = {
     // yandex: "your-yandex-verification-code",
   },
   alternates: {
-    canonical: "/",  },
+    canonical: "/",
+  },
 };
 
 export default function RootLayout({
@@ -121,7 +121,9 @@ export default function RootLayout({
     name: "مسترپریمیوم هاب",
     alternateName: "Mr Premium Hub",
     url: process.env.NEXT_PUBLIC_SITE_URL || "https://mrpremiumhub.com",
-    logo: `${process.env.NEXT_PUBLIC_SITE_URL || "https://mrpremiumhub.com"}/Images/Logo/logo stock copy 2.png`,
+    logo: `${
+      process.env.NEXT_PUBLIC_SITE_URL || "https://mrpremiumhub.com"
+    }/Images/Logo/logo stock copy 2.png`,
     description:
       "مسترپریمیوم هاب ارائه‌دهنده خدمات پرداخت ارزی، نقد کردن درآمد پی پال، پرداخت هزینه ویزا و سفارت، ثبت نام آزمون‌های بین‌المللی، خرید بلیت هواپیما و هتل",
     address: {
@@ -143,7 +145,9 @@ export default function RootLayout({
       "@type": "SearchAction",
       target: {
         "@type": "EntryPoint",
-        urlTemplate: `${process.env.NEXT_PUBLIC_SITE_URL || "https://mrpremiumhub.com"}/search?q={search_term_string}`,
+        urlTemplate: `${
+          process.env.NEXT_PUBLIC_SITE_URL || "https://mrpremiumhub.com"
+        }/search?q={search_term_string}`,
       },
       "query-input": "required name=search_term_string",
     },
@@ -151,9 +155,7 @@ export default function RootLayout({
 
   return (
     <html lang="fa" dir="rtl">
-      <body
-        className={`${iransans.variable} antialiased bg-white`}
-      >
+      <body className={`${iransans.variable} antialiased bg-white`}>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
