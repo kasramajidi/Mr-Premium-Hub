@@ -88,7 +88,7 @@ export default function PaymentMethods() {
 
                   {/* Back of card */}
                   <div
-                    className="absolute inset-0 bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl p-4 sm:p-5 md:p-6 lg:p-8 shadow-md cursor-pointer text-center backface-hidden flex flex-col items-center justify-center rotate-y-180"
+                    className="absolute inset-0 bg-linear-to-br from-gray-100 to-gray-200 rounded-xl p-4 sm:p-5 md:p-6 lg:p-8 shadow-md cursor-pointer text-center backface-hidden flex flex-col items-center justify-center"
                     style={{
                       backfaceVisibility: "hidden",
                       WebkitBackfaceVisibility: "hidden",
