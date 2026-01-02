@@ -11,6 +11,7 @@ export default function FooterRight() {
           alt="لوگو شرکت"
           fill
           className="object-contain"
+          sizes="(max-width: 640px) 224px, (max-width: 768px) 256px, (max-width: 1024px) 288px, 320px"
         />
       </div>
 

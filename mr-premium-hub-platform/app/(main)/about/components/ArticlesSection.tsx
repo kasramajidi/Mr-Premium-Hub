@@ -76,6 +76,7 @@ export default function ArticlesSection() {
                   fill
                   className="object-cover object-center"
                   quality={90}
+                  sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 35vw"
                 />
               </div>
             </div>

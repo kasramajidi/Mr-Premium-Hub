@@ -57,6 +57,7 @@ export default function TeamSection() {
                 fill
                 className="object-cover object-center"
                 quality={90}
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
               />
             </div>
             <div className="text-center">

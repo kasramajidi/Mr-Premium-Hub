@@ -1,0 +1,96 @@
+"use client";
+
+import { useState } from "react";
+import { useFilters } from "../../../context/FilterContext";
+
+const categories = [
+  "تلفن هوشمند",
+  "جارو هوشمند",
+  "حلقه هوشمند",
+  "دسته های بازی",
+  "ساعت های هوشمند",
+  "عینک هوشمند",
+];
+
+export default function CategoryFilter() {
+  const { selectedCategories, updateCategory } = useFilters();
+  const [showAll, setShowAll] = useState(false);
+
+  const initialCategories = categories.slice(0, 4);
+  const visibleCategories = showAll ? categories : initialCategories;
+
+  return (
+    <section className="space-y-3" aria-label="فیلتر دسته بندی">
+      <div className="flex items-center gap-3">
+        <div
+          className="w-1 h-6 bg-blue-400 rounded-full"
+          aria-hidden="true"
+        ></div>
+        <h3 className="font-bold text-lg text-gray-700">دسته بندی ها</h3>
+      </div>
+
+      <div className="space-y-3" role="group" aria-label="انتخاب دسته بندی">
+        {visibleCategories.map((category) => {
+          const isChecked = selectedCategories.includes(category);
+          return (
+            <label
+              key={category}
+              className="flex items-center gap-3 cursor-pointer group"
+              onClick={(e) => {
+                e.preventDefault();
+                updateCategory(category);
+              }}
+            >
+              <input
+                type="checkbox"
+                checked={isChecked}
+                onChange={() => updateCategory(category)}
+                className="sr-only"
+                aria-label={`انتخاب دسته بندی ${category}`}
+              />
+              <div
+                className={`w-5 h-5 border-2 rounded group-hover:border-blue-500 transition-colors duration-200 cursor-pointer flex items-center justify-center ${
+                  isChecked
+                    ? "bg-blue-500 border-blue-500"
+                    : "border-gray-300 bg-white"
+                }`}
+                role="checkbox"
+                aria-checked={isChecked}
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    updateCategory(category);
+                  }
+                }}
+              >
+                {isChecked && (
+                  <svg
+                    className="w-3 h-3 text-white"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                )}
+              </div>
+              <span className="text-gray-600 group-hover:text-blue-600 transition-colors duration-200">
+                {category}
+              </span>
+            </label>
+          );
+        })}
+        <button
+          onClick={() => setShowAll(!showAll)}
+          className="text-blue-600 cursor-pointer hover:text-blue-700 text-sm font-medium transition-colors duration-200"
+        >
+          {showAll ? "مخفی کردن دسته‌بندی‌ها -" : "نمایش همه دسته بندی ها +"}
+        </button>
+      </div>
+    </section>
+  );
+}

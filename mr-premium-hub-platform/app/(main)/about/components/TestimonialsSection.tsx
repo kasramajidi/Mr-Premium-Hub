@@ -111,6 +111,7 @@ export default function TestimonialsSection() {
                           fill
                           className="object-cover object-center"
                           quality={90}
+                          sizes="(max-width: 768px) 80px, (max-width: 1024px) 96px, 128px"
                         />
                       </div>
                       <h4 className="text-xs sm:text-sm font-bold text-gray-900 mb-1 text-center w-full">

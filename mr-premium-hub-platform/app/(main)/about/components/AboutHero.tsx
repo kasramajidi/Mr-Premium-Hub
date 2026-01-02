@@ -13,6 +13,7 @@ export default function AboutHero() {
           className="object-contain object-center"
           quality={100}
           priority
+          sizes="(max-width: 1024px) 100vw, 50vw"
         />
       </div>
 

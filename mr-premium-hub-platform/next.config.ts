@@ -11,7 +11,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [],
     unoptimized: false,
     loader: "default",
-    qualities: [100, 75, 50, 25],
+    qualities: [100, 25, 50, 75, 90],
   },
 };
 
