@@ -133,10 +133,10 @@ const ProductImageGallery = React.memo<ProductImageGalleryProps>(
             <button
               key={index}
               onClick={() => setSelectedImage(index)}
-              className={`w-12 h-12 sm:w-16 sm:h-16 rounded-lg overflow-hidden border-2 transition-all ${
+              className={`w-12 h-12 sm:w-16 sm:h-16 rounded-lg overflow-hidden border-2 transition-all shadow-sm ${
                 selectedImage === index
-                  ? "border-[#3b82f6] scale-105"
-                  : "border-gray-200 hover:border-gray-300"
+                  ? "border-[#ff5538] scale-105 shadow-md ring-2 ring-[#ff5538] ring-offset-1"
+                  : "border-gray-300 hover:border-gray-400"
               }`}
             >
               <img

@@ -120,10 +120,10 @@ export default function ProductInfo({
             <button
               key={color.value}
               onClick={() => setSelectedColor(color.value)}
-              className={`w-[22px] h-[22px] sm:w-[26px] sm:h-[26px] rounded-full border-2 transition-all ${
+              className={`w-[22px] h-[22px] sm:w-[26px] sm:h-[26px] rounded-full border-2 transition-all shadow-sm ${
                 selectedColor === color.value
-                  ? "border-[#3b82f6] scale-110"
-                  : "border-gray-200 hover:border-gray-300"
+                  ? "border-[#ff5538] scale-110 shadow-md ring-2 ring-[#ff5538] ring-offset-1"
+                  : "border-gray-300 hover:border-gray-400"
               }`}
               style={{ backgroundColor: color.hex }}
             />
@@ -144,10 +144,10 @@ export default function ProductInfo({
             <button
               key={warranty.id}
               onClick={() => setSelectedWarranty(warranty.id)}
-              className={`h-[35px] sm:h-[40px] p-1 rounded-lg border-2 text-right transition-all ${
+              className={`h-[35px] sm:h-[40px] p-1 rounded-lg border-2 text-right transition-all shadow-sm ${
                 selectedWarranty === warranty.id
-                  ? "bg-[#3b82f6] text-white border-[#3b82f6]"
-                  : "bg-gray-50 text-gray-700 border-gray-200 hover:border-gray-300"
+                  ? "bg-[#ff5538] text-white border-[#ff5538] shadow-md"
+                  : "bg-white text-gray-800 border-gray-300 hover:border-[#ff5538] hover:bg-gray-50"
               }`}
             >
               <span className="text-xs font-medium whitespace-nowrap overflow-hidden text-ellipsis">
@@ -168,14 +168,14 @@ export default function ProductInfo({
           min="1"
           value={quantity}
           onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value)))}
-          className="w-14 sm:w-16 h-9 sm:h-10 bg-[#f6f5ff] rounded-lg text-center text-gray-900 font-medium focus:outline-none focus:ring-2 focus:ring-[#3b82f6] text-xs sm:text-sm"
+          className="w-14 sm:w-16 h-9 sm:h-10 bg-gray-50 border border-gray-300 rounded-lg text-center text-gray-900 font-medium focus:outline-none focus:ring-1 focus:ring-[#ff5538] focus:border-[#ff5538] text-xs sm:text-sm"
         />
         <button
           disabled={!selectedColor || !selectedWarranty}
           onClick={handleAddToCart}
-          className={`flex-1 py-2 px-3 sm:px-4 rounded-xl font-bold text-sm sm:text-base transition-colors ${
+          className={`flex-1 py-2 px-3 sm:px-4 rounded-xl font-bold text-sm sm:text-base transition-opacity shadow-sm ${
             selectedColor && selectedWarranty
-              ? "bg-[#3b82f6] text-white hover:bg-[#2563eb]"
+              ? "bg-[#ff5538] text-white hover:opacity-90"
               : "bg-gray-300 text-gray-500 cursor-not-allowed"
           }`}
         >

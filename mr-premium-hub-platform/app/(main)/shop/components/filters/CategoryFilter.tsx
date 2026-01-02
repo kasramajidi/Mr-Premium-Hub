@@ -21,12 +21,12 @@ export default function CategoryFilter() {
 
   return (
     <section className="space-y-3" aria-label="فیلتر دسته بندی">
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2">
         <div
-          className="w-1 h-6 bg-blue-400 rounded-full"
+          className="w-1 h-5 bg-gradient-to-b from-[#ff5538] to-[#ff5538] rounded-full"
           aria-hidden="true"
         ></div>
-        <h3 className="font-bold text-lg text-gray-700">دسته بندی ها</h3>
+        <h3 className="text-base sm:text-lg font-semibold text-gray-800">دسته‌بندی‌ها</h3>
       </div>
 
       <div className="space-y-3" role="group" aria-label="انتخاب دسته بندی">
@@ -49,10 +49,10 @@ export default function CategoryFilter() {
                 aria-label={`انتخاب دسته بندی ${category}`}
               />
               <div
-                className={`w-5 h-5 border-2 rounded group-hover:border-blue-500 transition-colors duration-200 cursor-pointer flex items-center justify-center ${
+                className={`w-5 h-5 border-2 rounded-md group-hover:border-[#ff5538] transition-all duration-200 cursor-pointer flex items-center justify-center shadow-sm ${
                   isChecked
-                    ? "bg-blue-500 border-blue-500"
-                    : "border-gray-300 bg-white"
+                    ? "bg-[#ff5538] border-[#ff5538] shadow-md"
+                    : "border-gray-300 bg-white hover:bg-gray-50"
                 }`}
                 role="checkbox"
                 aria-checked={isChecked}
@@ -78,7 +78,11 @@ export default function CategoryFilter() {
                   </svg>
                 )}
               </div>
-              <span className="text-gray-600 group-hover:text-blue-600 transition-colors duration-200">
+              <span className={`text-sm sm:text-base transition-colors duration-200 ${
+                isChecked 
+                  ? "text-[#ff5538] font-medium" 
+                  : "text-gray-700 group-hover:text-[#ff5538]"
+              }`}>
                 {category}
               </span>
             </label>
@@ -86,9 +90,23 @@ export default function CategoryFilter() {
         })}
         <button
           onClick={() => setShowAll(!showAll)}
-          className="text-blue-600 cursor-pointer hover:text-blue-700 text-sm font-medium transition-colors duration-200"
+          className="text-[#ff5538] cursor-pointer hover:opacity-80 text-xs sm:text-sm font-medium transition-opacity duration-200 flex items-center gap-1 mt-1"
         >
-          {showAll ? "مخفی کردن دسته‌بندی‌ها -" : "نمایش همه دسته بندی ها +"}
+          {showAll ? (
+            <>
+              <span>مخفی کردن</span>
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+              </svg>
+            </>
+          ) : (
+            <>
+              <span>نمایش همه</span>
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </>
+          )}
         </button>
       </div>
     </section>

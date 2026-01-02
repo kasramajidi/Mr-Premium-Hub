@@ -23,13 +23,13 @@ const TabButton = React.memo<TabButtonProps>(({ tab, isActive, onClick }) => (
     role="tab"
     tabIndex={isActive ? 0 : -1}
     className={`relative px-2 sm:px-4 py-2 sm:py-3 text-sm sm:text-base font-medium transition-all cursor-pointer ${
-      isActive ? "text-[#3b82f6]" : "text-gray-600 hover:text-[#3b82f6]"
+      isActive ? "text-[#ff5538]" : "text-gray-600 hover:text-[#ff5538]"
     }`}
   >
     {tab.title}
     {isActive && (
       <div
-        className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#3b82f6]"
+        className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#ff5538]"
         aria-hidden="true"
       ></div>
     )}

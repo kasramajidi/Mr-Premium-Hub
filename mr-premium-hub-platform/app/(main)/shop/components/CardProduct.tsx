@@ -28,7 +28,7 @@ export default function ProductCard({ product }: ProductCardProps) {
 
   return (
     <div
-      className="bg-[#f7f7f7] rounded-2xl p-3 md:p-4 transition-all duration-300 hover:-translate-y-2 cursor-pointer h-full flex flex-col"
+      className="bg-white rounded-2xl p-3 md:p-4 transition-all duration-300 hover:-translate-y-2 cursor-pointer h-full flex flex-col shadow-sm border border-gray-200 hover:shadow-md"
       onClick={handleProductClick}
     >
       <div className="relative grow mb-3">
@@ -60,7 +60,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           )}
         </div>
         {discountPercentage > 0 && (
-          <div className="absolute top-2 right-2 bg-[#ff4c00] text-white px-2 py-1 rounded-full text-xs font-bold">
+          <div className="absolute top-2 right-2 bg-[#ff5538] text-white px-2 py-1 rounded-full text-xs font-bold">
             -{discountPercentage}%
           </div>
         )}
@@ -92,7 +92,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             e.stopPropagation();
             handleProductClick();
           }}
-          className="bg-[#4837f3] text-white py-2 md:py-2.5 px-3 md:px-4 rounded-l-full rounded-r-2xl font-medium text-xs hover:bg-[#ff4c00] transition-colors duration-200 flex flex-col items-center justify-center leading-tight shrink-0"
+          className="bg-[#ff5538] text-white py-2 md:py-2.5 px-3 md:px-4 rounded-l-full rounded-r-2xl font-medium text-xs hover:opacity-90 transition-opacity duration-200 flex flex-col items-center justify-center leading-tight shrink-0"
         >
           <span>خرید</span>
           <span>محصول</span>

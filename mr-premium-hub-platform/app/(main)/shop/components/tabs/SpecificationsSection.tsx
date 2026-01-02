@@ -33,8 +33,8 @@ const SpecificationsSection = React.memo(() => {
           <div
             key={index}
             className={`${
-              index % 2 === 0 ? "bg-[#f7f7f7]" : "bg-white"
-            } p-3 sm:p-4 rounded-2xl`}
+              index % 2 === 0 ? "bg-gray-50" : "bg-white"
+            } p-3 sm:p-4 rounded-2xl border border-gray-200`}
           >
             <dt className="text-base sm:text-lg font-medium text-gray-900 mb-2 sm:mb-3">
               {spec.title}

@@ -16,7 +16,7 @@ export default function ShopSection() {
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl py-6 sm:py-8">
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 lg:gap-8">
         <aside className="lg:col-span-1" aria-label="فیلترهای فروشگاه">
-          <div className="bg-[#f6f5ff] p-5 space-y-6 rounded-2xl sticky top-4">
+          <div className="bg-white p-5 space-y-6 rounded-2xl sticky top-4 shadow-sm border border-gray-200">
             <SearchFilter />
             <PriceRangeFilter />
             <CategoryFilter />
@@ -25,7 +25,7 @@ export default function ShopSection() {
               type="button"
               onClick={applyFilters}
               aria-label="اعمال فیلترهای انتخاب شده"
-              className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors duration-200 font-medium text-base shadow-md hover:shadow-lg transform hover:-translate-y-0.5 cursor-pointer"
+              className="w-full bg-[#ff5538] text-white py-2 px-4 rounded-lg hover:opacity-90 transition-opacity duration-200 font-medium text-base shadow-md hover:shadow-lg transform hover:-translate-y-0.5 cursor-pointer"
             >
               اعمال فیلترها
             </button>

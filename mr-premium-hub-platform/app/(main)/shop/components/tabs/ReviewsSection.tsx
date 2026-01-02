@@ -77,7 +77,7 @@ const ReviewsSection = React.memo(() => {
             <input
               type="checkbox"
               id="saveInfo"
-              className="w-4 h-4 text-[#3b82f6] bg-gray-100 border-gray-300 rounded focus:ring-[#3b82f6]"
+              className="w-4 h-4 text-[#ff5538] bg-gray-100 border-gray-300 rounded focus:ring-[#ff5538]"
             />
             <label htmlFor="saveInfo" className="text-sm text-gray-600">
               نام، ایمیل و وب‌سایت من را در این مرورگر برای دفعه بعدی که نظر
@@ -87,7 +87,7 @@ const ReviewsSection = React.memo(() => {
 
           <button
             type="submit"
-            className="w-full bg-[#3b82f6] text-white py-3 px-6 rounded-lg font-bold hover:bg-[#2563eb] transition-colors"
+            className="w-full bg-[#ff5538] text-white py-3 px-6 rounded-lg font-bold hover:opacity-90 transition-opacity shadow-sm"
           >
             ثبت
           </button>

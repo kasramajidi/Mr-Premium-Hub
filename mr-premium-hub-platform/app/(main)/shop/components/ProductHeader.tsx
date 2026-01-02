@@ -45,9 +45,9 @@ export default function ProductHeader({ onSortChange }: ProductHeaderProps) {
   }, []);
 
   return (
-    <div className="bg-[#4837f3] rounded-2xl p-4 mb-6">
+    <div className="bg-white rounded-2xl p-4 mb-6 shadow-sm border border-gray-200">
       <div className="flex items-center justify-between">
-        <div className="text-white">
+        <div className="text-gray-800">
           <h1 className="text-xl font-bold tracking-wide">فروشگاه</h1>
         </div>
         <div className="relative" ref={dropdownRef}>
@@ -81,10 +81,10 @@ export default function ProductHeader({ onSortChange }: ProductHeaderProps) {
                 <button
                   key={option.value}
                   onClick={() => handleSortChange(option.value)}
-                  className={`w-full text-right px-4 py-3 text-sm hover:bg-blue-50 transition-all duration-200 first:rounded-t-lg last:rounded-b-lg ${
+                  className={`w-full text-right px-4 py-3 text-sm hover:bg-gray-50 transition-all duration-200 first:rounded-t-lg last:rounded-b-lg ${
                     selectedSort === option.value
-                      ? "bg-blue-100 text-blue-600 font-medium"
-                      : "text-gray-700 hover:text-blue-600"
+                      ? "bg-gray-100 text-[#ff5538] font-medium"
+                      : "text-gray-700 hover:text-[#ff5538]"
                   } ${
                     index !== sortOptions.length - 1
                       ? "border-b border-gray-100"

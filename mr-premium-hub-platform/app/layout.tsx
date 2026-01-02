@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { Header, Footer } from "@/components/layout";
+import CartProviderWrapper from "./CartProviderWrapper";
 
 const iransans = localFont({
   src: [
@@ -161,9 +162,11 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
         />
-        <Header />
-        {children}
-        <Footer />
+        <CartProviderWrapper>
+          <Header />
+          {children}
+          <Footer />
+        </CartProviderWrapper>
       </body>
     </html>
   );

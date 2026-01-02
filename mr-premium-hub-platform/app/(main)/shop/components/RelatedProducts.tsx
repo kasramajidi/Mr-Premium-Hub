@@ -24,13 +24,13 @@ const RelatedProducts = React.memo<RelatedProductsProps>(
 
     if (relatedProducts.length === 0) {
       return (
-        <section className="py-8 bg-[#f6f5ff] rounded-2xl mt-8">
+        <section className="py-8 bg-white border border-gray-200 rounded-2xl mt-8 shadow-sm">
           <div className="px-6">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-lg font-bold text-gray-900">محصولات مرتبط</h2>
+              <h2 className="text-lg font-bold text-gray-800">محصولات مرتبط</h2>
               <Link
                 href="/shop"
-                className="px-4 py-2 bg-gray-100 border border-[#a78bfa] text-gray-900 rounded-full text-sm font-medium hover:bg-gray-200 transition-colors cursor-pointer inline-block"
+                className="px-4 py-2 bg-white border border-gray-300 text-gray-800 rounded-full text-sm font-medium hover:border-[#ff5538] hover:text-[#ff5538] transition-colors cursor-pointer inline-block shadow-sm"
               >
                 مشاهده همه
               </Link>
@@ -44,13 +44,13 @@ const RelatedProducts = React.memo<RelatedProductsProps>(
     }
 
     return (
-      <section className="py-8 bg-[#f7f7f7] rounded-2xl mt-8">
+      <section className="py-8 bg-white border border-gray-200 rounded-2xl mt-8 shadow-sm">
         <div className="px-6">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-lg font-bold text-gray-900">محصولات مرتبط</h2>
+            <h2 className="text-lg font-bold text-gray-800">محصولات مرتبط</h2>
             <Link
               href="/shop"
-              className="px-4 py-2 bg-gray-100 border border-[#a78bfa] text-gray-900 rounded-full text-sm font-medium hover:bg-gray-200 transition-colors cursor-pointer inline-block"
+              className="px-4 py-2 bg-white border border-gray-300 text-gray-800 rounded-full text-sm font-medium hover:border-[#ff5538] hover:text-[#ff5538] transition-colors cursor-pointer inline-block shadow-sm"
             >
               مشاهده همه
             </Link>

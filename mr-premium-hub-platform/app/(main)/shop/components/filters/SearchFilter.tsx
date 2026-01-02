@@ -12,9 +12,9 @@ export default function SearchFilter() {
 
   return (
     <div className="space-y-3">
-      <div className="flex items-center gap-3">
-        <div className="w-1 h-6 bg-blue-400 rounded-full"></div>
-        <h3 className="font-bold text-lg text-gray-700">جستجو</h3>
+      <div className="flex items-center gap-2">
+        <div className="w-1 h-5 bg-gradient-to-b from-[#ff5538] to-[#ff5538] rounded-full"></div>
+        <h3 className="text-base sm:text-lg font-semibold text-gray-800">جستجو</h3>
       </div>
 
       <div className="relative">
@@ -29,12 +29,12 @@ export default function SearchFilter() {
           onChange={(e) => updateSearch(e.target.value)}
           placeholder="جستجو محصولات"
           aria-label="جستجو محصولات"
-          className="w-full pl-14 pr-4 py-3 outline-none border-none bg-white rounded-lg transition-all duration-200 text-right"
+          className="w-full pl-14 pr-4 py-3 outline-none border border-gray-200 bg-gray-50 rounded-lg focus:border-[#ff5538] focus:ring-1 focus:ring-[#ff5538] transition-all duration-200 text-right text-sm sm:text-base placeholder-gray-400"
         />
         <button
           type="button"
           aria-label={isSearching ? "در حال جستجو" : "جستجو"}
-          className="absolute left-3 top-1/2 transform -translate-y-1/2 bg-blue-600 text-white p-2 rounded-full hover:bg-blue-700 transition-colors duration-200"
+          className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-[#ff5538] text-white p-1.5 sm:p-2 rounded-lg hover:opacity-90 transition-opacity duration-200 shadow-sm"
         >
           {isSearching ? (
             <svg

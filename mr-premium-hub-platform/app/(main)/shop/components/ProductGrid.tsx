@@ -125,7 +125,7 @@ export default function ProductGrid({ products, appliedFilters }: ProductGridPro
             type="button"
             onClick={() => handlePageChange(currentPage - 1)}
             disabled={currentPage === 1}
-            className="px-4 py-2 rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="px-4 py-2 rounded-lg border border-gray-200 bg-white text-gray-800 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-sm"
             aria-label="صفحه قبلی"
           >
             <svg
@@ -147,10 +147,10 @@ export default function ProductGrid({ products, appliedFilters }: ProductGridPro
               key={page}
               type="button"
               onClick={() => handlePageChange(page)}
-              className={`px-4 py-2 rounded-lg border transition-colors ${
+              className={`px-4 py-2 rounded-lg border transition-colors shadow-sm ${
                 currentPage === page
-                  ? "bg-[#4837f3] text-white border-[#4837f3]"
-                  : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
+                  ? "bg-[#ff5538] text-white border-[#ff5538]"
+                  : "bg-white text-gray-800 border-gray-200 hover:bg-gray-50"
               }`}
               aria-label={`صفحه ${page}`}
               aria-current={currentPage === page ? "page" : undefined}
@@ -162,7 +162,7 @@ export default function ProductGrid({ products, appliedFilters }: ProductGridPro
             type="button"
             onClick={() => handlePageChange(currentPage + 1)}
             disabled={currentPage === totalPages}
-            className="px-4 py-2 rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="px-4 py-2 rounded-lg border border-gray-200 bg-white text-gray-800 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-sm"
             aria-label="صفحه بعدی"
           >
             <svg

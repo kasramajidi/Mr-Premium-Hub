@@ -22,7 +22,7 @@ export default function ProductFeatures({ product }: ProductFeaturesProps) {
     <div className="h-full flex flex-col justify-between gap-4 sm:gap-6">
       <div className="rounded-2xl p-3 sm:p-4">
         <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
-          <div className="w-8 h-8 bg-[#3b82f6] rounded-lg flex items-center justify-center">
+          <div className="w-8 h-8 bg-[#ff5538] rounded-lg flex items-center justify-center shadow-sm">
             <svg
               className="w-5 h-5 text-white"
               fill="none"
@@ -45,7 +45,7 @@ export default function ProductFeatures({ product }: ProductFeaturesProps) {
 
         <ul className="space-y-2 sm:space-y-5">
           <li className="flex items-center gap-2 sm:gap-3">
-            <div className="w-4 h-4 sm:w-5 sm:h-5 bg-[#3b82f6] rounded-full flex items-center justify-center">
+            <div className="w-4 h-4 sm:w-5 sm:h-5 bg-[#ff5538] rounded-full flex items-center justify-center shadow-sm">
               <svg
                 className="w-2 h-2 sm:w-3 sm:h-3 text-white"
                 fill="none"
@@ -65,7 +65,7 @@ export default function ProductFeatures({ product }: ProductFeaturesProps) {
             </span>
           </li>
           <li className="flex items-center gap-2 sm:gap-3">
-            <div className="w-4 h-4 sm:w-5 sm:h-5 bg-[#3b82f6] rounded-full flex items-center justify-center">
+            <div className="w-4 h-4 sm:w-5 sm:h-5 bg-[#ff5538] rounded-full flex items-center justify-center shadow-sm">
               <svg
                 className="w-2 h-2 sm:w-3 sm:h-3 text-white"
                 fill="none"
@@ -85,7 +85,7 @@ export default function ProductFeatures({ product }: ProductFeaturesProps) {
             </span>
           </li>
           <li className="flex items-center gap-3">
-            <div className="w-5 h-5 bg-[#3b82f6] rounded-full flex items-center justify-center">
+            <div className="w-5 h-5 bg-[#ff5538] rounded-full flex items-center justify-center shadow-sm">
               <svg
                 className="w-3 h-3 text-white"
                 fill="none"
@@ -105,7 +105,7 @@ export default function ProductFeatures({ product }: ProductFeaturesProps) {
             </span>
           </li>
           <li className="flex items-center gap-3">
-            <div className="w-5 h-5 bg-[#3b82f6] rounded-full flex items-center justify-center">
+            <div className="w-5 h-5 bg-[#ff5538] rounded-full flex items-center justify-center shadow-sm">
               <svg
                 className="w-3 h-3 text-white"
                 fill="none"
@@ -133,7 +133,7 @@ export default function ProductFeatures({ product }: ProductFeaturesProps) {
         <ul className="space-y-1 sm:space-y-2">
           {productFeatures.map((feature: string, index: number) => (
             <li key={index} className="flex items-center gap-2 sm:gap-3">
-              <div className="w-2 h-2 bg-[#3b82f6] rounded-full"></div>
+              <div className="w-2 h-2 bg-[#ff5538] rounded-full"></div>
               <span className="text-gray-700 text-xs sm:text-sm">
                 {feature}
               </span>
