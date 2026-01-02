@@ -11,15 +11,23 @@ const categories = [
 
 export default function NewsSidebar() {
   return (
-    <aside className="lg:w-[190px] w-full bg-white shadow-sm rounded-lg p-3 sm:p-4 h-fit">
-      {categories.map((category, index) => (
-        <div key={index} className="flex items-center gap-x-2 mb-4 sm:mb-5 md:mb-6 last:mb-0">
-          <span className="block w-1 h-1 rounded-full" style={{ backgroundColor: '#ff5538' }}></span>
-          <Link href={`/news/category/${category}`} className="text-gray-500 text-xs sm:text-sm hover:text-[#ff5538] transition-colors">
-            {category}
-          </Link>
-        </div>
-      ))}
+    <aside className="lg:w-[190px] xl:w-[210px] w-full bg-white shadow-sm rounded-lg p-3 sm:p-4 md:p-5 h-fit border border-gray-200 lg:sticky lg:top-4 lg:self-start">
+      <h3 className="text-sm sm:text-base md:text-lg font-bold text-gray-800 mb-3 sm:mb-4 text-right hidden sm:block">
+        دسته‌بندی‌ها
+      </h3>
+      <div className="grid grid-cols-2 sm:grid-cols-1 gap-2 sm:gap-0">
+        {categories.map((category, index) => (
+          <div key={index} className="flex items-center gap-x-2 mb-0 sm:mb-3 md:mb-4 last:mb-0">
+            <span className="block w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full shrink-0" style={{ backgroundColor: '#ff5538' }}></span>
+            <Link 
+              href={`/news/category/${category}`} 
+              className="text-gray-600 hover:text-[#ff5538] transition-colors text-[11px] xs:text-xs sm:text-sm md:text-base line-clamp-1"
+            >
+              {category}
+            </Link>
+          </div>
+        ))}
+      </div>
     </aside>
   );
 }

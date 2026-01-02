@@ -31,35 +31,36 @@ export default function LatestArticlesSection({ articles }: LatestArticlesSectio
         </h2>
       </section>
 
-      <section className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5 md:gap-6 mb-10 sm:mb-12 md:mb-16 lg:mb-24">
+      <section className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 md:gap-5 lg:gap-6 mb-8 sm:mb-10 md:mb-12 lg:mb-16 xl:mb-20">
         {articles.map((article) => (
           <Link
             key={article.id}
             href={`/news/${encodeURIComponent(article.slug)}`}
-            className="flex flex-col sm:flex-row hover:cursor-pointer transition-transform duration-300 hover:-translate-y-2 h-full bg-white rounded-lg shadow-sm hover:shadow-md overflow-hidden"
+            className="flex flex-col sm:flex-row hover:cursor-pointer transition-all duration-300 hover:-translate-y-1 sm:hover:-translate-y-2 h-full bg-white rounded-lg shadow-sm hover:shadow-md overflow-hidden border border-gray-100"
           >
-            <div className="mt-[-10px] sm:w-[36%] relative h-[150px] sm:h-[180px] md:h-[195px]">
+            <div className="w-full sm:w-[36%] md:w-[38%] relative h-[180px] xs:h-[200px] sm:h-[160px] md:h-[180px] lg:h-[200px] shrink-0">
               <Image
                 src={article.image}
                 alt={article.title}
                 fill
-                className="rounded-2xl object-cover object-center"
+                className="rounded-t-lg sm:rounded-l-lg sm:rounded-tr-none object-cover object-center"
                 quality={90}
+                sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 36vw"
               />
             </div>
-            <div className="sm:w-[65%] p-3 sm:p-4 flex flex-col justify-between">
-              <div>
-                <p className="text-[10px] sm:text-[11px] text-gray-600 mb-2">{article.date}</p>
-                <span className="text-xs sm:text-sm md:text-[15px] my-2 sm:my-3 block line-clamp-2 hover:text-[#ff5538] transition-colors" style={{ color: '#1a3760' }}>
+            <div className="w-full sm:w-[64%] md:w-[62%] p-3 sm:p-3.5 md:p-4 flex flex-col justify-between">
+              <div className="flex-1">
+                <p className="text-[10px] xs:text-[11px] sm:text-xs text-gray-600 mb-1.5 sm:mb-2">{article.date}</p>
+                <span className="text-xs xs:text-sm sm:text-base md:text-[15px] lg:text-base my-1.5 sm:my-2 md:my-3 block line-clamp-2 hover:text-[#ff5538] transition-colors font-medium" style={{ color: '#1a3760' }}>
                   {article.title}
                 </span>
-                <p className="text-[11px] sm:text-xs md:text-[13px] text-gray-400 leading-5 sm:leading-6 line-clamp-2 text-right">
+                <p className="text-[10px] xs:text-[11px] sm:text-xs md:text-sm text-gray-500 leading-4 sm:leading-5 md:leading-6 line-clamp-2 sm:line-clamp-3 text-right mt-1.5 sm:mt-2">
                   {article.description}
                 </p>
               </div>
-              <span className="inline-flex items-center gap-1 mt-3 sm:mt-4 text-[10px] sm:text-xs text-[#ff5538] hover:gap-2 transition-all">
+              <span className="inline-flex items-center gap-1 mt-2 sm:mt-3 md:mt-4 text-[10px] xs:text-[11px] sm:text-xs text-[#ff5538] hover:gap-2 transition-all font-medium">
                 <span>مشاهده بیشتر</span>
-                <HiArrowLeft className="text-xs rotate-180" />
+                <HiArrowLeft className="text-[10px] xs:text-xs rotate-180" />
               </span>
             </div>
           </Link>
