@@ -135,7 +135,17 @@ export default function ArticlesPage() {
 
         {showForm && (
           <ArticleForm
-            article={editingArticle || undefined}
+            article={
+              editingArticle
+                ? {
+                    id: editingArticle.id,
+                    title: editingArticle.title,
+                    category: editingArticle.category,
+                    content: editingArticle.content || "",
+                    status: editingArticle.status,
+                  }
+                : undefined
+            }
             onClose={() => {
               setShowForm(false);
               setEditingArticle(null);

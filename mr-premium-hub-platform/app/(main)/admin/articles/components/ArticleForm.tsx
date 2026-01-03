@@ -7,7 +7,7 @@ interface ArticleFormProps {
     id: string;
     title: string;
     category: string;
-    content: string;
+    content?: string;
     status: string;
   };
   onClose: () => void;
