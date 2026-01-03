@@ -24,7 +24,7 @@ const FAQAccordionTrigger = React.forwardRef<
     <AccordionPrimitive.Trigger
       ref={ref}
       className={cn(
-        "flex flex-1 items-center justify-between py-2.5 sm:py-3 md:py-4 text-right hover:no-underline",
+        "flex flex-1 items-center justify-between py-2.5 sm:py-3 md:py-4 text-right hover:no-underline cursor-pointer",
         "[&[data-state=open]>span]:text-[#ff5538]",
         "[&[data-state=open]>div]:bg-[#ff5538]",
         "[&[data-state=open]>div]:text-white",
