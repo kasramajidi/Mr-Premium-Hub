@@ -1,28 +1,31 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
-import { Address, AddressFormData } from "./types";
+import { useState, useCallback } from "react";
+import { Address } from "./types";
 
 const STORAGE_KEY = "userAddresses";
 
-export function useAddresses() {
-  const [addresses, setAddresses] = useState<Address[]>([]);
+function loadAddressesFromStorage(): Address[] {
+  if (typeof window === "undefined") return [];
 
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    
-    try {
-      const savedAddresses = localStorage.getItem(STORAGE_KEY);
-      if (savedAddresses) {
-        const parsed = JSON.parse(savedAddresses);
-        if (Array.isArray(parsed)) {
-          setAddresses(parsed);
-        }
+  try {
+    const savedAddresses = localStorage.getItem(STORAGE_KEY);
+    if (savedAddresses) {
+      const parsed = JSON.parse(savedAddresses);
+      if (Array.isArray(parsed)) {
+        return parsed;
       }
-    } catch (error) {
-      console.error("Failed to load addresses:", error);
     }
-  }, []);
+  } catch (error) {
+    console.error("Failed to load addresses:", error);
+  }
+  return [];
+}
+
+export function useAddresses() {
+  const [addresses, setAddresses] = useState<Address[]>(
+    loadAddressesFromStorage
+  );
 
   const saveAddresses = useCallback((newAddresses: Address[]) => {
     setAddresses(newAddresses);
@@ -35,21 +38,30 @@ export function useAddresses() {
     }
   }, []);
 
-  const addAddress = useCallback((address: Address) => {
-    saveAddresses([...addresses, address]);
-  }, [addresses, saveAddresses]);
+  const addAddress = useCallback(
+    (address: Address) => {
+      saveAddresses([...addresses, address]);
+    },
+    [addresses, saveAddresses]
+  );
 
-  const updateAddress = useCallback((id: string, updates: Partial<Address>) => {
-    const newAddresses = addresses.map((addr) =>
-      addr.id === id ? { ...addr, ...updates } : addr
-    );
-    saveAddresses(newAddresses);
-  }, [addresses, saveAddresses]);
+  const updateAddress = useCallback(
+    (id: string, updates: Partial<Address>) => {
+      const newAddresses = addresses.map((addr) =>
+        addr.id === id ? { ...addr, ...updates } : addr
+      );
+      saveAddresses(newAddresses);
+    },
+    [addresses, saveAddresses]
+  );
 
-  const deleteAddress = useCallback((id: string) => {
-    const newAddresses = addresses.filter((addr) => addr.id !== id);
-    saveAddresses(newAddresses);
-  }, [addresses, saveAddresses]);
+  const deleteAddress = useCallback(
+    (id: string) => {
+      const newAddresses = addresses.filter((addr) => addr.id !== id);
+      saveAddresses(newAddresses);
+    },
+    [addresses, saveAddresses]
+  );
 
   return {
     addresses,
@@ -58,4 +70,3 @@ export function useAddresses() {
     deleteAddress,
   };
 }
-

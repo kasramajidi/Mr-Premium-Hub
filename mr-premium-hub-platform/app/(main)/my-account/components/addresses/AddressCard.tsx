@@ -6,19 +6,21 @@ import { Address } from "./types";
 import AddressForm from "./AddressForm";
 import AddressDisplay from "./AddressDisplay";
 
+interface AddressFormData {
+  fullName: string;
+  phone: string;
+  province: string;
+  city: string;
+  postalCode: string;
+  address: string;
+}
+
 interface AddressCardProps {
   address: Address | null;
   type: "shipping" | "billing";
   isFormOpen: boolean;
-  formData: {
-    fullName: string;
-    phone: string;
-    province: string;
-    city: string;
-    postalCode: string;
-    address: string;
-  };
-  onFormDataChange: (data: typeof AddressCardProps.prototype.formData) => void;
+  formData: AddressFormData;
+  onFormDataChange: (data: AddressFormData) => void;
   onAddClick: () => void;
   onEditClick: () => void;
   onDeleteClick: () => void;
@@ -70,10 +72,16 @@ export default function AddressCard({
           isSaving={isSaving}
         />
       ) : address ? (
-        <AddressDisplay address={address} onEdit={onEditClick} onDelete={onDeleteClick} />
+        <AddressDisplay
+          address={address}
+          onEdit={onEditClick}
+          onDelete={onDeleteClick}
+        />
       ) : (
         <div>
-          <p className="text-gray-500 text-sm mb-4">شما هنوز این آدرس را ثبت نکرده‌اید.</p>
+          <p className="text-gray-500 text-sm mb-4">
+            شما هنوز این آدرس را ثبت نکرده‌اید.
+          </p>
           <button
             onClick={onAddClick}
             className="inline-flex items-center gap-2 px-4 py-2 bg-[#ff5538] hover:bg-[#e6452e] text-white rounded-lg transition-colors text-sm font-medium"
@@ -86,4 +94,3 @@ export default function AddressCard({
     </div>
   );
 }
-
