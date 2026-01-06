@@ -5,13 +5,16 @@ import {
   HiHome,
   HiDotsHorizontal,
   HiCreditCard,
-  HiGlobe
+  HiGlobe,
+  HiServer,
+  HiOutlineDesktopComputer
 } from "react-icons/hi";
-import { SiPaypal, SiMastercard } from "react-icons/si";
+import { SiPaypal, SiMastercard, SiAmazon } from "react-icons/si";
 import { HiOutlineTemplate } from "react-icons/hi";
 import { SiDigitalocean } from "react-icons/si";
-import { FaBitcoin } from "react-icons/fa";
-import { BiTransfer } from "react-icons/bi";
+import { FaBitcoin, FaGamepad, FaBrain, FaSearch } from "react-icons/fa";
+import { BiTransfer, BiShoppingBag } from "react-icons/bi";
+import { MdSimCard, MdPhone, MdDomain, MdCloud, MdCode } from "react-icons/md";
 
 export interface Service {
   id: string;
@@ -20,7 +23,7 @@ export interface Service {
   href: string;
   icon: React.ReactNode;
   description: string;
-  category: "payment" | "travel" | "education" | "crypto" | "other";
+  category: "payment" | "travel" | "education" | "crypto" | "other" | "vps" | "premium" | "international";
 }
 
 export const services: Service[] = [
@@ -158,6 +161,168 @@ export const services: Service[] = [
     icon: React.createElement(HiDotsHorizontal, { className: "text-3xl sm:text-4xl md:text-5xl text-gray-600" }),
     description: "سایر خدمات پرداخت و ارزی",
     category: "other",
+  },
+  {
+    id: "vps-trading",
+    label: "VPS تریدینگ",
+    labelEn: "VPS Trading",
+    href: "/currency-payment/vps-trading",
+    icon: React.createElement(HiServer, { className: "text-3xl sm:text-4xl md:text-5xl text-red-500" }),
+    description: "سرویس VPS برای تریدینگ و معاملات",
+    category: "vps",
+  },
+  {
+    id: "vps-daily",
+    label: "VPS روزانه",
+    labelEn: "Daily VPS",
+    href: "/currency-payment/vps-daily",
+    icon: React.createElement(HiServer, { className: "text-3xl sm:text-4xl md:text-5xl text-red-500" }),
+    description: "سرویس VPS برای استفاده روزانه",
+    category: "vps",
+  },
+  {
+    id: "vps-usa",
+    label: "VPS آمریکا",
+    labelEn: "VPS USA",
+    href: "/currency-payment/vps-usa",
+    icon: React.createElement(HiServer, { className: "text-3xl sm:text-4xl md:text-5xl text-red-500" }),
+    description: "سرویس VPS در آمریکا",
+    category: "vps",
+  },
+  {
+    id: "vps-netherlands",
+    label: "VPS هلند",
+    labelEn: "VPS Netherlands",
+    href: "/currency-payment/vps-netherlands",
+    icon: React.createElement(HiServer, { className: "text-3xl sm:text-4xl md:text-5xl text-red-500" }),
+    description: "سرویس VPS در هلند",
+    category: "vps",
+  },
+  {
+    id: "vps-france",
+    label: "VPS فرانسه",
+    labelEn: "VPS France",
+    href: "/currency-payment/vps-france",
+    icon: React.createElement(HiServer, { className: "text-3xl sm:text-4xl md:text-5xl text-red-500" }),
+    description: "سرویس VPS در فرانسه",
+    category: "vps",
+  },
+  {
+    id: "ai-account",
+    label: "خرید اکانت هوش مصنوعی",
+    labelEn: "AI Account",
+    href: "/currency-payment/ai-account",
+    icon: React.createElement(FaBrain, { className: "text-3xl sm:text-4xl md:text-5xl text-green-500" }),
+    description: "خرید اکانت‌های هوش مصنوعی",
+    category: "premium",
+  },
+  {
+    id: "seo-account",
+    label: "خرید اکانت ابزارهای سئو",
+    labelEn: "SEO Tools Account",
+    href: "/currency-payment/seo-account",
+    icon: React.createElement(FaSearch, { className: "text-3xl sm:text-4xl md:text-5xl text-green-500" }),
+    description: "خرید اکانت ابزارهای سئو",
+    category: "premium",
+  },
+  {
+    id: "game-account",
+    label: "خرید اکانت بازی",
+    labelEn: "Game Account",
+    href: "/currency-payment/game-account",
+    icon: React.createElement(FaGamepad, { className: "text-3xl sm:text-4xl md:text-5xl text-green-500" }),
+    description: "خرید اکانت بازی",
+    category: "premium",
+  },
+  {
+    id: "software-account",
+    label: "خرید اکانت اورجینال نرم افزار",
+    labelEn: "Software Account",
+    href: "/currency-payment/software-account",
+    icon: React.createElement(MdCode, { className: "text-3xl sm:text-4xl md:text-5xl text-green-500" }),
+    description: "خرید اکانت نرم‌افزارهای اورجینال",
+    category: "premium",
+  },
+  {
+    id: "language-exam",
+    label: "ثبت نام آزمون زبان",
+    labelEn: "Language Exam",
+    href: "/currency-payment/language-exam",
+    icon: React.createElement(HiAcademicCap, { className: "text-3xl sm:text-4xl md:text-5xl text-orange-500" }),
+    description: "ثبت نام و پرداخت هزینه آزمون‌های زبان",
+    category: "education",
+  },
+  {
+    id: "student-payment",
+    label: "پرداخت دانشجویی",
+    labelEn: "Student Payment",
+    href: "/currency-payment/student-payment",
+    icon: React.createElement(HiAcademicCap, { className: "text-3xl sm:text-4xl md:text-5xl text-orange-500" }),
+    description: "پرداخت هزینه‌های دانشجویی",
+    category: "education",
+  },
+  {
+    id: "international-exam",
+    label: "آزمونهای بین المللی",
+    labelEn: "International Exams",
+    href: "/currency-payment/international-exam",
+    icon: React.createElement(HiGlobe, { className: "text-3xl sm:text-4xl md:text-5xl text-orange-500" }),
+    description: "ثبت نام و پرداخت آزمون‌های بین‌المللی",
+    category: "education",
+  },
+  {
+    id: "international-sim",
+    label: "سیم کارت بین المللی",
+    labelEn: "International SIM Card",
+    href: "/currency-payment/international-sim",
+    icon: React.createElement(MdSimCard, { className: "text-3xl sm:text-4xl md:text-5xl text-blue-500" }),
+    description: "خرید سیم کارت بین‌المللی",
+    category: "international",
+  },
+  {
+    id: "virtual-number",
+    label: "شماره مجازی",
+    labelEn: "Virtual Number",
+    href: "/currency-payment/virtual-number",
+    icon: React.createElement(MdPhone, { className: "text-3xl sm:text-4xl md:text-5xl text-blue-500" }),
+    description: "خرید شماره مجازی",
+    category: "international",
+  },
+  {
+    id: "domain",
+    label: "خرید دامنه",
+    labelEn: "Domain Purchase",
+    href: "/currency-payment/domain",
+    icon: React.createElement(MdDomain, { className: "text-3xl sm:text-4xl md:text-5xl text-blue-500" }),
+    description: "خرید دامنه",
+    category: "international",
+  },
+  {
+    id: "host",
+    label: "خرید هاست",
+    labelEn: "Host Purchase",
+    href: "/currency-payment/host",
+    icon: React.createElement(MdCloud, { className: "text-3xl sm:text-4xl md:text-5xl text-blue-500" }),
+    description: "خرید هاست",
+    category: "international",
+  },
+  {
+    id: "amazon",
+    label: "خرید از آمازون",
+    labelEn: "Amazon Purchase",
+    href: "/currency-payment/amazon",
+    icon: React.createElement(SiAmazon, { className: "text-3xl sm:text-4xl md:text-5xl text-[#FF9900]" }),
+    description: "خرید از آمازون",
+    category: "international",
+  },
+  {
+    id: "trendyol",
+    label: "خرید از ترندیول ترکیه",
+    labelEn: "Trendyol Turkey",
+    href: "/currency-payment/trendyol",
+    icon: React.createElement(BiShoppingBag, { className: "text-3xl sm:text-4xl md:text-5xl text-red-500" }),
+    description: "خرید از ترندیول ترکیه",
+    category: "international",
   },
 ];
 

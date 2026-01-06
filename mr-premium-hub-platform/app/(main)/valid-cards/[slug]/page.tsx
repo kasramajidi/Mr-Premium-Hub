@@ -36,7 +36,7 @@ export async function generateMetadata({ params }: ServicePageProps): Promise<Me
       "مسترپریمیوم هاب",
     ],
     alternates: {
-      canonical: `/services/${service.id}`,
+      canonical: `/valid-cards/${service.id}`,
     },
   };
 }

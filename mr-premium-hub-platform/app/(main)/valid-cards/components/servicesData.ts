@@ -5,13 +5,17 @@ import {
   HiHome,
   HiDotsHorizontal,
   HiCreditCard,
-  HiGlobe
+  HiGlobe,
+  HiOutlineDesktopComputer,
+  HiOutlineGift,
+  HiOutlineGlobe
 } from "react-icons/hi";
-import { SiPaypal, SiMastercard } from "react-icons/si";
+import { SiPaypal, SiMastercard, SiVisa, SiPlaystation, SiSteam, SiAmazon, SiApple, SiSpotify, SiNetflix } from "react-icons/si";
 import { HiOutlineTemplate } from "react-icons/hi";
 import { SiDigitalocean } from "react-icons/si";
-import { FaBitcoin } from "react-icons/fa";
+import { FaBitcoin, FaGamepad, FaXbox } from "react-icons/fa";
 import { BiTransfer } from "react-icons/bi";
+import { MdCreditCard, MdCardGiftcard } from "react-icons/md";
 
 export interface Service {
   id: string;
@@ -20,7 +24,7 @@ export interface Service {
   href: string;
   icon: React.ReactNode;
   description: string;
-  category: "payment" | "travel" | "education" | "crypto" | "other";
+  category: "payment" | "travel" | "education" | "crypto" | "other" | "gaming" | "gift" | "mastercard" | "visa";
 }
 
 export const services: Service[] = [
@@ -158,6 +162,159 @@ export const services: Service[] = [
     icon: React.createElement(HiDotsHorizontal, { className: "text-3xl sm:text-4xl md:text-5xl text-gray-600" }),
     description: "سایر خدمات پرداخت و ارزی",
     category: "other",
+  },
+  {
+    id: "playstation",
+    label: "گیفت کارت Play Station",
+    labelEn: "PlayStation Gift Card",
+    href: "/valid-cards/playstation",
+    icon: React.createElement(SiPlaystation, { className: "text-3xl sm:text-4xl md:text-5xl text-[#003087]" }),
+    description: "خرید گیفت کارت Play Station",
+    category: "gaming",
+  },
+  {
+    id: "xbox",
+    label: "گیفت کارت ایکس باکس XBOX",
+    labelEn: "Xbox Gift Card",
+    href: "/valid-cards/xbox",
+    icon: React.createElement(FaXbox, { className: "text-3xl sm:text-4xl md:text-5xl text-[#107C10]" }),
+    description: "خرید گیفت کارت Xbox",
+    category: "gaming",
+  },
+  {
+    id: "steam",
+    label: "گیفت کارت استیم والت Steam",
+    labelEn: "Steam Gift Card",
+    href: "/valid-cards/steam",
+    icon: React.createElement(SiSteam, { className: "text-3xl sm:text-4xl md:text-5xl text-[#1B2838]" }),
+    description: "خرید گیفت کارت Steam",
+    category: "gaming",
+  },
+  {
+    id: "battlenet",
+    label: "گیفت کارت بتل نت Battle.Net",
+    labelEn: "Battle.Net Gift Card",
+    href: "/valid-cards/battlenet",
+    icon: React.createElement(FaGamepad, { className: "text-3xl sm:text-4xl md:text-5xl text-[#148EFF]" }),
+    description: "خرید گیفت کارت Battle.Net",
+    category: "gaming",
+  },
+  {
+    id: "visa-gift",
+    label: "گیفت کارت ویزا",
+    labelEn: "Visa Gift Card",
+    href: "/valid-cards/visa-gift",
+    icon: React.createElement(SiVisa, { className: "text-3xl sm:text-4xl md:text-5xl text-[#1A1F71]" }),
+    description: "خرید گیفت کارت ویزا",
+    category: "gift",
+  },
+  {
+    id: "amazon",
+    label: "گیفت کارت آمازون",
+    labelEn: "Amazon Gift Card",
+    href: "/valid-cards/amazon",
+    icon: React.createElement(SiAmazon, { className: "text-3xl sm:text-4xl md:text-5xl text-[#FF9900]" }),
+    description: "خرید گیفت کارت آمازون",
+    category: "gift",
+  },
+  {
+    id: "apple",
+    label: "گیفت کارت اپل",
+    labelEn: "Apple Gift Card",
+    href: "/valid-cards/apple",
+    icon: React.createElement(SiApple, { className: "text-3xl sm:text-4xl md:text-5xl text-gray-900" }),
+    description: "خرید گیفت کارت اپل",
+    category: "gift",
+  },
+  {
+    id: "spotify",
+    label: "گیفت کارت اسپاتیفای",
+    labelEn: "Spotify Gift Card",
+    href: "/valid-cards/spotify",
+    icon: React.createElement(SiSpotify, { className: "text-3xl sm:text-4xl md:text-5xl text-[#1DB954]" }),
+    description: "خرید گیفت کارت Spotify",
+    category: "gift",
+  },
+  {
+    id: "netflix",
+    label: "گیفت کارت نتفلیکس",
+    labelEn: "Netflix Gift Card",
+    href: "/valid-cards/netflix",
+    icon: React.createElement(SiNetflix, { className: "text-3xl sm:text-4xl md:text-5xl text-[#E50914]" }),
+    description: "خرید گیفت کارت Netflix",
+    category: "gift",
+  },
+  {
+    id: "mastercard-prime",
+    label: "مسترکارت فیزیکی پرایم",
+    labelEn: "MasterCard Prime Physical",
+    href: "/valid-cards/mastercard-prime",
+    icon: React.createElement(SiMastercard, { className: "text-3xl sm:text-4xl md:text-5xl text-[#EB001B]" }),
+    description: "دریافت مسترکارت فیزیکی پرایم",
+    category: "mastercard",
+  },
+  {
+    id: "mastercard-us-virtual",
+    label: "مسترکارت مجازی آمریکا",
+    labelEn: "MasterCard US Virtual",
+    href: "/valid-cards/mastercard-us-virtual",
+    icon: React.createElement(HiOutlineGlobe, { className: "text-3xl sm:text-4xl md:text-5xl text-[#EB001B]" }),
+    description: "دریافت مسترکارت مجازی آمریکا",
+    category: "mastercard",
+  },
+  {
+    id: "mastercard-virtual",
+    label: "مسترکارت مجازی",
+    labelEn: "MasterCard Virtual",
+    href: "/valid-cards/mastercard-virtual",
+    icon: React.createElement(MdCreditCard, { className: "text-3xl sm:text-4xl md:text-5xl text-[#EB001B]" }),
+    description: "دریافت مسترکارت مجازی",
+    category: "mastercard",
+  },
+  {
+    id: "mastercard-physical",
+    label: "مسترکارت فیزیکی",
+    labelEn: "MasterCard Physical",
+    href: "/valid-cards/mastercard-physical",
+    icon: React.createElement(SiMastercard, { className: "text-3xl sm:text-4xl md:text-5xl text-[#EB001B]" }),
+    description: "دریافت مسترکارت فیزیکی",
+    category: "mastercard",
+  },
+  {
+    id: "mastercard-personal",
+    label: "مسترکارت فیزیکی پرسونال",
+    labelEn: "MasterCard Personal Physical",
+    href: "/valid-cards/mastercard-personal",
+    icon: React.createElement(HiCreditCard, { className: "text-3xl sm:text-4xl md:text-5xl text-[#EB001B]" }),
+    description: "دریافت مسترکارت فیزیکی پرسونال",
+    category: "mastercard",
+  },
+  {
+    id: "visa-virtual",
+    label: "ویزا کارت مجازی",
+    labelEn: "Visa Virtual Card",
+    href: "/valid-cards/visa-virtual",
+    icon: React.createElement(MdCreditCard, { className: "text-3xl sm:text-4xl md:text-5xl text-[#1A1F71]" }),
+    description: "دریافت ویزا کارت مجازی",
+    category: "visa",
+  },
+  {
+    id: "visa-physical",
+    label: "ویزا کارت فیزیکی",
+    labelEn: "Visa Physical Card",
+    href: "/valid-cards/visa-physical",
+    icon: React.createElement(SiVisa, { className: "text-3xl sm:text-4xl md:text-5xl text-[#1A1F71]" }),
+    description: "دریافت ویزا کارت فیزیکی",
+    category: "visa",
+  },
+  {
+    id: "credit-card",
+    label: "کردیت کارت",
+    labelEn: "Credit Card",
+    href: "/valid-cards/credit-card",
+    icon: React.createElement(HiCreditCard, { className: "text-3xl sm:text-4xl md:text-5xl text-[#1A1F71]" }),
+    description: "دریافت کردیت کارت",
+    category: "visa",
   },
 ];
 
