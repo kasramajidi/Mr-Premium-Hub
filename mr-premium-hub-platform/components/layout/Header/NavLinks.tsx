@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import ServicesDropdown from "./ServicesDropdown";
 
 interface NavLink {
   label: string;
@@ -24,7 +25,12 @@ export default function NavLinks() {
   return (
     <nav className="flex items-center gap-2 min-[500px]:gap-2.5 md:gap-3 lg:gap-5 xl:gap-6 flex-wrap justify-center overflow-visible" aria-label="منوی اصلی">
       {navLinks.map((link) => {
-        const isActive = pathname === link.href || (link.href === "/services" && pathname?.startsWith("/services"));
+        // اگر لینک "خدمات" است، از ServicesDropdown استفاده کن
+        if (link.href === "/services") {
+          return <ServicesDropdown key={link.href} />;
+        }
+        
+        const isActive = pathname === link.href;
         return (
           <Link
             key={link.href}
