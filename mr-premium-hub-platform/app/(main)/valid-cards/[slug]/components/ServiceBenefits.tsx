@@ -8,9 +8,13 @@ import {
   HiCreditCard,
   HiRefresh,
   HiDeviceMobile,
+  HiX,
+  HiGlobe,
 } from "react-icons/hi";
 import { BiShoppingBag } from "react-icons/bi";
 import { MdPayment, MdAccountBalance } from "react-icons/md";
+import { FaGamepad } from "react-icons/fa";
+import { HiOutlineGift } from "react-icons/hi";
 
 interface ServiceBenefitsProps {
   service: Service;
@@ -118,11 +122,133 @@ const creditCardBenefits = [
   },
 ];
 
+const playstationBenefits = [
+  {
+    icon: <FaGamepad className="text-2xl sm:text-3xl text-white" />,
+    title: "خرید بازی ها و برنامه ها",
+    description:
+      "امکان خرید تمام بازی‌ها، برنامه‌ها و محتوای اضافی از پلی استیشن استور.",
+    color: "bg-blue-900",
+  },
+  {
+    icon: (
+      <div className="relative">
+        <HiCreditCard className="text-2xl sm:text-3xl text-white" />
+        <HiX className="text-xl sm:text-2xl text-white absolute -top-1 -right-1" />
+      </div>
+    ),
+    title: "بدون نیاز به کارت اعتباری",
+    description:
+      "شارژ اکانت پلی استیشن بدون نیاز به کارت‌های اعتباری بین‌المللی.",
+    color: "bg-blue-900",
+  },
+  {
+    icon: <HiCurrencyDollar className="text-2xl sm:text-3xl text-white" />,
+    title: "مبالغ متنوع",
+    description: "قابل ارائه در مبالغ مختلف از 1 دلار تا 250 دلار.",
+    color: "bg-blue-900",
+  },
+];
+
+const xboxBenefits = [
+  {
+    icon: <FaGamepad className="text-2xl sm:text-3xl text-white" />,
+    title: "خرید بازی ها و برنامه ها",
+    description:
+      "امکان خرید تمام بازی‌ها، برنامه‌ها و محتوای اضافی از ایکس باکس استور.",
+    color: "bg-blue-900",
+  },
+  {
+    icon: (
+      <div className="relative">
+        <HiCreditCard className="text-2xl sm:text-3xl text-white" />
+        <HiX className="text-xl sm:text-2xl text-white absolute -top-1 -right-1" />
+      </div>
+    ),
+    title: "بدون نیاز به کارت اعتباری",
+    description:
+      "شارژ اکانت ایکس باکس بدون نیاز به کارت‌های اعتباری بین‌المللی.",
+    color: "bg-blue-900",
+  },
+  {
+    icon: <HiCurrencyDollar className="text-2xl sm:text-3xl text-white" />,
+    title: "مبالغ متنوع",
+    description: "قابل ارائه در مبالغ مختلف از 1 دلار تا 50 دلار.",
+    color: "bg-blue-900",
+  },
+  {
+    icon: <HiGlobe className="text-2xl sm:text-3xl text-white" />,
+    title: "سازگاری با مایکروسافت",
+    description:
+      "قابل استفاده برای خرید از مایکروسافت استور و سایر خدمات مایکروسافت.",
+    color: "bg-blue-900",
+  },
+];
+
+const steamBenefits = [
+  {
+    icon: <FaGamepad className="text-2xl sm:text-3xl text-white" />,
+    title: "خرید بازی ها و برنامه ها",
+    description:
+      "امکان خرید تمام بازی‌ها، برنامه‌ها و محتوای اضافی از استیم استور.",
+    color: "bg-blue-900",
+  },
+  {
+    icon: (
+      <div className="relative">
+        <HiCreditCard className="text-2xl sm:text-3xl text-white" />
+        <HiX className="text-xl sm:text-2xl text-white absolute -top-1 -right-1" />
+      </div>
+    ),
+    title: "بدون نیاز به کارت اعتباری",
+    description: "شارژ اکانت استیم بدون نیاز به کارت‌های اعتباری بین‌المللی.",
+    color: "bg-blue-900",
+  },
+  {
+    icon: <HiCurrencyDollar className="text-2xl sm:text-3xl text-white" />,
+    title: "مبالغ متنوع",
+    description: "قابل ارائه در مبالغ مختلف از 1 دلار تا 100 دلار.",
+    color: "bg-blue-900",
+  },
+];
+
+const battlenetBenefits = [
+  {
+    icon: <FaGamepad className="text-2xl sm:text-3xl text-white" />,
+    title: "خرید انواع بازی‌های مختلف",
+    description:
+      "امکان خرید تمام بازی‌ها و محتوای اضافی از فروشگاه Battle.net.",
+    color: "bg-blue-900",
+  },
+  {
+    icon: <MdPayment className="text-2xl sm:text-3xl text-white" />,
+    title: "امکان پرداخت درون برنامه‌ای",
+    description: "پرداخت آسان برای خرید آیتم‌ها و خدمات درون بازی.",
+    color: "bg-blue-900",
+  },
+  {
+    icon: <HiClock className="text-2xl sm:text-3xl text-white" />,
+    title: "بدون محدودیت زمانی و تاریخ انقضا",
+    description: "گیفت کارت بدون تاریخ انقضا و قابل استفاده در هر زمان.",
+    color: "bg-blue-900",
+  },
+  {
+    icon: <HiOutlineGift className="text-2xl sm:text-3xl text-white" />,
+    title: "مناسب هدیه به دوستان",
+    description: "بهترین گزینه برای هدیه دادن به دوستان گیمر.",
+    color: "bg-blue-900",
+  },
+];
+
 export default function ServiceBenefits({ service }: ServiceBenefitsProps) {
   const isVisaCard =
     service.id === "visa-virtual" || service.id === "visa-physical";
   const isVisaGift = service.id === "visa-gift";
   const isCreditCard = service.id === "credit-card";
+  const isPlaystation = service.id === "playstation";
+  const isXbox = service.id === "xbox";
+  const isSteam = service.id === "steam";
+  const isBattlenet = service.id === "battlenet";
 
   return (
     <>
@@ -201,6 +327,150 @@ export default function ServiceBenefits({ service }: ServiceBenefitsProps) {
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {creditCardBenefits.map((benefit, index) => (
+              <div
+                key={index}
+                className="bg-white rounded-lg p-4 sm:p-5 shadow-md hover:shadow-lg transition-all duration-200"
+              >
+                <div className="flex items-center justify-center mb-3 sm:mb-4">
+                  <div
+                    className={`${benefit.color} p-3 sm:p-4 rounded-lg sm:rounded-xl flex items-center justify-center`}
+                  >
+                    {benefit.icon}
+                  </div>
+                </div>
+                <h3 className="text-xs sm:text-sm font-bold text-gray-900 mb-2 text-center">
+                  {benefit.title}
+                </h3>
+                <p className="text-[10px] sm:text-xs text-gray-600 leading-5 sm:leading-6 text-justify sm:text-right">
+                  {benefit.description}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {isPlaystation && (
+        <div className="bg-white rounded-lg sm:rounded-xl shadow-sm p-4 sm:p-5 md:p-6 mb-6">
+          <h2 className="text-sm sm:text-base md:text-lg font-bold text-gray-900 mb-4 sm:mb-6 text-center">
+            مزایای گیفت کارت PSN
+          </h2>
+          <p className="text-[10px] sm:text-xs md:text-sm text-gray-600 text-center mb-4 sm:mb-6 leading-5 sm:leading-6">
+            گیفت کارت پلی استیشن PSN راهی آسان و مطمئن برای شارژ اکانت پلی
+            استیشن و خرید از فروشگاه پلی استیشن استور است.
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+            {playstationBenefits.map((benefit, index) => (
+              <div
+                key={index}
+                className="bg-white rounded-lg p-4 sm:p-5 shadow-md hover:shadow-lg transition-all duration-200"
+              >
+                <div className="flex items-center justify-center mb-3 sm:mb-4">
+                  <div
+                    className={`${benefit.color} p-3 sm:p-4 rounded-lg sm:rounded-xl flex items-center justify-center`}
+                  >
+                    {benefit.icon}
+                  </div>
+                </div>
+                <h3 className="text-xs sm:text-sm font-bold text-gray-900 mb-2 text-center">
+                  {benefit.title}
+                </h3>
+                <p className="text-[10px] sm:text-xs text-gray-600 leading-5 sm:leading-6 text-justify sm:text-right">
+                  {benefit.description}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {isXbox && (
+        <div className="bg-white rounded-lg sm:rounded-xl shadow-sm p-4 sm:p-5 md:p-6 mb-6">
+          <h2 className="text-sm sm:text-base md:text-lg font-bold text-gray-900 mb-4 sm:mb-6 text-center">
+            مزایای گیفت کارت Xbox
+          </h2>
+          <p className="text-[10px] sm:text-xs md:text-sm text-gray-600 text-center mb-4 sm:mb-6 leading-5 sm:leading-6">
+            گیفت کارت ایکس باکس XBOX راهی آسان و مطمئن برای شارژ اکانت ایکس باکس
+            و خرید از فروشگاه ایکس باکس استور و مایکروسافت استور است.
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+            {xboxBenefits.map((benefit, index) => (
+              <div
+                key={index}
+                className="bg-white rounded-lg p-4 sm:p-5 shadow-md hover:shadow-lg transition-all duration-200"
+              >
+                <div className="flex items-center justify-center mb-3 sm:mb-4">
+                  <div
+                    className={`${benefit.color} p-3 sm:p-4 rounded-lg sm:rounded-xl flex items-center justify-center`}
+                  >
+                    {benefit.icon}
+                  </div>
+                </div>
+                <h3 className="text-xs sm:text-sm font-bold text-gray-900 mb-2 text-center">
+                  {benefit.title}
+                </h3>
+                <p className="text-[10px] sm:text-xs text-gray-600 leading-5 sm:leading-6 text-justify sm:text-right">
+                  {benefit.description}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {isSteam && (
+        <div className="bg-white rounded-lg sm:rounded-xl shadow-sm p-4 sm:p-5 md:p-6 mb-6">
+          <h2 className="text-sm sm:text-base md:text-lg font-bold text-gray-900 mb-4 sm:mb-6 text-center">
+            مزایای گیفت کارت استیم
+          </h2>
+          <p className="text-[10px] sm:text-xs md:text-sm text-gray-600 text-center mb-4 sm:mb-6 leading-5 sm:leading-6">
+            گیفت کارت استیم Steam راهی آسان و مطمئن برای شارژ اکانت استیم و خرید
+            از فروشگاه استیم استور است.
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+            {steamBenefits.map((benefit, index) => (
+              <div
+                key={index}
+                className="bg-white rounded-lg p-4 sm:p-5 shadow-md hover:shadow-lg transition-all duration-200"
+              >
+                <div className="flex items-center justify-center mb-3 sm:mb-4">
+                  <div
+                    className={`${benefit.color} p-3 sm:p-4 rounded-lg sm:rounded-xl flex items-center justify-center`}
+                  >
+                    {benefit.icon}
+                  </div>
+                </div>
+                <h3 className="text-xs sm:text-sm font-bold text-gray-900 mb-2 text-center">
+                  {benefit.title}
+                </h3>
+                <p className="text-[10px] sm:text-xs text-gray-600 leading-5 sm:leading-6 text-justify sm:text-right">
+                  {benefit.description}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {isBattlenet && (
+        <div className="bg-white rounded-lg sm:rounded-xl shadow-sm p-4 sm:p-5 md:p-6 mb-6">
+          <h2 className="text-sm sm:text-base md:text-lg font-bold text-gray-900 mb-4 sm:mb-6 text-center">
+            چرا از گیفت کارت بتل نت استفاده کنیم؟
+          </h2>
+          <p className="text-[10px] sm:text-xs md:text-sm text-gray-600 text-center mb-4 sm:mb-6 leading-5 sm:leading-6">
+            محال است اهل بازی‌های اکشن باشید و بتل نت را نشناسید! بتل نت
+            (Battle.Net) یکی از بزرگ‌ترین فروشگاه‌های بازی و گیم‌های کامپیوتری
+            است و در میان گیمرها محبوبیت زیادی دارد. این فروشگاه به شما امکان
+            دسترسی به هزاران بازی را می‌دهد.
+          </p>
+          <p className="text-[10px] sm:text-xs md:text-sm text-gray-600 text-center mb-4 sm:mb-6 leading-5 sm:leading-6">
+            برای تجربه‌های بازی‌های مشهور جهان و لذت بردن از یک بازی باکیفیت،
+            کافی است گیفت کارت بتل نت بخرید. با این کارت به سادگی اکانت خود را
+            شارژ کنید، بازی‌های مختلف را تهیه کنید و پرداخت‌های درون برنامه‌ای
+            را انجام دهید.
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+            {battlenetBenefits.map((benefit, index) => (
               <div
                 key={index}
                 className="bg-white rounded-lg p-4 sm:p-5 shadow-md hover:shadow-lg transition-all duration-200"
