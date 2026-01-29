@@ -222,7 +222,7 @@ export const services: Service[] = [
     labelEn: "SEO Tools Account",
     href: "/currency-payment/seo-account",
     icon: React.createElement(FaSearch, { className: "text-3xl sm:text-4xl md:text-5xl text-green-500" }),
-    description: "خرید اکانت ابزارهای سئو",
+    description: "خرید اکانت پریمیوم ابزارهای سئو؛ SEMrush، Ahrefs، KWFinder، MOZ و سایر ابزارها از طریق مستر پریمیوم هاب",
     category: "premium",
   },
   {
