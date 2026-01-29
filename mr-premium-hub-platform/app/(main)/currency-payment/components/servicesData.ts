@@ -294,7 +294,7 @@ export const services: Service[] = [
     labelEn: "Domain Purchase",
     href: "/currency-payment/domain",
     icon: React.createElement(MdDomain, { className: "text-3xl sm:text-4xl md:text-5xl text-blue-500" }),
-    description: "خرید دامنه",
+    description: "خرید دامنه از وب‌سایت‌های معتبر خارجی مثل GoDaddy، Name.com و سایر ثبت‌کنندگان بین‌المللی",
     category: "international",
   },
   {

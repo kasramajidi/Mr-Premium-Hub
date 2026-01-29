@@ -7,4 +7,7 @@ export { default as ServiceFAQ } from "./ServiceFAQ";
 export { default as RelatedServices } from "./RelatedServices";
 export { default as SimCardTypes } from "./SimCardTypes";
 export { default as VirtualNumberTypes } from "./VirtualNumberTypes";
+export { default as DomainExtensions } from "./DomainExtensions";
+export { default as DomainTips } from "./DomainTips";
+export { default as DomainProviders } from "./DomainProviders";
 

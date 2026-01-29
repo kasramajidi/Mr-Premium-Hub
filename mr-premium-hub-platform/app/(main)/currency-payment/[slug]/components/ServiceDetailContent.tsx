@@ -4,7 +4,16 @@ interface ServiceDetailContentProps {
   service: Service;
 }
 
-const serviceDetails: Record<string, { features: string[]; steps: string[]; note?: string; description?: string }> = {
+const serviceDetails: Record<
+  string,
+  {
+    features: string[];
+    steps: string[];
+    note?: string;
+    description?: string;
+    stepsDetail?: { title: string; description: string }[];
+  }
+> = {
   paypal: {
     features: [
       "نقد کردن موجودی پی پال به ریال",
@@ -72,6 +81,44 @@ const serviceDetails: Record<string, { features: string[]; steps: string[]; note
     ],
     description: "شماره مجازی یک شماره تلفن واقعی است که بدون نیاز به سیم‌کارت فیزیکی فعالیت می‌کند. از این شماره‌ها می‌توان برای دریافت پیامک‌های تأیید، تماس‌های صوتی و ثبت‌نام در سرویس‌ها و اپلیکیشن‌های مختلف استفاده کرد.\n\nبا استفاده از خدمات مستر پریمیوم هاب می‌توانید به‌سادگی و بدون نیاز به کارت اعتباری بین‌المللی، شماره‌های مجازی معتبر تهیه کرده و از تمامی مزایای آن‌ها بهره‌مند شوید.",
   },
+  domain: {
+    features: [
+      "بدون نیاز به حساب ارزی",
+      "پرداخت به صورت ریالی",
+      "تضمین خرید",
+      "سرعت بالا",
+    ],
+    steps: [
+      "انتخاب دامنه",
+      "ثبت نام در مستر پریمیوم هاب",
+      "ارسال اطلاعات",
+      "پرداخت هزینه",
+      "خرید و تحویل",
+    ],
+    stepsDetail: [
+      {
+        title: "انتخاب دامنه",
+        description: "انتخاب دامنه مورد نظر از سایت های معتبر",
+      },
+      {
+        title: "ثبت نام در مستر پریمیوم هاب",
+        description: "ایجاد حساب کاربری در پلتفرم مستر پریمیوم هاب",
+      },
+      {
+        title: "ارسال اطلاعات",
+        description: "ارسال لینک و اطلاعات دامنه مورد نظر",
+      },
+      {
+        title: "پرداخت هزینه",
+        description: "پرداخت هزینه به صورت ریالی",
+      },
+      {
+        title: "خرید و تحویل",
+        description: "انجام خرید و تحویل دامنه به شما",
+      },
+    ],
+    description: "خرید دامنه از وب‌سایت‌های معتبر خارجی مثل GoDaddy، Name.com و سایر ثبت‌کنندگان بین‌المللی",
+  },
 };
 
 export default function ServiceDetailContent({ service }: ServiceDetailContentProps) {
@@ -135,17 +182,44 @@ export default function ServiceDetailContent({ service }: ServiceDetailContentPr
           <div>
             <h2 className="text-sm sm:text-base md:text-lg font-bold text-gray-900 mb-3 sm:mb-4 text-right flex items-center gap-2">
               <span className="w-1 h-6 bg-[#ff5538] rounded"></span>
-              مراحل انجام کار
+              {details.stepsDetail
+                ? "فرآیند خرید دامنه در مستر پریمیوم هاب"
+                : "مراحل انجام کار"}
             </h2>
+            {details.stepsDetail ? (
+              <p className="text-xs sm:text-sm text-gray-600 text-right mb-4">
+                در چند مرحله ساده دامنه خود را خریداری کنید
+              </p>
+            ) : null}
             <ol className="space-y-2.5 sm:space-y-3 text-right">
-              {details.steps.map((step, index) => (
-                <li key={index} className="flex items-start gap-3 text-xs sm:text-sm text-gray-700">
-                  <span className="shrink-0 w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-[#ff5538]/10 text-[#ff5538] flex items-center justify-center text-[10px] sm:text-xs font-bold border-2 border-[#ff5538]/20">
-                    {index + 1}
-                  </span>
-                  <span className="pt-0.5">{step}</span>
-                </li>
-              ))}
+              {details.stepsDetail
+                ? details.stepsDetail.map((step, index) => (
+                    <li
+                      key={index}
+                      className="flex items-start gap-3 text-xs sm:text-sm text-gray-700"
+                    >
+                      <span className="shrink-0 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#1a3760] text-white flex items-center justify-center text-xs sm:text-sm font-bold">
+                        {index + 1}
+                      </span>
+                      <div className="pt-0.5">
+                        <span className="font-bold text-gray-900 block mb-0.5">
+                          {step.title}
+                        </span>
+                        <span className="text-gray-600">{step.description}</span>
+                      </div>
+                    </li>
+                  ))
+                : details.steps.map((step, index) => (
+                    <li
+                      key={index}
+                      className="flex items-start gap-3 text-xs sm:text-sm text-gray-700"
+                    >
+                      <span className="shrink-0 w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-[#ff5538]/10 text-[#ff5538] flex items-center justify-center text-[10px] sm:text-xs font-bold border-2 border-[#ff5538]/20">
+                        {index + 1}
+                      </span>
+                      <span className="pt-0.5">{step}</span>
+                    </li>
+                  ))}
             </ol>
           </div>
         </div>

@@ -2,7 +2,7 @@
 
 import { Service } from "../../components/servicesData";
 import { HiCheckCircle, HiShieldCheck, HiClock, HiCurrencyDollar, HiRefresh, HiX, HiCreditCard, HiSupport } from "react-icons/hi";
-import { MdSimCard } from "react-icons/md";
+import { MdSimCard, MdDomain } from "react-icons/md";
 
 interface ServiceBenefitsProps {
   service: Service;
@@ -67,6 +67,34 @@ const internationalSimBenefits = [
   },
 ];
 
+const domainBenefits = [
+  {
+    icon: (
+      <div className="relative">
+        <HiCreditCard className="text-white text-3xl md:text-4xl" />
+        <HiX className="text-white text-2xl md:text-3xl absolute -top-1 -right-1" />
+      </div>
+    ),
+    title: "بدون نیاز به حساب ارزی",
+    description: "خرید دامنه بدون نیاز به داشتن حساب ارزی",
+  },
+  {
+    icon: <HiCurrencyDollar className="text-white text-3xl md:text-4xl" />,
+    title: "پرداخت به صورت ریالی",
+    description: "امکان پرداخت با ریال ایران",
+  },
+  {
+    icon: <HiCheckCircle className="text-white text-3xl md:text-4xl" />,
+    title: "تضمین خرید",
+    description: "تضمین انجام خرید و تحویل دامنه",
+  },
+  {
+    icon: <HiClock className="text-white text-3xl md:text-4xl" />,
+    title: "سرعت بالا",
+    description: "انجام سریع فرآیند خرید دامنه",
+  },
+];
+
 const virtualNumberBenefits = [
   {
     icon: <HiSupport className="text-white text-2xl sm:text-3xl" />,
@@ -103,9 +131,49 @@ const virtualNumberBenefits = [
 export default function ServiceBenefits({ service }: ServiceBenefitsProps) {
   const isInternationalSim = service.id === "international-sim";
   const isVirtualNumber = service.id === "virtual-number";
+  const isDomain = service.id === "domain";
 
   return (
     <>
+      {isDomain && (
+        <>
+          {/* Domain Benefits Box */}
+          <div className="bg-gray-50 rounded-xl shadow-sm p-5 md:p-6 mb-6 border border-gray-100">
+            <div className="flex flex-col items-center mb-5 md:mb-6">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-lg bg-[#ff5538]/10 flex items-center justify-center mb-3 text-[#ff5538]">
+                <MdDomain className="text-2xl sm:text-3xl" />
+              </div>
+              <h2 className="text-lg md:text-xl font-bold text-gray-900 text-center mb-1">
+                خرید دامنه
+              </h2>
+              <p className="text-xs sm:text-sm text-gray-600 text-center">
+                خدمات بین‌المللی شامل سیم کارت، شماره مجازی، دامنه و هاست
+              </p>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
+              {domainBenefits.map((benefit, index) => (
+                <div
+                  key={index}
+                  className="bg-white rounded-lg p-4 sm:p-5 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 flex items-start gap-3 sm:gap-4 flex-row-reverse"
+                >
+                  <div className="shrink-0 w-12 h-12 sm:w-14 sm:h-14 rounded-lg bg-[#1a3760] flex items-center justify-center [&_svg]:!text-lg [&_svg]:sm:!text-xl">
+                    {benefit.icon}
+                  </div>
+                  <div className="flex-1 min-w-0 text-right">
+                    <h3 className="text-sm sm:text-base font-bold text-gray-900 mb-1">
+                      {benefit.title}
+                    </h3>
+                    <p className="text-xs sm:text-sm text-gray-600 leading-5">
+                      {benefit.description}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </>
+      )}
+
       {isInternationalSim && (
         <>
           {/* Benefits Box */}
