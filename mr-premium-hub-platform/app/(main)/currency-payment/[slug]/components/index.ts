@@ -17,4 +17,6 @@ export { default as TrendyolCategories } from "./TrendyolCategories";
 export { default as AIAccounts } from "./AIAccounts";
 export { default as SeoTools } from "./SeoTools";
 export { default as GameAccounts } from "./GameAccounts";
+export { default as LanguageExamTypes } from "./LanguageExamTypes";
+export { default as LanguageExamServices } from "./LanguageExamServices";
 

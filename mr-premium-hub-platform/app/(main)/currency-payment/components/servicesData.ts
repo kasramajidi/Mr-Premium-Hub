@@ -249,7 +249,7 @@ export const services: Service[] = [
     labelEn: "Language Exam",
     href: "/currency-payment/language-exam",
     icon: React.createElement(HiAcademicCap, { className: "text-3xl sm:text-4xl md:text-5xl text-orange-500" }),
-    description: "ثبت نام و پرداخت هزینه آزمون‌های زبان",
+    description: "ثبت نام و پرداخت هزینه آزمون‌های زبان؛ IELTS، TOEFL، PTE، GRE، Duolingo و سایر آزمون‌ها از طریق مستر پریمیوم هاب",
     category: "education",
   },
   {

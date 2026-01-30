@@ -21,6 +21,8 @@ import {
   AIAccounts,
   SeoTools,
   GameAccounts,
+  LanguageExamTypes,
+  LanguageExamServices,
 } from "./components";
 
 interface ServicePageProps {
@@ -143,6 +145,12 @@ export default async function ServicePage({ params }: ServicePageProps) {
             {service.id === "ai-account" && <AIAccounts />}
             {service.id === "seo-account" && <SeoTools />}
             {service.id === "game-account" && <GameAccounts />}
+            {service.id === "language-exam" && (
+              <>
+                <LanguageExamTypes />
+                <LanguageExamServices />
+              </>
+            )}
             <ServiceFAQ service={service} />
             <RelatedServices currentService={service} />
           </div>
