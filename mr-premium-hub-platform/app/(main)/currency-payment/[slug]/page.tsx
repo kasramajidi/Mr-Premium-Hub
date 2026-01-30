@@ -25,6 +25,8 @@ import {
   LanguageExamServices,
   StudentPaymentTypes,
   StudentPaymentServices,
+  InternationalExamTypes,
+  InternationalLanguageExams,
 } from "./components";
 
 interface ServicePageProps {
@@ -157,6 +159,12 @@ export default async function ServicePage({ params }: ServicePageProps) {
               <>
                 <StudentPaymentTypes />
                 <StudentPaymentServices />
+              </>
+            )}
+            {service.id === "international-exam" && (
+              <>
+                <InternationalExamTypes />
+                <InternationalLanguageExams />
               </>
             )}
             <ServiceFAQ service={service} />

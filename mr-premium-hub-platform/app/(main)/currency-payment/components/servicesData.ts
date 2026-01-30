@@ -267,7 +267,7 @@ export const services: Service[] = [
     labelEn: "International Exams",
     href: "/currency-payment/international-exam",
     icon: React.createElement(HiGlobe, { className: "text-3xl sm:text-4xl md:text-5xl text-orange-500" }),
-    description: "ثبت نام و پرداخت آزمون‌های بین‌المللی",
+    description: "ثبت نام و پرداخت آزمون‌های بین‌المللی؛ GMAT، USMLE، PMP، IMAT، SAT، Prometric، ICF، CFA و آزمون‌های زبان از طریق مستر پریمیوم هاب",
     category: "education",
   },
   {
