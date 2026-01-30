@@ -177,7 +177,7 @@ export const services: Service[] = [
     labelEn: "Daily VPS",
     href: "/currency-payment/vps-daily",
     icon: React.createElement(HiServer, { className: "text-3xl sm:text-4xl md:text-5xl text-red-500" }),
-    description: "سرویس VPS برای استفاده روزانه",
+    description: "سرور مجازی روزانه یک‌روزه و پنج‌روزه از مستر پریمیوم هاب؛ آمریکا و انگلیس، ویندوز، تحویل ۱ تا ۵ ساعت",
     category: "vps",
   },
   {

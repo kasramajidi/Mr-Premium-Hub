@@ -26,4 +26,7 @@ export { default as InternationalLanguageExams } from "./InternationalLanguageEx
 export { default as VPSTradingSteps } from "./VPSTradingSteps";
 export { default as VPSTradingPlans } from "./VPSTradingPlans";
 export { default as VPSTradingBenefits } from "./VPSTradingBenefits";
+export { default as VPSDailySteps } from "./VPSDailySteps";
+export { default as VPSDailyPlans } from "./VPSDailyPlans";
+export { default as VPSDailyBenefits } from "./VPSDailyBenefits";
 
