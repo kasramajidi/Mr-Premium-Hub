@@ -35,8 +35,8 @@ export async function generateMetadata({
       product.name,
       product.brand,
       product.category,
-      "محصولات هوشمند",
-      "مسترپریمیوم هاب",
+      "گیفت کارت",
+      "مستر پریمیوم هاب",
     ],
     openGraph: {
       title: `${product.name} | مسترپریمیوم هاب`,

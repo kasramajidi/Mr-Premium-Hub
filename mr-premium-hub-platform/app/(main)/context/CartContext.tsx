@@ -2,6 +2,12 @@
 
 import React, { createContext, useContext, useState, ReactNode } from "react";
 
+export interface Denomination {
+  id: string;
+  label: string;
+  price: number;
+}
+
 export interface Product {
   id: number;
   name: string;
@@ -17,6 +23,9 @@ export interface Product {
   createdAt: string | Date;
   sales: number;
   description: string;
+  productType?: "gift_card" | "service";
+  denominations?: Denomination[];
+  mainCategoryId?: string;
 }
 
 export interface CartItem {

@@ -23,7 +23,7 @@ export default function ShopSidebar() {
         type="button"
         onClick={applyFilters}
         aria-label="اعمال فیلترهای انتخاب شده"
-        className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors duration-200 font-medium text-base shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+        className="w-full bg-[#ff5538] text-white py-2 px-4 rounded-lg hover:bg-[#e54d32] transition-colors duration-200 font-medium text-base shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
       >
         اعمال فیلترها
       </button>

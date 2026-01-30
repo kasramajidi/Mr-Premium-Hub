@@ -61,7 +61,7 @@ export default function WhiteProductCard({ product }: WhiteProductCardProps) {
           )}
         </div>
         {discountPercentage > 0 && (
-          <div className="absolute top-2 right-2 bg-[#ff4c00] text-white px-2 py-1 rounded-full text-xs font-bold">
+          <div className="absolute top-2 right-2 bg-[#ff5538] text-white px-2 py-1 rounded-full text-xs font-bold">
             -{discountPercentage}%
           </div>
         )}
@@ -88,7 +88,7 @@ export default function WhiteProductCard({ product }: WhiteProductCardProps) {
             </span>
           )}
         </div>
-        <button className="bg-[#4837f3] text-white py-1.5 md:py-2 px-2 md:px-3 rounded-l-full rounded-r-2xl font-medium text-xs hover:bg-[#ff4c00] transition-colors duration-200">
+        <button className="bg-[#ff5538] text-white py-1.5 md:py-2 px-2 md:px-3 rounded-l-full rounded-r-2xl font-medium text-xs hover:bg-[#e54d32] transition-colors duration-200">
           خرید محصول
         </button>
       </div>

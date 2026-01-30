@@ -33,22 +33,22 @@ export default function ProductsTable({
                 نام محصول
               </th>
               <th className="text-right py-3 px-4 font-medium text-gray-700">
-                دسته‌بندی
+                دسته‌بندی محصول
               </th>
               <th className="text-right py-3 px-4 font-medium text-gray-700">
-                قیمت
+                قیمت محصول
               </th>
               <th className="text-right py-3 px-4 font-medium text-gray-700">
-                موجودی
+                موجودی انبار
               </th>
               <th className="text-right py-3 px-4 font-medium text-gray-700">
-                فروش
+                تعداد فروش
               </th>
               <th className="text-right py-3 px-4 font-medium text-gray-700">
-                وضعیت
+                وضعیت موجودی
               </th>
               <th className="text-right py-3 px-4 font-medium text-gray-700">
-                عملیات
+                عملیات محصول
               </th>
             </tr>
           </thead>
@@ -91,13 +91,13 @@ export default function ProductsTable({
                         onClick={() => onEdit(product)}
                         className="text-[#ff5538] hover:underline text-xs"
                       >
-                        ویرایش
+                        ویرایش محصول
                       </button>
                       <button
                         onClick={() => onDelete(product.id)}
                         className="text-red-600 hover:underline text-xs"
                       >
-                        حذف
+                        حذف محصول
                       </button>
                     </div>
                   </td>

@@ -1,8 +1,7 @@
 "use client";
 
 import { useFilters } from "../../../context/FilterContext";
-
-const brands = ["اپل", "سامسونگ", "سونی", "شیائومی"];
+import { brands } from "../productsData";
 
 export default function BrandFilter() {
   const { selectedBrands, updateBrand } = useFilters();

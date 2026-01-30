@@ -5,40 +5,51 @@ import TabNavigation from "./tabs/TabNavigation";
 import ProductIntroduction from "./tabs/ProductIntroduction";
 import SpecificationsSection from "./tabs/SpecificationsSection";
 import ReviewsSection from "./tabs/ReviewsSection";
+import type { Product } from "./productsData";
 
 interface TabContentProps {
   activeTab: string;
+  product: Product | null;
 }
 
-const TabContent = React.memo<TabContentProps>(({ activeTab }) => {
-  const tabComponents = useMemo(
-    () => ({
-      introduction: <ProductIntroduction />,
-      specifications: <SpecificationsSection />,
-      reviews: <ReviewsSection />,
-    }),
-    []
-  );
-
-  return (
-    (tabComponents[
-      activeTab as keyof typeof tabComponents
-    ] as React.ReactElement) || null
-  );
+const TabContent = React.memo<TabContentProps>(({ activeTab, product }) => {
+  if (activeTab === "introduction") {
+    return <ProductIntroduction product={product} />;
+  }
+  if (activeTab === "specifications") {
+    return <SpecificationsSection product={product} />;
+  }
+  if (activeTab === "reviews") {
+    return <ReviewsSection />;
+  }
+  return null;
 });
 
 TabContent.displayName = "TabContent";
 
-export default function ProductTabs() {
+interface ProductTabsProps {
+  product: Product;
+}
+
+export default function ProductTabs({ product }: ProductTabsProps) {
   const [activeTab, setActiveTab] = useState("introduction");
 
+  const isServiceOrGiftCard =
+    product?.productType === "service" || product?.productType === "gift_card";
+
   const tabs = useMemo(
-    () => [
-      { id: "introduction", title: "معرفی محصول" },
-      { id: "specifications", title: "مشخصات فنی" },
-      { id: "reviews", title: "نظرات کاربران" },
-    ],
-    []
+    () =>
+      isServiceOrGiftCard
+        ? [
+            { id: "introduction", title: "معرفی محصول" },
+            { id: "reviews", title: "نظرات کاربران" },
+          ]
+        : [
+            { id: "introduction", title: "معرفی محصول" },
+            { id: "specifications", title: "مشخصات فنی" },
+            { id: "reviews", title: "نظرات کاربران" },
+          ],
+    [isServiceOrGiftCard]
   );
 
   const handleTabChange = (tabId: string) => {
@@ -52,8 +63,8 @@ export default function ProductTabs() {
         activeTab={activeTab}
         onTabChange={handleTabChange}
       />
-      <div className="bg-white rounded-br-2xl rounded-bl-2xl p-4 sm:p-6 border-t-0">
-        <TabContent activeTab={activeTab} />
+      <div className="bg-white rounded-br-2xl rounded-bl-2xl p-4 sm:p-6 border border-gray-200 border-t-0">
+        <TabContent activeTab={activeTab} product={product} />
       </div>
     </div>
   );

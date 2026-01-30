@@ -10,8 +10,8 @@ interface ProductImageGalleryProps {
 
 const ProductImageGallery = React.memo<ProductImageGalleryProps>(
   ({ product, images }) => {
-    const [selectedImage, setSelectedImage] = useState(0);
     const [isFavorite, setIsFavorite] = useState(false);
+    const imageSrc = images[0] ?? "";
 
     useEffect(() => {
       const favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
@@ -36,9 +36,10 @@ const ProductImageGallery = React.memo<ProductImageGalleryProps>(
     };
 
     const handleDownload = () => {
+      if (!imageSrc) return;
       const link = document.createElement("a");
-      link.href = images[selectedImage];
-      link.download = `${product.name}-${selectedImage + 1}.jpg`;
+      link.href = imageSrc;
+      link.download = `${product.name}.jpg`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -60,11 +61,29 @@ const ProductImageGallery = React.memo<ProductImageGalleryProps>(
       <div className="bg-white rounded-2xl h-full gap-3 sm:gap-4 flex flex-col justify-center p-2 sm:p-4">
         <div className="relative">
           <div className="relative group">
-            <img
-              src={images[selectedImage]}
-              alt={product.name}
-              className="w-full h-60 sm:h-72 lg:h-80 object-contain rounded-xl transition-transform duration-300 group-hover:scale-110"
-            />
+            {imageSrc ? (
+              <img
+                src={imageSrc}
+                alt={product.name}
+                className="w-full h-60 sm:h-72 lg:h-80 object-contain rounded-xl transition-transform duration-300 group-hover:scale-105"
+              />
+            ) : (
+              <div className="w-full h-60 sm:h-72 lg:h-80 flex items-center justify-center bg-gray-50 rounded-xl">
+                <svg
+                  className="w-16 h-16 text-gray-300"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                  />
+                </svg>
+              </div>
+            )}
             <div className="absolute top-2 sm:top-4 right-2 sm:right-4 flex gap-1 sm:gap-2">
               <button
                 onClick={handleFavorite}
@@ -127,25 +146,6 @@ const ProductImageGallery = React.memo<ProductImageGalleryProps>(
               </button>
             </div>
           </div>
-        </div>
-        <div className="flex justify-center gap-2">
-          {images.map((image: string, index: number) => (
-            <button
-              key={index}
-              onClick={() => setSelectedImage(index)}
-              className={`w-12 h-12 sm:w-16 sm:h-16 rounded-lg overflow-hidden border-2 transition-all shadow-sm ${
-                selectedImage === index
-                  ? "border-[#ff5538] scale-105 shadow-md ring-2 ring-[#ff5538] ring-offset-1"
-                  : "border-gray-300 hover:border-gray-400"
-              }`}
-            >
-              <img
-                src={image}
-                alt={`تصویر ${index + 1}`}
-                className="w-full h-full object-cover"
-              />
-            </button>
-          ))}
         </div>
       </div>
     );

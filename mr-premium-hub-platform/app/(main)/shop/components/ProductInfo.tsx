@@ -32,8 +32,6 @@ interface ProductInfoProps {
   setSelectedColor: (color: string) => void;
   selectedWarranty: string;
   setSelectedWarranty: (warranty: string) => void;
-  quantity: number;
-  setQuantity: (quantity: number) => void;
   finalPrice: number;
   handleAddToCart: () => void;
 }
@@ -44,10 +42,17 @@ export default function ProductInfo({
   setSelectedColor,
   selectedWarranty,
   setSelectedWarranty,
-  quantity,
-  setQuantity,
   handleAddToCart,
 }: ProductInfoProps) {
+  const isGiftCard = product.productType === "gift_card";
+  const isService = product.productType === "service";
+  const hasDenominations = isGiftCard && product.denominations && product.denominations.length > 0;
+  const canAddToCart = isService
+    ? true
+    : isGiftCard
+      ? !hasDenominations || !!selectedWarranty
+      : !!selectedColor && !!selectedWarranty;
+
   return (
     <div className="h-full flex flex-col gap-4 sm:gap-6">
       <div>
@@ -63,7 +68,7 @@ export default function ProductInfo({
                   key={i}
                   className={`w-5 h-5 ${
                     i < Math.floor(product.rating)
-                      ? "text-orange-400"
+                      ? "text-[#ff5538]"
                       : "text-gray-300"
                   }`}
                   fill="currentColor"
@@ -104,84 +109,112 @@ export default function ProductInfo({
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth={2}
-                d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
+                d="M13 10V3L4 14h7v7l9-11h-7z"
               />
             </svg>
-            <span className="text-sm text-gray-600">امکان تحویل حضوری</span>
+            <span className="text-sm text-gray-600">
+              {isGiftCard ? "تحویل فوری آنلاین" : isService ? "ثبت درخواست و پشتیبانی آنلاین" : "امکان تحویل حضوری"}
+            </span>
           </div>
         </div>
       </div>
-      <div>
-        <h3 className="text-sm sm:text-base font-bold text-gray-900 mb-2 text-right">
-          رنگ
-        </h3>
-        <div className="flex gap-2 sm:gap-3">
-          {COLORS.map((color: Color) => (
-            <button
-              key={color.value}
-              onClick={() => setSelectedColor(color.value)}
-              className={`w-[22px] h-[22px] sm:w-[26px] sm:h-[26px] rounded-full border-2 transition-all shadow-sm ${
-                selectedColor === color.value
-                  ? "border-[#ff5538] scale-110 shadow-md ring-2 ring-[#ff5538] ring-offset-1"
-                  : "border-gray-300 hover:border-gray-400"
-              }`}
-              style={{ backgroundColor: color.hex }}
-            />
-          ))}
+
+      {!isGiftCard && !isService && (
+        <div>
+          <h3 className="text-sm sm:text-base font-bold text-gray-900 mb-2 text-right">
+            رنگ
+          </h3>
+          <div className="flex gap-2 sm:gap-3">
+            {COLORS.map((color: Color) => (
+              <button
+                key={color.value}
+                onClick={() => setSelectedColor(color.value)}
+                className={`w-[22px] h-[22px] sm:w-[26px] sm:h-[26px] rounded-full border-2 transition-all shadow-sm ${
+                  selectedColor === color.value
+                    ? "border-[#ff5538] scale-110 shadow-md ring-2 ring-[#ff5538] ring-offset-1"
+                    : "border-gray-300 hover:border-gray-400"
+                }`}
+                style={{ backgroundColor: color.hex }}
+              />
+            ))}
+          </div>
         </div>
-      </div>
+      )}
+
+      {(hasDenominations || (!isGiftCard && !isService)) && (
       <div>
         <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-2 sm:mb-3">
           <h3 className="text-sm sm:text-base font-bold text-gray-900 mb-1 sm:mb-0">
-            گارانتی:
+            {hasDenominations ? "مبلغ گیفت کارت:" : "گارانتی:"}
           </h3>
-          <span className="text-xs sm:text-sm text-gray-600">
-            {WARRANTIES.find((w: Warranty) => w.id === selectedWarranty)?.text}
-          </span>
+          {hasDenominations && (
+            <span className="text-xs sm:text-sm text-gray-600">
+              {product.denominations?.find((d) => d.id === selectedWarranty)?.label}
+            </span>
+          )}
+          {!isGiftCard && !isService && (
+            <span className="text-xs sm:text-sm text-gray-600">
+              {WARRANTIES.find((w: Warranty) => w.id === selectedWarranty)?.text}
+            </span>
+          )}
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-          {WARRANTIES.map((warranty: Warranty) => (
-            <button
-              key={warranty.id}
-              onClick={() => setSelectedWarranty(warranty.id)}
-              className={`h-[35px] sm:h-[40px] p-1 rounded-lg border-2 text-right transition-all shadow-sm ${
-                selectedWarranty === warranty.id
-                  ? "bg-[#ff5538] text-white border-[#ff5538] shadow-md"
-                  : "bg-white text-gray-800 border-gray-300 hover:border-[#ff5538] hover:bg-gray-50"
-              }`}
-            >
-              <span className="text-xs font-medium whitespace-nowrap overflow-hidden text-ellipsis">
-                {warranty.text}
-              </span>
-            </button>
-          ))}
-        </div>
+        {hasDenominations && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            {product.denominations!.map((d) => (
+              <button
+                key={d.id}
+                onClick={() => setSelectedWarranty(d.id)}
+                className={`h-[35px] sm:h-[40px] p-1 rounded-lg border-2 text-right transition-all shadow-sm ${
+                  selectedWarranty === d.id
+                    ? "bg-[#ff5538] text-white border-[#ff5538] shadow-md"
+                    : "bg-white text-gray-800 border-gray-300 hover:border-[#ff5538] hover:bg-gray-50"
+                }`}
+              >
+                <span className="text-xs font-medium whitespace-nowrap overflow-hidden text-ellipsis block w-full text-right">
+                  {d.label}
+                </span>
+              </button>
+            ))}
+          </div>
+        )}
+        {!isGiftCard && !isService && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            {WARRANTIES.map((warranty: Warranty) => (
+              <button
+                key={warranty.id}
+                onClick={() => setSelectedWarranty(warranty.id)}
+                className={`h-[35px] sm:h-[40px] p-1 rounded-lg border-2 text-right transition-all shadow-sm ${
+                  selectedWarranty === warranty.id
+                    ? "bg-[#ff5538] text-white border-[#ff5538] shadow-md"
+                    : "bg-white text-gray-800 border-gray-300 hover:border-[#ff5538] hover:bg-gray-50"
+                }`}
+              >
+                <span className="text-xs font-medium whitespace-nowrap overflow-hidden text-ellipsis">
+                  {warranty.text}
+                </span>
+              </button>
+            ))}
+          </div>
+        )}
       </div>
-      {(!selectedColor || !selectedWarranty) && (
-        <div className="text-xs text-orange-600 text-right bg-orange-50 p-2 rounded-lg border border-orange-200">
-          ⚠️ لطفاً رنگ و گارانتی محصول را انتخاب کنید
+      )}
+
+      {!canAddToCart && (
+        <div className="text-xs text-[#ff5538] text-right bg-[#ff5538]/10 p-2 rounded-lg border border-[#ff5538]/20">
+          ⚠️ {hasDenominations ? "لطفاً مبلغ گیفت کارت را انتخاب کنید" : isService ? "" : "لطفاً رنگ و گارانتی محصول را انتخاب کنید"}
         </div>
       )}
-      <div className="flex gap-2 bg-white p-2 sm:p-3 rounded-lg">
-        <input
-          type="number"
-          min="1"
-          value={quantity}
-          onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value)))}
-          className="w-14 sm:w-16 h-9 sm:h-10 bg-gray-50 border border-gray-300 rounded-lg text-center text-gray-900 font-medium focus:outline-none focus:ring-1 focus:ring-[#ff5538] focus:border-[#ff5538] text-xs sm:text-sm"
-        />
-        <button
-          disabled={!selectedColor || !selectedWarranty}
-          onClick={handleAddToCart}
-          className={`flex-1 py-2 px-3 sm:px-4 rounded-xl font-bold text-sm sm:text-base transition-opacity shadow-sm ${
-            selectedColor && selectedWarranty
-              ? "bg-[#ff5538] text-white hover:opacity-90"
-              : "bg-gray-300 text-gray-500 cursor-not-allowed"
-          }`}
-        >
-          افزودن به سبد خرید
-        </button>
-      </div>
+      <button
+        disabled={!canAddToCart}
+        onClick={handleAddToCart}
+        className={`w-full py-3 px-4 rounded-xl font-bold text-sm sm:text-base transition-opacity shadow-sm ${
+          canAddToCart
+            ? "bg-[#ff5538] text-white hover:opacity-90 cursor-pointer"
+            : "bg-gray-300 text-gray-500 cursor-not-allowed"
+        }`}
+      >
+        ثبت سفارش
+      </button>
     </div>
   );
 }

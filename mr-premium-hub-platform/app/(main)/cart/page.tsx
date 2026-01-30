@@ -33,6 +33,22 @@ export default function Cart() {
     return warranty ? warranty.text : warrantyId;
   };
 
+  const getOptionLabel = (item: CartItem): string => {
+    const p = item.product as CartItem["product"] & { productType?: string; denominations?: { id: string; label: string }[] };
+    if (p.productType === "service") return "سرویس";
+    if (p.productType === "gift_card" && p.denominations?.length && item.selectedWarranty) {
+      const d = p.denominations.find((x) => x.id === item.selectedWarranty);
+      return d ? `مبلغ: ${d.label}` : getWarrantyText(item.selectedWarranty);
+    }
+    if (item.selectedWarranty) return `گارانتی: ${getWarrantyText(item.selectedWarranty)}`;
+    return "";
+  };
+
+  const showColor = (item: CartItem): boolean => {
+    const t = (item.product as CartItem["product"] & { productType?: string }).productType;
+    return t !== "gift_card" && t !== "service";
+  };
+
   if (items.length === 0) {
     return (
       <div className="bg-gray-50 py-8 min-h-screen">
@@ -200,8 +216,8 @@ export default function Cart() {
                               {item.product.name}
                             </h3>
                             <p className="text-gray-500 text-xs mt-1">
-                              گارانتی: {getWarrantyText(item.selectedWarranty)}،
-                              رنگ: {getColorName(item.selectedColor)}
+                              {getOptionLabel(item)}
+                              {showColor(item) && `، رنگ: ${getColorName(item.selectedColor)}`}
                             </p>
                           </div>
                         </div>

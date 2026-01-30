@@ -47,7 +47,7 @@ export default function ProductHeader({ onSortChange }: ProductHeaderProps) {
   return (
     <div className="mb-8">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold text-gray-900">فروشگاه</h1>
+        <h1 className="text-2xl font-semibold text-gray-900">فروشگاه گیفت کارت</h1>
         <div className="relative" ref={dropdownRef}>
           <button
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}

@@ -59,7 +59,7 @@ export default function PriceRangeFilter() {
     
     if (rawValue === "") {
       setMaxValue("");
-      updatePrice(1, 10000000);
+      updatePrice(1, 50000000);
       return;
     }
 
@@ -132,7 +132,7 @@ export default function PriceRangeFilter() {
             onBlur={handleMaxBlur}
             aria-label="حداکثر قیمت"
             className="w-full px-3 py-2 text-sm text-center border-b border-gray-300 focus:outline-none focus:border-[#ff5538] transition-colors bg-transparent placeholder-gray-400"
-            placeholder="19,000,000"
+            placeholder="50,000,000"
           />
         </div>
       </div>

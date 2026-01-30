@@ -2,15 +2,7 @@
 
 import { useState } from "react";
 import { useFilters } from "../../../context/FilterContext";
-
-const categories = [
-  "تلفن هوشمند",
-  "جارو هوشمند",
-  "حلقه هوشمند",
-  "دسته های بازی",
-  "ساعت های هوشمند",
-  "عینک هوشمند",
-];
+import { categories } from "../productsData";
 
 export default function CategoryFilter() {
   const { selectedCategories, updateCategory } = useFilters();
@@ -18,6 +10,7 @@ export default function CategoryFilter() {
 
   const initialCategories = categories.slice(0, 4);
   const visibleCategories = showAll ? categories : initialCategories;
+  const hasMore = categories.length > 4;
 
   return (
     <section className="space-y-3" aria-label="فیلتر دسته بندی">
@@ -82,6 +75,7 @@ export default function CategoryFilter() {
             </label>
           );
         })}
+        {hasMore && (
         <button
           onClick={() => setShowAll(!showAll)}
           className="text-[#ff5538] cursor-pointer hover:opacity-80 text-xs sm:text-sm font-medium transition-opacity duration-200 flex items-center gap-1 mt-1"
@@ -102,6 +96,7 @@ export default function CategoryFilter() {
             </>
           )}
         </button>
+        )}
       </div>
     </section>
   );

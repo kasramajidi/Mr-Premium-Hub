@@ -10,6 +10,7 @@ interface ProductGridProps {
   appliedFilters?: {
     categories: string[];
     brands: string[];
+    mainCategoryId: string | null;
     search: string;
     price: [number, number];
   };
@@ -32,44 +33,36 @@ export default function ProductGrid({
   const filteredProducts = useMemo(() => {
     if (!appliedFilters) return products;
 
-    const hasActiveFilters =
-      appliedFilters.categories.length > 0 ||
-      appliedFilters.brands.length > 0 ||
-      appliedFilters.search.length > 0 ||
+    let list = products;
+
+    if (appliedFilters.mainCategoryId) {
+      list = list.filter(
+        (p) => "mainCategoryId" in p && p.mainCategoryId === appliedFilters!.mainCategoryId
+      );
+    }
+    if (
+      appliedFilters.categories.length > 0 &&
+      list.some((p) => appliedFilters!.categories.includes(p.category))
+    ) {
+      list = list.filter((p) => appliedFilters!.categories.includes(p.category));
+    }
+    if (appliedFilters.brands.length > 0) {
+      list = list.filter((p) => appliedFilters!.brands.includes(p.brand));
+    }
+    if (appliedFilters.search) {
+      const q = appliedFilters.search.toLowerCase();
+      list = list.filter((p) => p.name.toLowerCase().includes(q));
+    }
+    if (
       appliedFilters.price[0] > 0 ||
-      appliedFilters.price[1] < 10000000;
+      appliedFilters.price[1] < 50000000
+    ) {
+      list = list.filter(
+        (p) => p.price >= appliedFilters!.price[0] && p.price <= appliedFilters!.price[1]
+      );
+    }
 
-    if (!hasActiveFilters) return products;
-
-    return products.filter((product) => {
-      if (
-        appliedFilters.categories.length > 0 &&
-        !appliedFilters.categories.includes(product.category)
-      ) {
-        return false;
-      }
-      if (
-        appliedFilters.brands.length > 0 &&
-        !appliedFilters.brands.includes(product.brand)
-      ) {
-        return false;
-      }
-      if (
-        appliedFilters.search &&
-        !product.name
-          .toLowerCase()
-          .includes(appliedFilters.search.toLowerCase())
-      ) {
-        return false;
-      }
-      if (
-        product.price < appliedFilters.price[0] ||
-        product.price > appliedFilters.price[1]
-      ) {
-        return false;
-      }
-      return true;
-    });
+    return list;
   }, [products, appliedFilters]);
 
   const sortedProducts = useMemo(() => {
