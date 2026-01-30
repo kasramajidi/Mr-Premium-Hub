@@ -23,4 +23,7 @@ export { default as StudentPaymentTypes } from "./StudentPaymentTypes";
 export { default as StudentPaymentServices } from "./StudentPaymentServices";
 export { default as InternationalExamTypes } from "./InternationalExamTypes";
 export { default as InternationalLanguageExams } from "./InternationalLanguageExams";
+export { default as VPSTradingSteps } from "./VPSTradingSteps";
+export { default as VPSTradingPlans } from "./VPSTradingPlans";
+export { default as VPSTradingBenefits } from "./VPSTradingBenefits";
 

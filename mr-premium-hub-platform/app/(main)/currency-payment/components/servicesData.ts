@@ -168,7 +168,7 @@ export const services: Service[] = [
     labelEn: "VPS Trading",
     href: "/currency-payment/vps-trading",
     icon: React.createElement(HiServer, { className: "text-3xl sm:text-4xl md:text-5xl text-red-500" }),
-    description: "سرویس VPS برای تریدینگ و معاملات",
+    description: "خرید سرور مجازی ترید با آی‌پی ثابت از مستر پریمیوم هاب؛ پلن‌های رم ۶ و رم ۸، تحویل ۲ تا ۲۴ ساعت کاری",
     category: "vps",
   },
   {

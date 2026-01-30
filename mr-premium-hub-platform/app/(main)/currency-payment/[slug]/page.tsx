@@ -27,6 +27,9 @@ import {
   StudentPaymentServices,
   InternationalExamTypes,
   InternationalLanguageExams,
+  VPSTradingSteps,
+  VPSTradingPlans,
+  VPSTradingBenefits,
 } from "./components";
 
 interface ServicePageProps {
@@ -165,6 +168,13 @@ export default async function ServicePage({ params }: ServicePageProps) {
               <>
                 <InternationalExamTypes />
                 <InternationalLanguageExams />
+              </>
+            )}
+            {service.id === "vps-trading" && (
+              <>
+                <VPSTradingSteps />
+                <VPSTradingPlans />
+                <VPSTradingBenefits />
               </>
             )}
             <ServiceFAQ service={service} />
