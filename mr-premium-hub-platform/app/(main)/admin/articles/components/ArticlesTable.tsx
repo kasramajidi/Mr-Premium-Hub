@@ -2,7 +2,7 @@
 
 import React from "react";
 
-interface Article {
+export interface Article {
   id: string;
   title: string;
   category: string;

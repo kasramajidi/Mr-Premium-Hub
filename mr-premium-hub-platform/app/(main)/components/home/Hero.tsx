@@ -20,8 +20,8 @@ export default function Hero() {
     <section className="relative min-h-[600px] md:min-h-[700px] lg:min-h-[800px] flex items-center justify-center overflow-hidden">
       <div className="absolute inset-0 z-0">
         <Image
-          src="/Images/Baner/Layer 5.png"
-          alt="مسترپریمیوم هاب - خدمات پرداخت ارزی و نقد کردن درآمد پی پال"
+          src="/ChatGPT%20Image%20Jan%2024,%202026,%2004_07_27%20PM.png"
+          alt="نقد کردن درآمدهای ارزی - مسترپریمیوم هاب"
           fill
           className="object-cover object-center"
           priority
@@ -32,7 +32,7 @@ export default function Hero() {
           className="absolute inset-0"
           style={{
             background:
-              "linear-gradient(to bottom, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.80), rgba(0, 0, 0, 0.85))",
+              "linear-gradient(to bottom, rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.5))",
           }}
         ></div>
       </div>
