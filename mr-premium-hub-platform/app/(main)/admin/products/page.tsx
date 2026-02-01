@@ -7,12 +7,14 @@ import ProductForm, { ShopApiPayload } from "./components/ProductForm";
 import { useCart } from "../../context/CartContext";
 
 const API_URL = "https://mrpremiumhub.org/api.ashx?action=shop";
+const EXCHANGE_RATE_API = "https://mrpremiumhub.org/api.ashx?action=change";
 
 interface Product {
   id: string;
   name: string;
   category: string;
   price: string;
+  priceUSD: number;
   stock: number;
   sales: number;
   status: string;
@@ -21,14 +23,15 @@ interface Product {
 
 type ApiProduct = Record<string, unknown>;
 
-function mapApiToProduct(item: ApiProduct, index: number): Product {
+function mapApiToProduct(item: ApiProduct, index: number, exchangeRate: number): Product {
   const id = String(item.id ?? item.ID ?? index + 1);
   const name = String(item.title ?? item.name ?? item.Name ?? "—");
   const category = String(item.groups ?? item.category ?? item.Category ?? "—");
-  const priceNum = Number(item.price ?? item.Price ?? 0);
+  const priceUSD = Number(item.price ?? item.Price ?? 0);
+  const priceIRR = priceUSD > 0 && exchangeRate > 0 ? Math.round(priceUSD * exchangeRate) : 0;
   const price =
-    priceNum > 0
-      ? new Intl.NumberFormat("fa-IR").format(priceNum) + " تومان"
+    priceIRR > 0
+      ? new Intl.NumberFormat("fa-IR").format(priceIRR) + " تومان"
       : "—";
   const stock = Math.max(0, Number(item.value ?? item.stock ?? item.Stock ?? 0));
   const sales = Math.max(0, Number(item.sales ?? item.Sales ?? item.NumberOfComments ?? 0));
@@ -39,6 +42,7 @@ function mapApiToProduct(item: ApiProduct, index: number): Product {
     name,
     category,
     price,
+    priceUSD,
     stock,
     sales,
     status,
@@ -46,7 +50,7 @@ function mapApiToProduct(item: ApiProduct, index: number): Product {
   };
 }
 
-function parseApiProducts(data: unknown): Product[] {
+function parseApiProducts(data: unknown, exchangeRate: number): Product[] {
   if (!data || typeof data !== "object") return [];
   const obj = data as Record<string, unknown>;
   const raw =
@@ -55,15 +59,33 @@ function parseApiProducts(data: unknown): Product[] {
     (obj.items as ApiProduct[] | undefined) ??
     (Array.isArray(data) ? data : []);
   if (!Array.isArray(raw)) return [];
-  return raw.map((item, i) => mapApiToProduct(item as ApiProduct, i));
+  return raw.map((item, i) => mapApiToProduct(item as ApiProduct, i, exchangeRate));
 }
 
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState<string | null>(null);
+  const [exchangeRate, setExchangeRate] = useState<number>(161390);
+
+  // دریافت نرخ ارز
+  useEffect(() => {
+    const fetchExchangeRate = async () => {
+      try {
+        const res = await fetch(EXCHANGE_RATE_API);
+        const data = await res.json();
+        if (data.buy) {
+          setExchangeRate(Number(data.buy));
+        }
+      } catch (error) {
+        console.error("خطا در دریافت نرخ ارز:", error);
+      }
+    };
+    fetchExchangeRate();
+  }, []);
 
   const fetchProducts = useCallback(async () => {
+    if (exchangeRate === 0) return; // منتظر دریافت نرخ ارز
     setLoading(true);
     setFetchError(null);
     try {
@@ -82,7 +104,7 @@ export default function ProductsPage() {
           `خطای سرور (کد: ${res.status})`;
         throw new Error(msg);
       }
-      const list = parseApiProducts(data);
+      const list = parseApiProducts(data, exchangeRate);
       setProducts(list);
     } catch (err) {
       const msg =
@@ -92,7 +114,7 @@ export default function ProductsPage() {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [exchangeRate]);
 
   useEffect(() => {
     fetchProducts();

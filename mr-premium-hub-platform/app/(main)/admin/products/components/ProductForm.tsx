@@ -48,6 +48,7 @@ interface ProductFormProps {
 }
 
 const API_URL = "https://mrpremiumhub.org/api.ashx?action=shop";
+const EXCHANGE_RATE_API = "https://mrpremiumhub.org/api.ashx?action=change";
 
 const readFileAsDataUrl = (file: File): Promise<string> =>
   new Promise((resolve, reject) => {
@@ -65,6 +66,16 @@ const parseTags = (str: string): string[] => {
     .filter(Boolean);
 };
 
+/** یک نظر کاربر — API ممکن است UserComments را به‌صورت آرایه برگرداند */
+interface UserCommentItem {
+  id?: string;
+  author?: string;
+  content?: string;
+  date?: string;
+  status?: string;
+  [key: string]: unknown;
+}
+
 /** نظرات را برای نمایش در فرم به رشتهٔ JSON تبدیل می‌کند (API ممکن است رشته یا آبجکت برگرداند) */
 function userCommentsToFormValue(value: string | UserCommentItem[] | undefined): string {
   if (value == null || value === "") return "";
@@ -81,6 +92,7 @@ export default function ProductForm({
   onClose,
   onSave,
 }: ProductFormProps) {
+  const [exchangeRate, setExchangeRate] = useState<number>(0);
   const [searchTags, setSearchTags] = useState<string[]>(
     parseTags(product?.search ?? "")
   );
@@ -89,6 +101,24 @@ export default function ProductForm({
     parseTags(product?.RelatedProducts ?? "")
   );
   const [relatedInput, setRelatedInput] = useState("");
+  
+  // دریافت نرخ ارز
+  useEffect(() => {
+    const fetchExchangeRate = async () => {
+      try {
+        const res = await fetch(EXCHANGE_RATE_API);
+        const data = await res.json();
+        if (data.buy) {
+          setExchangeRate(Number(data.buy));
+        }
+      } catch (error) {
+        console.error("خطا در دریافت نرخ ارز:", error);
+        setExchangeRate(161390); // مقدار پیش‌فرض
+      }
+    };
+    fetchExchangeRate();
+  }, []);
+
   useEffect(() => {
     setSearchTags(parseTags(product?.search ?? ""));
   }, [product?.search]);
@@ -96,21 +126,14 @@ export default function ProductForm({
     setRelatedTags(parseTags(product?.RelatedProducts ?? ""));
   }, [product?.RelatedProducts]);
   const [formData, setFormData] = useState<Record<string, string | number | boolean>>({
-    img: "",
-    video: "",
-    price: product?.price ? parsePrice(product.price) : "",
-    title: product?.name || "",
-    groups: product?.category || "",
-    value: product?.stock ?? 0,
-    search: "",
-    UserComments: "",
-    RelatedProducts: "",
-    Specifications: "",
-    Score: "",
-    NumberOfComments: "",
-    brand: "",
-    text: product?.description || "",
-    inPersonDelivery: false,
+    img: product?.img ?? "",
+    video: product?.video ?? "",
+    title: product?.title ?? "",
+    groups: product?.groups ?? "",
+    price: product?.price ?? 0,
+    value: product?.value ?? 0,
+    text: product?.text ?? "",
+    inPersonDelivery: product?.inPersonDelivery ?? false,
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -129,6 +152,8 @@ export default function ProductForm({
     if (formData.video) payload.video = String(formData.video);
     if (formData.title) payload.title = String(formData.title);
     if (formData.groups) payload.groups = String(formData.groups);
+    if (formData.price !== "" && formData.price !== undefined)
+      payload.price = Math.max(0, Number(formData.price) ?? 0);
     if (formData.value !== "" && formData.value !== undefined)
       payload.value = Math.max(0, Number(formData.value) ?? 0);
     if (searchTags.length > 0) payload.search = searchTags.join("، ");
@@ -264,6 +289,27 @@ export default function ProductForm({
                   placeholder="مثال: گیفت کارت"
                   className={inputClass}
                 />
+              </div>
+              <div>
+                <label className={labelClass}>قیمت محصول (دلار)</label>
+                <input
+                  type="number"
+                  min={0}
+                  step="0.01"
+                  value={formData.price === "" ? "" : Number(formData.price)}
+                  onChange={(e) => {
+                    const num = parseFloat(e.target.value);
+                    const clamped = isNaN(num) || num < 0 ? 0 : num;
+                    updateField("price", clamped);
+                  }}
+                  placeholder="مثال: 10"
+                  className={inputClass}
+                />
+                {exchangeRate > 0 && formData.price && Number(formData.price) > 0 && (
+                  <p className="text-xs text-gray-500 mt-1">
+                    قیمت تومانی: {new Intl.NumberFormat("fa-IR").format(Math.round(Number(formData.price) * exchangeRate))} تومان
+                  </p>
+                )}
               </div>
               <div>
                 <label className={labelClass}>ارزش یا موجودی</label>
