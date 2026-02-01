@@ -21,17 +21,17 @@ export default function AboutHero() {
         <div className="mb-3 sm:mb-4">
           <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-orange-50 rounded-full">
             <div className="w-1 h-1 rounded-full bg-orange-500"></div>
-            <span className="text-[10px] sm:text-xs text-orange-600 font-medium">تجربه دیجیتال</span>
+            <span className="text-[10px] sm:text-xs text-orange-600 font-medium">خدمات ارزی و پرداخت ارزی</span>
           </div>
         </div>
 
         <h1 className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold mb-1.5 sm:mb-2 md:mb-3 text-right leading-tight" style={{ color: '#1a3760' }}>
-          همه چیز درباره شرکت دیجیتال مارکتینگ
+          درباره مستر پریمیوم هاب (Mr Premium Hub)
         </h1>
 
         <div className="text-right text-gray-600 text-[10px] sm:text-xs md:text-sm leading-5 sm:leading-6 md:leading-7 mb-3 sm:mb-4 md:mb-6">
           <p className="text-justify sm:text-right">
-            لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ، و با استفاده از طراحان گرافیک است، چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است، و برای شرایط فعلی تکنولوژی مورد نیاز، و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد، کتابهای زیادی در شصت و سه درصد گذشته حال و آینده، شناخت فراوان جامعه و متخصصان را می طلبد، تا با نرم افزارها شناخت بیشتری را برای طراحان رایانه ای علی الخصوص طراحان خلاقی، و فرهنگ پیشرو در زبان فارسی ایجاد کرد، در این صورت می توان امید داشت که تمام و دشواری موجود در ارائه راهکارها است.
+            مستر پریمیوم هاب پلتفرم معتبر و امن برای خدمات ارزی و پرداخت ارزی است. ما نقد کردن درآمد پی‌پال، پرداخت با مسترکارت، پرداخت هزینه ویزا و سفارت، ثبت نام آزمون‌های بین‌المللی، خرید بلیت هواپیما و هتل و سایر خدمات بین‌المللی را با بهترین نرخ و پشتیبانی ۲۴ ساعته ارائه می‌دهیم. امنیت و سرعت در انجام تراکنش‌ها اولویت اصلی ماست. برای تماس: ۰۲۱-۹۱۳۲۰۷۰۰ و support@tehranpayment.com — آدرس: تهران، خیابان کارگر شمالی، نبش بزرگراه جلال آل احمد، کوچه چهارم، پلاک ۴۰، طبقه سوم.
           </p>
         </div>
 
@@ -47,7 +47,7 @@ export default function AboutHero() {
             href="/contact"
             className="inline-flex items-center justify-center px-4 sm:px-5 md:px-6 py-2 sm:py-2.5 border border-[#ff5538] text-[#ff5538] rounded-lg text-xs sm:text-sm font-medium transition-all hover:bg-[#ff5538] hover:text-white cursor-pointer"
           >
-            تماس با شرکت
+            تماس با ما
           </Link>
         </div>
       </div>

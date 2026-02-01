@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Clock, Package, Download, ArrowLeft } from "lucide-react";
+import { Package, Clock, ArrowLeft } from "lucide-react";
 
 interface AccountEmptyStateProps {
   message: string;
@@ -11,34 +11,30 @@ interface AccountEmptyStateProps {
   isComingSoon?: boolean;
 }
 
-export default function AccountEmptyState({ 
-  message, 
-  buttonText, 
-  onButtonClick, 
+export default function AccountEmptyState({
+  message,
+  buttonText,
+  onButtonClick,
   icon,
-  isComingSoon = false
+  isComingSoon = false,
 }: AccountEmptyStateProps) {
   if (isComingSoon) {
     return (
-      <div className="w-full flex flex-col items-center justify-center py-16 px-4">
-        <div className="relative mb-6">
-          <div className="w-24 h-24 rounded-full bg-gradient-to-br from-[#ff5538]/10 to-[#ff5538]/5 flex items-center justify-center">
-            <Clock className="w-12 h-12 text-[#ff5538]" strokeWidth={1.5} />
-          </div>
-          <div className="absolute -top-1 -right-1 w-6 h-6 bg-[#ff5538] rounded-full flex items-center justify-center">
-            <span className="text-white text-xs">+</span>
-          </div>
+      <div className="flex flex-col items-center justify-center py-14 sm:py-16 px-4">
+        <div className="mb-5 flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-50 to-amber-100/80 text-amber-600 shadow-inner ring-2 ring-amber-200/50">
+          <Clock size={28} strokeWidth={2} />
         </div>
-        <h3 className="text-xl font-semibold text-gray-800 mb-2">به زودی</h3>
-        <p className="text-gray-500 text-center mb-8 max-w-md leading-relaxed">
+        <h3 className="text-lg font-bold text-gray-900 tracking-tight mb-1.5">به زودی</h3>
+        <p className="text-sm text-gray-500 text-center mb-6 max-w-sm leading-relaxed">
           {message}
         </p>
         {buttonText && onButtonClick && (
           <button
+            type="button"
             onClick={onButtonClick}
-            className="inline-flex items-center gap-2 px-6 py-3 bg-white border-2 border-[#ff5538] text-[#ff5538] rounded-xl hover:bg-[#ff5538] hover:text-white transition-all duration-200 font-medium text-sm"
+            className="inline-flex items-center gap-2 rounded-xl border-2 border-[#ff5538] bg-white px-5 py-2.5 text-sm font-semibold text-[#ff5538] shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#ff5538] hover:text-white hover:shadow-md hover:shadow-[#ff5538]/20"
           >
-            <ArrowLeft className="w-4 h-4" />
+            <ArrowLeft size={16} strokeWidth={2} />
             {buttonText}
           </button>
         )}
@@ -46,18 +42,21 @@ export default function AccountEmptyState({
     );
   }
 
+  const Icon = icon ?? <Package size={32} className="text-gray-400" strokeWidth={2} />;
+
   return (
-    <div className="w-full flex flex-col items-center justify-center py-12 px-4">
-      <div className="w-20 h-20 rounded-full bg-gray-100 flex items-center justify-center mb-6">
-        {icon || <Package className="w-10 h-10 text-gray-400" strokeWidth={1.5} />}
+    <div className="flex flex-col items-center justify-center py-12 sm:py-14 px-4">
+      <div className="mb-5 flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-gray-100 to-gray-50 shadow-inner ring-2 ring-gray-200/60">
+        {Icon}
       </div>
-      <p className="text-gray-600 text-center mb-6 text-base leading-relaxed max-w-sm">
+      <p className="text-sm text-gray-600 text-center mb-6 max-w-sm leading-relaxed">
         {message}
       </p>
       {buttonText && onButtonClick && (
         <button
+          type="button"
           onClick={onButtonClick}
-          className="px-6 py-2.5 bg-[#ff5538] hover:bg-[#e6452e] text-white rounded-lg transition-colors duration-200 font-medium text-sm"
+          className="inline-flex items-center gap-2 rounded-xl bg-[#ff5538] px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-[#ff5538]/25 transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#ff5538]/95 hover:shadow-lg hover:shadow-[#ff5538]/30"
         >
           {buttonText}
         </button>
@@ -65,4 +64,3 @@ export default function AccountEmptyState({
     </div>
   );
 }
-

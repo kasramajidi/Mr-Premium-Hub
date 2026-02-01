@@ -1,11 +1,13 @@
 "use client";
 
+import Link from "next/link";
 import { HiBuildingOffice, HiPaperAirplane } from "react-icons/hi2";
 
 interface TravelCard {
   icon: React.ReactNode;
   title: string;
   description: string;
+  href: string;
 }
 
 const travelServices: TravelCard[] = [
@@ -14,14 +16,16 @@ const travelServices: TravelCard[] = [
       <HiBuildingOffice className="text-4xl sm:text-5xl md:text-6xl text-gray-700" />
     ),
     title: "پرداخت هتل خارجی",
-    description: "",
+    description: "رزرو و پرداخت هتل با کارت ارزی",
+    href: "/shop",
   },
   {
     icon: (
       <HiPaperAirplane className="text-4xl sm:text-5xl md:text-6xl text-gray-700" />
     ),
-    title: "خرید بلیت هواپیما خارجی",
-    description: "",
+    title: "خرید بلیت هواپیما",
+    description: "خرید بلیت هواپیما با پرداخت ارزی",
+    href: "/shop",
   },
 ];
 
@@ -32,20 +36,25 @@ export default function TravelPayments() {
         <h2 className="text-2xl md:text-3xl lg:text-4xl font-medium text-gray-900 text-center mb-8 md:mb-12">
           پرداخت مسافرتی
         </h2>
+        <p className="text-sm text-gray-600 text-center max-w-2xl mx-auto mb-8">
+          پرداخت هتل و بلیت هواپیما با کارت ارزی از طریق مستر پریمیوم هاب؛ امن و با بهترین نرخ.
+        </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 max-w-3xl mx-auto">
           {travelServices.map((service, index) => (
-            <div
+            <Link
               key={index}
-              className="bg-white p-6 transition-opacity hover:opacity-80 cursor-pointer text-center"
+              href={service.href}
+              className="bg-white p-6 transition-opacity hover:opacity-80 cursor-pointer text-center block rounded-lg shadow-sm hover:shadow-md"
             >
               <div className="mb-3 flex items-center justify-center">
                 {service.icon}
               </div>
-              <h3 className="text-base font-medium text-gray-900">
+              <h3 className="text-base font-medium text-gray-900 mb-1">
                 {service.title}
               </h3>
-            </div>
+              <p className="text-xs text-gray-600">{service.description}</p>
+            </Link>
           ))}
         </div>
       </div>

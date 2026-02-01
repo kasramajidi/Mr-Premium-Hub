@@ -6,7 +6,7 @@ import type { Product } from "../productsData";
 import FlightTicketContent from "../FlightTicketContent";
 
 const PLACEHOLDER_TEXTS = [
-  "لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است.",
+  "این محصول توسط مستر پریمیوم هاب (Mr Premium Hub) ارائه می‌شود. برای جزئیات بیشتر و خرید با پشتیبانی تماس بگیرید: ۰۲۱-۹۱۳۲۰۷۰۰ یا support@tehranpayment.com",
 ];
 
 interface ProductIntroductionProps {

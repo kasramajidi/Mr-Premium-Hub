@@ -2,56 +2,32 @@
 
 import React from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
-interface Action {
-  name: string;
-  action: () => void;
-  icon: string;
-}
+const actions = [
+  { name: "افزودن مقاله", href: "/admin/articles", icon: "➕" },
+  { name: "افزودن محصول", href: "/admin/products", icon: "➕" },
+  { name: "مدیریت کاربران", href: "/admin/users", icon: "👥" },
+  { name: "تنظیمات", href: "/admin/settings", icon: "⚙️" },
+];
 
 export default function QuickActions() {
-  const router = useRouter();
-
-  const actions: Action[] = [
-    {
-      name: "افزودن مقاله",
-      action: () => router.push("/admin/articles"),
-      icon: "➕",
-    },
-    {
-      name: "افزودن محصول",
-      action: () => router.push("/admin/products"),
-      icon: "➕",
-    },
-    {
-      name: "مدیریت کاربران",
-      action: () => router.push("/admin/users"),
-      icon: "👥",
-    },
-    {
-      name: "تنظیمات",
-      action: () => router.push("/admin/settings"),
-      icon: "⚙️",
-    },
-  ];
-
   return (
-    <div className="bg-white border-b border-gray-200 p-6">
-      <h3 className="text-lg font-medium text-gray-900 mb-4">دسترسی سریع</h3>
-      <div className="space-y-2">
-        {actions.map((action, index) => (
-          <button
-            key={index}
-            onClick={action.action}
-            className="w-full flex items-center gap-3 px-4 py-3 border-b border-gray-200 hover:border-[#ff5538] hover:text-[#ff5538] transition-colors text-sm font-medium text-gray-700 text-right"
+    <div className="bg-white rounded-xl border border-gray-200/80 p-4 sm:p-5 shadow-sm">
+      <h3 className="text-sm font-semibold text-gray-900 mb-3">
+        دسترسی سریع
+      </h3>
+      <div className="space-y-0.5">
+        {actions.map((action) => (
+          <Link
+            key={action.href}
+            href={action.href}
+            className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"
           >
-            <span className="text-lg">{action.icon}</span>
+            <span className="text-base">{action.icon}</span>
             <span>{action.name}</span>
-          </button>
+          </Link>
         ))}
       </div>
     </div>
   );
 }
-

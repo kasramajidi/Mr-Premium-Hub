@@ -24,21 +24,21 @@ export default function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="w-64 bg-white border-l border-gray-200 min-h-screen sticky top-0">
-      <nav className="p-4 space-y-2">
+    <aside className="w-56 lg:w-60 bg-white border-l border-gray-200/80 min-h-[calc(100vh-53px)] sticky top-[53px] shrink-0">
+      <nav className="p-3 space-y-0.5" aria-label="منوی ادمین">
         {navItems.map((item) => {
           const isActive = pathname === item.href;
           return (
             <Link
               key={item.href}
               href={item.href}
-              className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
+              className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
                 isActive
                   ? "bg-[#ff5538] text-white"
-                  : "text-gray-700 hover:bg-gray-50 hover:text-[#ff5538]"
+                  : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
               }`}
             >
-              <span className="text-lg">{item.icon}</span>
+              <span className="text-base leading-none">{item.icon}</span>
               <span>{item.name}</span>
             </Link>
           );
@@ -47,4 +47,3 @@ export default function Sidebar() {
     </aside>
   );
 }
-

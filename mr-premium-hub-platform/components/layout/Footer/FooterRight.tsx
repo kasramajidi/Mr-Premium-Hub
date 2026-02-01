@@ -17,16 +17,13 @@ export default function FooterRight() {
 
       <div className="text-center space-y-1 hidden md:block">
         <p className="text-xs md:text-sm text-gray-400 leading-relaxed">
-          Mr Premium Hub، پلتفرم معتبر و امن برای نقد کردن درآمدهای ارزی
+          مستر پریمیوم هاب (Mr Premium Hub) — خدمات ارزی و پرداخت ارزی
         </p>
         <p className="text-xs md:text-sm text-gray-400 leading-relaxed">
-          پرداخت‌های بین‌المللی با بهترین نرخ و سریع‌ترین زمان
+          تلفن: <a href="tel:02191320700" className="hover:text-white">۰۲۱-۹۱۳۲۰۷۰۰</a> | ایمیل: <a href="mailto:support@tehranpayment.com" className="hover:text-white">support@tehranpayment.com</a>
         </p>
         <p className="text-xs md:text-sm text-gray-400 leading-relaxed">
-          خدمات متنوع: پی‌پال، مسترکارت، پرداخت سفارت و آزمون‌های بین‌المللی
-        </p>
-        <p className="text-xs md:text-sm text-gray-400 leading-relaxed">
-          پشتیبانی ۲۴ ساعته و تضمین امنیت تمامی تراکنش‌ها
+          آدرس: تهران، خیابان کارگر شمالی، نبش بزرگراه جلال آل احمد، کوچه چهارم، پلاک ۴۰، طبقه سوم
         </p>
       </div>
     </div>

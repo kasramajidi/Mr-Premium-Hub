@@ -7,13 +7,14 @@ import {
 } from "./components";
 
 export const metadata: Metadata = {
-  title: "تماس با ما",
-  description: "راه‌های ارتباطی با مسترپریمیوم هاب - تماس با پشتیبانی و ارسال پیام",
+  title: "تماس با ما | مستر پریمیوم هاب",
+  description: "تماس با مستر پریمیوم هاب: ۰۲۱-۹۱۳۲۰۷۰۰ | support@tehranpayment.com | تهران، کارگر شمالی، جلال آل احمد، کوچه چهارم، پلاک ۴۰",
   keywords: [
     "تماس با ما",
     "پشتیبانی",
-    "ارتباط با مسترپریمیوم هاب",
-    "تماس با پشتیبانی",
+    "مستر پریمیوم هاب",
+    "۰۲۱۹۱۳۲۰۷۰۰",
+    "support@tehranpayment.com",
   ],
   alternates: {
     canonical: "/contact",

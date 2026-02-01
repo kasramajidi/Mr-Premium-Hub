@@ -11,8 +11,7 @@ export default function ContactCards() {
           <h2 className="text-[11px] sm:text-[10px] md:text-xs font-bold text-gray-800 leading-tight">شماره های تماس</h2>
         </div>
         <div className="space-y-0.5 sm:space-y-0.5 text-gray-600 text-[10px] sm:text-[9px] md:text-[10px] text-center mt-1">
-          <p className="break-all">۰۹۱۲-۱۲۳۴۵۶#</p>
-          <p className="break-all">۰۹۱۲-۹۸۷۶۵۴#</p>
+          <a href="tel:02191320700" className="break-all hover:text-[#ff5538]">۰۲۱-۹۱۳۲۰۷۰۰</a>
         </div>
       </div>
 
@@ -24,8 +23,7 @@ export default function ContactCards() {
           <h2 className="text-[11px] sm:text-[10px] md:text-xs font-bold text-gray-800 leading-tight">آدرس ایمیل</h2>
         </div>
         <div className="space-y-0.5 sm:space-y-0.5 text-gray-600 text-[10px] sm:text-[9px] md:text-[10px] text-center mt-1">
-          <p className="break-all text-[9px] sm:text-[9px]">yoursite@info.com</p>
-          <p className="break-all text-[9px] sm:text-[9px]">yoursite@gmail.com</p>
+          <a href="mailto:support@tehranpayment.com" className="break-all text-[9px] sm:text-[9px] hover:text-[#ff5538]">support@tehranpayment.com</a>
         </div>
       </div>
 
@@ -37,8 +35,7 @@ export default function ContactCards() {
           <h2 className="text-[11px] sm:text-[10px] md:text-xs font-bold text-gray-800 leading-tight">نشانی ها</h2>
         </div>
         <div className="space-y-0.5 sm:space-y-0.5 text-gray-600 text-[10px] sm:text-[9px] md:text-[10px] text-center mt-1">
-          <p className="break-word leading-tight">یزد ، خیابان خوبان</p>
-          <p className="break-word leading-tight">کوچه طراحان سایت</p>
+          <p className="break-word leading-tight">تهران، خیابان کارگر شمالی، نبش بزرگراه جلال آل احمد، کوچه چهارم، پلاک ۴۰، طبقه سوم</p>
         </div>
       </div>
     </div>

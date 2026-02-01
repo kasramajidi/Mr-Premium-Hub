@@ -41,12 +41,12 @@ const recentOrders: Order[] = [
 
 export default function RecentOrders() {
   return (
-    <div className="bg-white border-b border-gray-200 p-6">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-medium text-gray-900">سفارشات اخیر</h3>
+    <div className="bg-white rounded-xl border border-gray-200/80 overflow-hidden shadow-sm">
+      <div className="flex items-center justify-between px-4 sm:px-6 py-4 border-b border-gray-100">
+        <h3 className="text-sm font-semibold text-gray-900">سفارشات اخیر</h3>
         <Link
           href="/admin/orders"
-          className="text-sm text-[#ff5538] hover:underline"
+          className="text-xs sm:text-sm text-[#ff5538] hover:underline font-medium"
         >
           مشاهده همه
         </Link>
@@ -54,23 +54,23 @@ export default function RecentOrders() {
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-gray-200">
-              <th className="text-right py-3 px-4 font-medium text-gray-700">
-                شماره سفارش
+            <tr className="bg-gray-50/80 border-b border-gray-100">
+              <th className="text-right py-3 px-3 sm:px-4 font-medium text-gray-500 text-xs">
+                شماره
               </th>
-              <th className="text-right py-3 px-4 font-medium text-gray-700">
+              <th className="text-right py-3 px-3 sm:px-4 font-medium text-gray-500 text-xs">
                 مشتری
               </th>
-              <th className="text-right py-3 px-4 font-medium text-gray-700">
+              <th className="text-right py-3 px-3 sm:px-4 font-medium text-gray-500 text-xs">
                 محصول
               </th>
-              <th className="text-right py-3 px-4 font-medium text-gray-700">
+              <th className="text-right py-3 px-3 sm:px-4 font-medium text-gray-500 text-xs">
                 مبلغ
               </th>
-              <th className="text-right py-3 px-4 font-medium text-gray-700">
+              <th className="text-right py-3 px-3 sm:px-4 font-medium text-gray-500 text-xs">
                 وضعیت
               </th>
-              <th className="text-right py-3 px-4 font-medium text-gray-700">
+              <th className="text-right py-3 px-3 sm:px-4 font-medium text-gray-500 text-xs">
                 تاریخ
               </th>
             </tr>
@@ -79,20 +79,26 @@ export default function RecentOrders() {
             {recentOrders.map((order) => (
               <tr
                 key={order.id}
-                className="border-b border-gray-100 hover:bg-gray-50 transition-colors"
+                className="border-b border-gray-50 last:border-0 hover:bg-gray-50/50 transition-colors"
               >
-                <td className="py-3 px-4 text-gray-900">{order.id}</td>
-                <td className="py-3 px-4 text-gray-700">{order.customer}</td>
-                <td className="py-3 px-4 text-gray-700">{order.product}</td>
-                <td className="py-3 px-4 text-gray-900 font-medium">
+                <td className="py-3 px-3 sm:px-4 text-gray-900 font-medium">
+                  {order.id}
+                </td>
+                <td className="py-3 px-3 sm:px-4 text-gray-600">
+                  {order.customer}
+                </td>
+                <td className="py-3 px-3 sm:px-4 text-gray-600">
+                  {order.product}
+                </td>
+                <td className="py-3 px-3 sm:px-4 text-gray-900 font-medium">
                   {order.amount}
                 </td>
-                <td className="py-3 px-4">
-                  <span className="px-2 py-1 text-xs font-medium bg-gray-100 text-gray-700 rounded">
+                <td className="py-3 px-3 sm:px-4">
+                  <span className="inline-block px-2 py-0.5 text-xs font-medium bg-gray-100 text-gray-600 rounded">
                     {order.status}
                   </span>
                 </td>
-                <td className="py-3 px-4 text-gray-600">{order.date}</td>
+                <td className="py-3 px-3 sm:px-4 text-gray-500">{order.date}</td>
               </tr>
             ))}
           </tbody>
@@ -101,4 +107,3 @@ export default function RecentOrders() {
     </div>
   );
 }
-
