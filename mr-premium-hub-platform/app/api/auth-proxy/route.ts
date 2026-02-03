@@ -3,8 +3,8 @@ import { NextResponse } from "next/server";
 const EXTERNAL_API = "https://mrpremiumhub.org/api.ashx";
 
 /**
- * پروکسی درخواست‌های احراز هویت به mrpremiumhub.org از سمت سرور
- * تا خطای CORS و ERR_NETWORK_CHANGED در مرورگر رفع شود.
+ * پروکسی API به mrpremiumhub.org (GET, POST, PATCH, DELETE) برای رفع CORS.
+ * مطابق تست API: GetData, PostData, PATCHData, DELETEData
  */
 
 export async function GET(request: Request) {
@@ -61,7 +61,37 @@ export async function POST(request: Request) {
   }
 }
 
-/** پروکسی DELETE برای حذف (مثلاً نظرات: action=Comment&id=2) */
+/** پروکسی PATCH مطابق تست API */
+export async function PATCH(request: Request) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const action = searchParams.get("action");
+    if (!action) {
+      return NextResponse.json(
+        { error: "پارامتر action لازم است" },
+        { status: 400 }
+      );
+    }
+    const body = await request.json().catch(() => ({}));
+    const res = await fetch(
+      `${EXTERNAL_API}?action=${encodeURIComponent(action)}`,
+      {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      }
+    );
+    const data = await res.json().catch(() => ({}));
+    return NextResponse.json(data);
+  } catch (e) {
+    return NextResponse.json(
+      { error: "خطا در ارتباط با سرور" },
+      { status: 502 }
+    );
+  }
+}
+
+/** پروکسی DELETE (مثلاً ExamRegister&id=2 یا Comment&id=2) */
 export async function DELETE(request: Request) {
   try {
     const { searchParams } = new URL(request.url);

@@ -119,9 +119,12 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchToLogin }) => {
             type="tel"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
-            placeholder="مثال: ۰۹۰۴۴۲۸۴۵۲۵"
+            placeholder="۰۹۱۲۳۴۵۶۷۸۹ یا ۹۸۹۱۲۳۴۵۶۷۸۹"
             className="w-full bg-white border-b border-gray-300 py-2.5 focus:outline-none focus:border-[#ff5538] transition-colors"
           />
+          <p className="text-xs text-gray-500 mt-1 text-right">
+            با ۰۹ شروع کنید (۱۱ رقم) یا ۹۸۹ (۱۲ رقم). اعداد فارسی یا انگلیسی قبول است.
+          </p>
         </div>
 
         <p className="text-xs text-gray-500 pt-2 text-center leading-relaxed">

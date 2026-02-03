@@ -73,25 +73,39 @@ const LoginForm: React.FC<LoginFormProps> = ({
       const data = await requestSmsPass(p);
       const apiError = (data as { error?: string }).error;
       if (apiError) {
-        setError(apiError);
+        const isSmsError =
+          apiError.toLowerCase().includes("sms") ||
+          apiError.toLowerCase().includes("send") ||
+          apiError.toLowerCase().includes("failed");
+        const message = isSmsError
+          ? "ارسال پیامک ناموفق بود. شماره را با فرمت ۰۹۱۲۳۴۵۶۷۸۹ (۱۱ رقم با ۰۹) وارد کنید. در تست سرور ممکن است فقط برای برخی شماره‌ها پیامک فعال باشد؛ شماره ۰۹۰۴۴۲۸۴۵۲۵ را امتحان کنید یا با پشتیبانی تماس بگیرید."
+          : apiError;
+        setError(message);
         setSmsLoading(false);
         return;
       }
+      const raw = data as Record<string, unknown>;
       const code =
-        typeof (data as { pass?: string }).pass === "string"
-          ? (data as { pass: string }).pass
-          : typeof (data as { code?: string }).code === "string"
-            ? (data as { code: string }).code
-            : typeof (data as { otp?: string }).otp === "string"
-              ? (data as { otp: string }).otp
-              : null;
+        typeof raw.pass === "string"
+          ? raw.pass
+          : typeof raw.code === "string"
+            ? raw.code
+            : typeof raw.otp === "string"
+              ? raw.otp
+              : typeof raw.password === "string"
+                ? raw.password
+                : typeof raw.Pass === "string"
+                  ? raw.Pass
+                  : typeof raw.Code === "string"
+                    ? raw.Code
+                    : null;
       if (code) {
         setPass(code);
         setSuccess(
-          `رمز یکبار مصرف: ${code} (در فیلد رمز قرار گرفت؛ در صورت عدم دریافت اس‌ام‌اس از همین استفاده کنید.)`
+          `رمز یکبار مصرف: ${code} (در فیلد رمز قرار گرفت؛ از همین استفاده کنید.)`
         );
       } else {
-        setSuccess("رمز یکبار مصرف به شماره شما ارسال شد.");
+        setSuccess("رمز یکبار مصرف به شماره شما ارسال شد. در صورت عدم دریافت، پاسخ سرور را با پشتیبانی چک کنید.");
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "خطا در ارسال رمز.");
@@ -129,9 +143,12 @@ const LoginForm: React.FC<LoginFormProps> = ({
             type="tel"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
-            placeholder="مثال: ۰۹۰۴۴۲۸۴۵۲۵"
+            placeholder="۰۹۱۲۳۴۵۶۷۸۹ یا ۹۸۹۱۲۳۴۵۶۷۸۹"
             className="w-full bg-white border-b border-gray-300 py-2.5 focus:outline-none focus:border-[#ff5538] transition-colors"
           />
+          <p className="text-xs text-gray-500 mt-1 text-right">
+            با ۰۹ شروع کنید (۱۱ رقم) یا ۹۸۹ (۱۲ رقم). اعداد فارسی یا انگلیسی قبول است.
+          </p>
         </div>
         <div>
           <label
