@@ -69,8 +69,10 @@ export default function ArticlesPage() {
     try {
       const list = await getArticles();
       const overrides = getOverrides();
-      const merged = (Array.isArray(list) ? list : []).map((a) => overrides[String(a.id)] ?? a);
-      setArticles(merged);
+      const apiIds = new Set((Array.isArray(list) ? list : []).map((a) => String(a.id)));
+      const mergedFromApi = (Array.isArray(list) ? list : []).map((a) => overrides[String(a.id)] ?? a);
+      const onlyInOverrides = Object.values(overrides).filter((a) => !apiIds.has(String(a.id)));
+      setArticles([...onlyInOverrides, ...mergedFromApi]);
     } catch (err) {
       if (!silent) setFetchError(err instanceof Error ? err.message : "خطا در دریافت لیست مقالات");
       setArticles((prev) => (silent ? prev : []));
@@ -116,7 +118,12 @@ export default function ArticlesPage() {
     setSaving(true);
     try {
       if (editingArticle) {
-        const contentArr = formData.content ? formData.content.split("\n").filter(Boolean) : editingArticle.content ?? [];
+        const isHtml = (formData.content ?? "").trim().startsWith("<");
+        const contentArr = isHtml
+          ? [formData.content!.trim()]
+          : formData.content
+            ? formData.content.split("\n").filter(Boolean)
+            : editingArticle.content ?? [];
         const headingsArr = formData.headings?.trim()
           ? formData.headings.trim().split("\n").filter(Boolean)
           : editingArticle.headings ?? [];
@@ -141,7 +148,12 @@ export default function ArticlesPage() {
           await revalidateNews(editingArticle.slug);
         }
       } else {
-        const contentLines = formData.content?.trim() ? formData.content.trim().split("\n").filter(Boolean) : [""];
+        const isHtml = (formData.content ?? "").trim().startsWith("<");
+        const contentLines = isHtml
+          ? [formData.content!.trim()]
+          : formData.content?.trim()
+            ? formData.content.trim().split("\n").filter(Boolean)
+            : [""];
         const headingsLines = formData.headings?.trim() ? formData.headings.trim().split("\n").filter(Boolean) : [];
         const slug = (formData.slug ?? formData.title.replace(/\s+/g, "-")).trim() || formData.title.replace(/\s+/g, "-");
         const dateStr = formData.date?.trim() || new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "long", year: "numeric" });

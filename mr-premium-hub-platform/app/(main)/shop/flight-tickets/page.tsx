@@ -4,6 +4,7 @@ export const metadata = {
   title: "خرید بلیط پرواز خارجی | فروشگاه مستر پریمیوم هاب",
   description:
     "رزرو و خرید بلیط هواپیما خارجی از وبسایت‌های معتبر؛ لیست سایت‌ها، نحوه خرید آنلاین و ریفاند. مستر پریمیوم هاب.",
+  alternates: { canonical: "/shop/flight-tickets" },
 };
 
 export default function FlightTicketsPage() {

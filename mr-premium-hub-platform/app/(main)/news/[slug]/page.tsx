@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import React from "react";
 import Image from "next/image";
+import DOMPurify from "isomorphic-dompurify";
 import { notFound } from "next/navigation";
 import { getArticleBySlugFromApi, getRelatedArticlesFromApi } from "../lib/articles-api";
 import { HiLocationMarker, HiArrowLeft } from "react-icons/hi";
@@ -8,6 +9,16 @@ import { FaTelegram, FaWhatsapp, FaTwitter, FaFacebook } from "react-icons/fa";
 import TableOfContents from "./components/TableOfContents";
 import RelatedArticlesCarousel from "./components/RelatedArticlesCarousel";
 import CommentForm from "./components/CommentForm";
+
+const ALLOWED_HTML_TAGS = [
+  "p", "br", "strong", "b", "em", "i", "u", "a", "img", "ul", "ol", "li",
+  "table", "thead", "tbody", "tr", "th", "td", "h2", "h3", "h4", "div", "span", "figure", "figcaption",
+];
+const ALLOWED_ATTR = ["href", "src", "alt", "title", "class", "target", "rel"];
+
+function sanitizeArticleHtml(html: string): string {
+  return DOMPurify.sanitize(html, { ALLOWED_TAGS: ALLOWED_HTML_TAGS, ALLOWED_ATTR });
+}
 
 const TABLE_ROW_REGEX = /^\|.+\|$/;
 
@@ -30,15 +41,26 @@ function isSeparatorRow(cells: string[]): boolean {
 function renderContentBlock(
   block: string,
   key: string | number,
-  baseClass: string
+  baseClass: string,
+  imageAlt?: string
 ): React.ReactNode {
   const trimmed = String(block).trim();
+  if (trimmed.startsWith("<") && trimmed.length > 1) {
+    return (
+      <div
+        key={key}
+        className={`${baseClass} article-html-content prose prose-sm max-w-none text-right`}
+        dir="rtl"
+        dangerouslySetInnerHTML={{ __html: sanitizeArticleHtml(trimmed) }}
+      />
+    );
+  }
   if (/^(https?:\/\/|data:image\/)/i.test(trimmed)) {
     return (
       <figure key={key} className="my-4">
         <img
           src={trimmed}
-          alt=""
+          alt={imageAlt ?? "تصویر مقاله"}
           className="w-full max-w-full h-auto rounded-xl object-cover"
         />
       </figure>
@@ -96,7 +118,8 @@ function renderContentBlock(
 function renderContentBlocks(
   blocks: string[],
   startKey: number,
-  baseClass: string
+  baseClass: string,
+  imageAlt?: string
 ): React.ReactNode[] {
   const nodes: React.ReactNode[] = [];
   let i = 0;
@@ -108,7 +131,7 @@ function renderContentBlocks(
     }
     const trimmed = String(block).trim();
     if (/^(https?:\/\/|data:image\/)/i.test(trimmed)) {
-      nodes.push(renderContentBlock(block, startKey + i, baseClass));
+      nodes.push(renderContentBlock(block, startKey + i, baseClass, imageAlt));
       i++;
       continue;
     }
@@ -161,7 +184,7 @@ function renderContentBlocks(
         continue;
       }
     }
-    nodes.push(renderContentBlock(block, startKey + i, baseClass));
+    nodes.push(renderContentBlock(block, startKey + i, baseClass, imageAlt));
     i++;
   }
   return nodes;
@@ -204,7 +227,42 @@ export default async function ArticlePage({ params }: PageProps) {
 
   const relatedArticles = await getRelatedArticlesFromApi(slug, 10);
 
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://mrpremiumhub.com";
+  const articleUrl = `${baseUrl}/news/${encodeURIComponent(article.slug)}`;
+  const articleImage = article.image?.startsWith("http")
+    ? article.image
+    : article.image?.startsWith("/")
+      ? `${baseUrl}${article.image}`
+      : article.image
+        ? `${baseUrl}/${article.image.replace(/^\//, "")}`
+        : undefined;
+  const firstText = article.content?.find((b) => b && !/^(https?:\/\/|data:image\/)/i.test(String(b).trim()));
+  const description = (firstText ? String(firstText).substring(0, 160) : "") || article.title;
+
+  const articleJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: article.title,
+    description,
+    image: articleImage,
+    datePublished: article.date,
+    dateModified: article.date,
+    author: { "@type": "Organization", name: "مسترپریمیوم هاب" },
+    publisher: {
+      "@type": "Organization",
+      name: "مسترپریمیوم هاب",
+      logo: { "@type": "ImageObject", url: `${baseUrl}/Images/Logo/logo stock copy 2.png` },
+    },
+    mainEntityOfPage: { "@type": "WebPage", "@id": articleUrl },
+    url: articleUrl,
+  };
+
   return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+      />
     <main className="min-h-screen bg-gray-50 pt-8 sm:pt-12 md:pt-16 lg:pt-20 pb-4 sm:pb-6 md:pb-8 lg:pb-10">
       <div className="container mx-auto px-3 sm:px-4 md:px-6 lg:px-8 max-w-7xl">
         <section className="flex flex-col lg:flex-row justify-between gap-x-3">
@@ -234,28 +292,28 @@ export default async function ArticlePage({ params }: PageProps) {
               </div>
               <div className="text-xs flex items-center gap-1">
                 <a
-                  href={`https://t.me/share/url?url=${encodeURIComponent(`https://yoursite.com/news/${slug}`)}&text=${encodeURIComponent(article.title)}`}
+                  href={`https://t.me/share/url?url=${encodeURIComponent(articleUrl)}&text=${encodeURIComponent(article.title)}`}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
                   <FaTelegram className="text-[14px] mx-[2px] text-gray-400 hover:text-[#ff5538] cursor-pointer transition-all" />
                 </a>
                 <a
-                  href={`https://wa.me/?text=${encodeURIComponent(article.title + ' https://yoursite.com/news/' + slug)}`}
+                  href={`https://wa.me/?text=${encodeURIComponent(article.title + " " + articleUrl)}`}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
                   <FaWhatsapp className="text-[14px] mx-[2px] text-gray-400 hover:text-[#ff5538] cursor-pointer transition-all" />
                 </a>
                 <a
-                  href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(article.title)}&url=${encodeURIComponent(`https://yoursite.com/news/${slug}`)}`}
+                  href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(article.title)}&url=${encodeURIComponent(articleUrl)}`}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
                   <FaTwitter className="text-[14px] mx-[2px] text-gray-400 hover:text-[#ff5538] cursor-pointer transition-all" />
                 </a>
                 <a
-                  href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(`https://yoursite.com/news/${slug}`)}`}
+                  href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(articleUrl)}`}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -269,7 +327,8 @@ export default async function ArticlePage({ params }: PageProps) {
                 renderContentBlock(
                   block,
                   index,
-                  "text-gray-500 leading-6 text-justify text-[13px]"
+                  "text-gray-500 leading-6 text-justify text-[13px]",
+                  article.title
                 )
               )}
             </div>
@@ -284,7 +343,8 @@ export default async function ArticlePage({ params }: PageProps) {
                     ? renderContentBlock(
                         block,
                         `h-${index}`,
-                        "text-gray-500 leading-6 text-justify text-[13px] mb-3"
+                        "text-gray-500 leading-6 text-justify text-[13px] mb-3",
+                        article.title
                       )
                     : null}
                 </div>
@@ -295,7 +355,8 @@ export default async function ArticlePage({ params }: PageProps) {
               renderContentBlocks(
                 article.content.slice(1 + (article.headings?.length ?? 0)),
                 1000,
-                "mt-3 text-gray-500 leading-6 text-justify text-[13px] mb-3"
+                "mt-3 text-gray-500 leading-6 text-justify text-[13px] mb-3",
+                article.title
               )}
           </div>
 
@@ -310,6 +371,7 @@ export default async function ArticlePage({ params }: PageProps) {
         <CommentForm />
       </div>
     </main>
+    </>
   );
 }
 

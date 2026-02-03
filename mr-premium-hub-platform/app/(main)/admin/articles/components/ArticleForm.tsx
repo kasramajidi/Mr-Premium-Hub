@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { getArticleCategories } from "../lib/article-api";
+import RichTextEditor from "./RichTextEditor";
 
 const readFileAsDataUrl = (file: File): Promise<string> =>
   new Promise((resolve, reject) => {
@@ -10,6 +11,28 @@ const readFileAsDataUrl = (file: File): Promise<string> =>
     reader.onerror = reject;
     reader.readAsDataURL(file);
   });
+
+function escapeHtml(s: string): string {
+  return s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+function legacyContentToHtml(text: string): string {
+  if (!text.trim()) return "";
+  return text
+    .trim()
+    .split("\n")
+    .filter(Boolean)
+    .map((line) => {
+      const t = line.trim();
+      if (/^(https?:\/\/|data:image\/)/i.test(t)) return `<p><img src="${escapeHtml(t)}" alt="" /></p>`;
+      return "<p>" + escapeHtml(t) + "</p>";
+    })
+    .join("");
+}
 
 export interface RelatedServiceForm {
   title: string;
@@ -96,7 +119,19 @@ export default function ArticleForm({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const categoryToSave = (formData.category ?? "").trim();
-    if (!categoryToSave) return;
+    if (!categoryToSave) {
+      alert("لطفاً دسته‌بندی را پر کنید.");
+      return;
+    }
+    if (!(formData.title ?? "").trim()) {
+      alert("لطفاً عنوان مقاله را وارد کنید.");
+      return;
+    }
+    const contentTrimmed = (formData.content ?? "").trim();
+    if (!contentTrimmed || contentTrimmed === "<p></p>") {
+      alert("لطفاً محتوا را وارد کنید.");
+      return;
+    }
     onSave({ ...formData, category: categoryToSave });
   };
 
@@ -229,87 +264,20 @@ export default function ArticleForm({
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1.5">
-              محتوا (هر پاراگراف در یک خط) <span className="text-red-500">*</span>
+              محتوا (مثل Word: جدول، لینک، تصویر، لیست) <span className="text-red-500">*</span>
             </label>
-            <p className="text-xs text-gray-500 mb-2">
-              هر خط = یک پاراگراف. برای درج تصویر: از دکمهٔ زیر یا یک خط با آدرس تصویر. برای جدول: چند خط پشت‌سرهم با | بین ستون‌ها، مثلاً | عنوان۱ | عنوان۲ | و در خط بعد | مقدار | مقدار |
-            </p>
-            <div className="flex flex-wrap gap-2 mb-2">
-              <input
-                type="text"
-                id="content-image-url"
-                placeholder="آدرس تصویر (URL)"
-                className="flex-1 min-w-[140px] h-9 bg-gray-50 border border-gray-200 rounded-lg px-3 text-right text-sm focus:outline-none focus:ring-2 focus:ring-[#ff5538]/30"
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    e.preventDefault();
-                    const input = e.target as HTMLInputElement;
-                    const url = input.value?.trim();
-                    if (url) {
-                      setFormData((prev) => ({
-                        ...prev,
-                        content: (prev.content ?? "").trim() ? `${(prev.content ?? "").trim()}\n${url}` : url,
-                      }));
-                      input.value = "";
-                    }
-                  }
-                }}
-              />
-              <button
-                type="button"
-                onClick={() => {
-                  const input = document.getElementById("content-image-url") as HTMLInputElement;
-                  const url = input?.value?.trim();
-                  if (url) {
-                    setFormData((prev) => ({
-                      ...prev,
-                      content: (prev.content ?? "").trim() ? `${(prev.content ?? "").trim()}\n${url}` : url,
-                    }));
-                    input.value = "";
-                  }
-                }}
-                className="shrink-0 h-9 px-3 bg-gray-100 hover:bg-gray-200 border border-gray-200 rounded-lg text-sm font-medium text-gray-700"
-              >
-                افزودن تصویر به محتوا
-              </button>
-              <label className="shrink-0 h-9 px-3 bg-[#ff5538]/10 hover:bg-[#ff5538]/20 border border-[#ff5538]/30 rounded-lg text-sm font-medium text-[#ff5538] cursor-pointer inline-flex items-center gap-1">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
-                </svg>
-                آپلود و درج تصویر
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  onChange={async (e) => {
-                    const file = e.target.files?.[0];
-                    if (file) {
-                      try {
-                        const dataUrl = await readFileAsDataUrl(file);
-                        setFormData((prev) => ({
-                          ...prev,
-                          content: (prev.content ?? "").trim()
-                            ? `${(prev.content ?? "").trim()}\n${dataUrl}`
-                            : dataUrl,
-                        }));
-                      } catch {
-                        // ignore
-                      }
-                      e.target.value = "";
-                    }
-                  }}
-                />
-              </label>
-            </div>
-            <textarea
-              required
-              rows={10}
-              value={formData.content}
-              onChange={(e) =>
-                setFormData({ ...formData, content: e.target.value })
+            <RichTextEditor
+              key={article?.id ?? "new"}
+              value={
+                (formData.content ?? "").trim().startsWith("<")
+                  ? (formData.content ?? "")
+                  : (formData.content ?? "").trim()
+                    ? legacyContentToHtml(formData.content ?? "")
+                    : ""
               }
-              placeholder="هر خط = یک پاراگراف. تصویر: یک خط با URL. جدول: چند خط با | بین ستون‌ها، مثلاً | ستون۱ | ستون۲ |"
-              className="w-full bg-white border border-gray-200 rounded-lg px-3 py-2 text-right text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#ff5538]/30 focus:border-[#ff5538] transition-colors resize-none text-sm"
+              onChange={(html) => setFormData((prev) => ({ ...prev, content: html }))}
+              placeholder="محتوا را اینجا بنویسید… از نوار بالا جدول، لینک و تصویر اضافه کنید."
+              minHeight="320px"
             />
           </div>
           <div>
