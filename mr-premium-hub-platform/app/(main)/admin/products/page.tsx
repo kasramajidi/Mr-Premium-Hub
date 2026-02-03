@@ -133,7 +133,7 @@ export default function ProductsPage() {
           "خطا در دریافت اطلاعات محصول";
         throw new Error(msg);
       }
-      const apiProduct = obj as import("./components/ProductForm").ApiProductForEdit;
+      const apiProduct = obj as unknown as import("./components/ProductForm").ApiProductForEdit;
       setEditingProduct({
         id: apiProduct.id ?? product.id,
         title: apiProduct.title,
