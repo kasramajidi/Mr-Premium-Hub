@@ -23,21 +23,44 @@ export interface UserCommentItem {
   date?: string;
   rating?: number;
   status?: string;
+  /** پاسخ ادمین */
+  reply?: string;
+  /** ایمیل نویسنده (برای تشخیص نظر خود کاربر) */
+  userEmail?: string;
   [key: string]: unknown;
+}
+
+function normalizeCommentForDisplay(c: Record<string, unknown>): UserCommentItem {
+  return {
+    id: c.id ?? c.ID,
+    author: (c.author ?? c.userName ?? c.UserName ?? "") as string,
+    content: (c.content ?? c.commentText ?? c.comment ?? "") as string,
+    date: (c.date ?? c.Date ?? c.createdAt) != null ? String(c.date ?? c.Date ?? c.createdAt) : undefined,
+    rating: typeof c.rating === "number" ? c.rating : Number(c.Rating ?? c.rating ?? 0),
+    status: (c.status ?? c.Status ?? "pending") as string,
+    reply: c.reply != null ? String(c.reply) : undefined,
+    userEmail: (c.userEmail ?? c.UserEmail) != null ? String(c.userEmail ?? c.UserEmail) : undefined,
+  };
 }
 
 function parseUserComments(value: string | UserCommentItem[] | undefined): UserCommentItem[] {
   if (value == null) return [];
-  if (Array.isArray(value)) return value.filter((c) => c && (c.content || c.author));
-  if (typeof value !== "string") return [];
-  const s = value.trim();
-  if (!s) return [];
-  try {
-    const parsed = JSON.parse(s) as unknown;
-    return Array.isArray(parsed) ? parsed.filter((c) => c && (c.content || c.author)) : [];
-  } catch {
-    return [];
-  }
+  const raw: Record<string, unknown>[] = Array.isArray(value)
+    ? value.filter((c) => c && typeof c === "object") as Record<string, unknown>[]
+    : (() => {
+        if (typeof value !== "string") return [];
+        const s = value.trim();
+        if (!s) return [];
+        try {
+          const parsed = JSON.parse(s) as unknown;
+          return Array.isArray(parsed) ? (parsed.filter((c) => c && typeof c === "object") as Record<string, unknown>[]) : [];
+        } catch {
+          return [];
+        }
+      })();
+  return raw
+    .filter((c) => c && (c.content || c.author || c.commentText || c.userName || c.UserName))
+    .map(normalizeCommentForDisplay);
 }
 
 function mapGroupToMainCategoryId(groups: string): "currency" | "exams" | "embassy" | "apply" | "giftcards" | "other" {
@@ -86,13 +109,19 @@ export function mapApiItemToShopProduct(item: ApiShopItem, index: number): ShopP
       .join("\n\n") || "خرید از مستر پریمیوم هاب.";
   const userComments = parseUserComments(item.UserComments);
   const reviewsCount = userComments.length || Math.max(0, Number(item.NumberOfComments ?? 0));
-  const score = Number(item.Score ?? 5);
+  const ratingsFromComments = userComments
+    .map((c) => (typeof c.rating === "number" && c.rating >= 1 && c.rating <= 5 ? c.rating : null))
+    .filter((r): r is number => r != null);
+  const averageRating =
+    ratingsFromComments.length > 0
+      ? Math.round((ratingsFromComments.reduce((a, b) => a + b, 0) / ratingsFromComments.length) * 10) / 10
+      : Number(item.Score ?? 5);
   return {
     id,
     name,
     price,
     image,
-    rating: score,
+    rating: Math.min(5, Math.max(0, averageRating)),
     reviews: reviewsCount,
     isNew: false,
     category: groups,
@@ -132,23 +161,87 @@ export async function fetchProductById(id: number | string): Promise<ShopProduct
   }
 }
 
-/** ارسال نظر جدید برای محصول (در صورت پشتیبانی API) */
+/** ارسال نظر جدید مطابق API: PostData('shopcomments', { idshop, rating, commentText, userName, userEmail, status }) */
+const AUTH_PROXY = "/api/auth-proxy";
+
 export async function submitProductComment(
   productId: number | string,
   payload: { author: string; email: string; content: string; rating: number }
 ): Promise<{ ok: boolean; message?: string }> {
   try {
-    const res = await fetch("https://mrpremiumhub.org/api.ashx?action=comment", {
+    const idshop = typeof productId === "string" ? parseInt(productId, 10) : productId;
+    const body = {
+      idshop: Number.isNaN(idshop) ? productId : idshop,
+      rating: Math.min(5, Math.max(1, payload.rating)) || 1,
+      commentText: payload.content.trim(),
+      userName: payload.author.trim(),
+      userEmail: payload.email.trim(),
+      status: "pending",
+    };
+    const res = await fetch(`${AUTH_PROXY}?action=shopcomments`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ productId, ...payload }),
+      body: JSON.stringify(body),
     });
-    const data = await res.json().catch(() => ({}));
+    const data = (await res.json().catch(() => ({}))) as Record<string, unknown>;
+    const errMsg = typeof data?.error === "string" ? data.error : typeof data?.message === "string" ? data.message : null;
+    if (errMsg || data?.success === false) {
+      return { ok: false, message: errMsg ?? "سرور ثبت نظر را قبول نکرد." };
+    }
     if (!res.ok) {
-      return { ok: false, message: (data?.message ?? data?.error ?? "خطا در ثبت نظر") as string };
+      return { ok: false, message: errMsg ?? (data?.message as string) ?? "خطا در ثبت نظر" };
     }
     return { ok: true };
   } catch (err) {
-    return { ok: false, message: err instanceof Error ? err.message : "خطا در ارسال نظر" };
+    return { ok: false, message: err instanceof Error ? err.message : "خطا در ارسال نظر (اتصال به سرور برقرار نشد)." };
+  }
+}
+
+/** ویرایش نظر توسط خود کاربر (ارسال userEmail برای تأیید در بک‌اند) */
+export async function updateProductComment(
+  productId: number | string,
+  commentId: number | string,
+  payload: { content: string; rating: number; userEmail: string }
+): Promise<{ ok: boolean; message?: string }> {
+  try {
+    const idshop = typeof productId === "string" ? parseInt(productId, 10) : productId;
+    const res = await fetch(`${AUTH_PROXY}?action=shopcomments`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        id: commentId,
+        idshop: Number.isNaN(idshop) ? productId : idshop,
+        commentText: payload.content.trim(),
+        rating: Math.min(5, Math.max(1, payload.rating)) || 1,
+        userEmail: payload.userEmail.trim(),
+      }),
+    });
+    const data = (await res.json().catch(() => ({}))) as Record<string, unknown>;
+    const errMsg = typeof data?.error === "string" ? data.error : typeof data?.message === "string" ? data.message : null;
+    if (errMsg || data?.success === false) return { ok: false, message: errMsg ?? "خطا در ویرایش نظر." };
+    if (!res.ok) return { ok: false, message: errMsg ?? "خطا در ویرایش نظر." };
+    return { ok: true };
+  } catch (err) {
+    return { ok: false, message: err instanceof Error ? err.message : "خطا در ارتباط با سرور." };
+  }
+}
+
+/** حذف نظر توسط خود کاربر (بک‌اند ممکن است با userEmail تأیید کند) */
+export async function deleteProductComment(
+  productId: number | string,
+  commentId: number | string,
+  userEmail: string
+): Promise<{ ok: boolean; message?: string }> {
+  try {
+    const idshop = typeof productId === "string" ? parseInt(productId, 10) : productId;
+    const url = `${AUTH_PROXY}?action=shopcomments&idshop=${encodeURIComponent(String(Number.isNaN(idshop) ? productId : idshop))}&id=${encodeURIComponent(String(commentId))}`;
+    const res = await fetch(url, { method: "DELETE", headers: { "Content-Type": "application/json" } });
+    const data = (await res.json().catch(() => ({}))) as Record<string, unknown>;
+    const errMsg = typeof data?.error === "string" ? data.error : typeof data?.message === "string" ? data.message : null;
+    if (errMsg || data?.success === false) return { ok: false, message: errMsg ?? "خطا در حذف نظر." };
+    if (!res.ok) return { ok: false, message: errMsg ?? "خطا در حذف نظر." };
+    return { ok: true };
+  } catch (err) {
+    return { ok: false, message: err instanceof Error ? err.message : "خطا در ارتباط با سرور." };
   }
 }

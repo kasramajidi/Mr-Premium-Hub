@@ -168,19 +168,20 @@ export default function ProductForm({
     if (formData.video) payload.video = String(formData.video);
     if (formData.title) payload.title = String(formData.title);
     if (formData.groups) payload.groups = String(formData.groups);
-    
+
     // ارسال قیمت تومانی محاسبه‌شده (قیمت دلاری × نرخ ارز)
     if (formData.price !== "" && formData.price !== undefined && exchangeRate > 0) {
       const priceUSD = Number(formData.price) ?? 0;
       const priceIRR = Math.round(priceUSD * exchangeRate);
       payload.price = Math.max(0, priceIRR);
     }
-    
+
     if (formData.value !== "" && formData.value !== undefined)
       payload.value = Math.max(0, Number(formData.value) ?? 0);
     if (searchTags.length > 0) payload.search = searchTags.join("، ");
     if (relatedTags.length > 0) payload.RelatedProducts = relatedTags.join("، ");
     if (formData.text) payload.text = String(formData.text);
+    // UserComments عمداً ارسال نمی‌شود تا با PATCH نظرات قبلی اوررایت نشوند (مدیریت نظرات فقط از API shopcomments).
     return payload;
   };
 
