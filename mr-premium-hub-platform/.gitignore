@@ -36,6 +36,9 @@ yarn-error.log*
 # local registration log (private)
 /data/
 
+# support chat persistence (user messages)
+.data/
+
 # env files (can opt-in for committing if needed)
 .env*
 

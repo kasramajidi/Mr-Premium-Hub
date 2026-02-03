@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Eye, EyeOff } from "lucide-react";
 import SubmitButton from "./SubmitButton";
 import { login, requestSmsPass } from "@/app/(main)/auth/lib/auth-api";
@@ -11,12 +12,16 @@ const AUTH_STORAGE_KEY = "loginval";
 interface LoginFormProps {
   initialPhone?: string;
   onSwitchToRegister?: () => void;
+  /** پس از ورود موفق، به این آدرس ریدایرکت شود (مثلاً /cart یا /checkout) */
+  redirectNext?: string;
 }
 
 const LoginForm: React.FC<LoginFormProps> = ({
   initialPhone = "",
   onSwitchToRegister,
+  redirectNext,
 }) => {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [phone, setPhone] = useState(initialPhone);
   const [pass, setPass] = useState("");
@@ -49,7 +54,10 @@ const LoginForm: React.FC<LoginFormProps> = ({
         }
         setSuccess("ورود با موفقیت انجام شد.");
         setPass("");
-        // در صورت تمایل می‌توان ریدایرکت کرد، مثلاً به /
+        if (redirectNext && redirectNext.startsWith("/")) {
+          router.replace(redirectNext, { scroll: false });
+          return;
+        }
       } else {
         setError((data as { error?: string }).error || "ورود ناموفق بود.");
       }

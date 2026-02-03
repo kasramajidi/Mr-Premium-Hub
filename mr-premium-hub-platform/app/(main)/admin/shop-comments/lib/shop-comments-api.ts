@@ -20,9 +20,16 @@ export interface ShopCommentItem {
   productTitle?: string;
 }
 
+function toId(value: unknown): number | string {
+  if (typeof value === "number" && !Number.isNaN(value)) return value;
+  if (typeof value === "string") return value;
+  const n = Number(value);
+  return Number.isNaN(n) ? 0 : n;
+}
+
 function normalizeComment(raw: Record<string, unknown>, idshop: number | string, productTitle?: string): ShopCommentItem {
   return {
-    id: raw.id ?? raw.ID ?? 0,
+    id: toId(raw.id ?? raw.ID ?? 0),
     idshop,
     rating: Number(raw.rating ?? raw.Rating ?? 0),
     commentText: String(raw.commentText ?? raw.comment ?? raw.content ?? ""),

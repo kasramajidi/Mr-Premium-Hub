@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { Header, Footer } from "@/components/layout";
+import { ChatWidgetWrapper } from "@/components/ChatWidget";
 import CartProviderWrapper from "./CartProviderWrapper";
 
 const iransans = localFont({
@@ -166,6 +167,15 @@ export default function RootLayout({
           <Header />
           {children}
           <Footer />
+          <ChatWidgetWrapper
+            adminAvatars={
+              [
+                // تصاویر آواتار ادمین‌ها را اینجا بگذارید، مثلاً:
+                // "/images/support/avatar1.jpg",
+                // "/images/support/avatar2.jpg",
+              ]
+            }
+          />
         </CartProviderWrapper>
       </body>
     </html>
