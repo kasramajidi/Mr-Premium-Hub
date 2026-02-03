@@ -100,11 +100,6 @@ export default async function ProductPage({ params }: ProductPageProps) {
           priceCurrency: "IRR",
           price: product.price.toString(),
           availability: "https://schema.org/InStock",
-          ...(product.originalPrice && {
-            priceValidUntil: new Date(
-              Date.now() + 365 * 24 * 60 * 60 * 1000
-            ).toISOString(),
-          }),
         },
         aggregateRating:
           product.reviews > 0
