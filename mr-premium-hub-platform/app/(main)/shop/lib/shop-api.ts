@@ -30,9 +30,17 @@ export interface UserCommentItem {
   [key: string]: unknown;
 }
 
+function toCommentId(value: unknown): string | number | undefined {
+  if (value === undefined || value === null) return undefined;
+  if (typeof value === "number" && !Number.isNaN(value)) return value;
+  if (typeof value === "string") return value;
+  const n = Number(value);
+  return Number.isNaN(n) ? undefined : n;
+}
+
 function normalizeCommentForDisplay(c: Record<string, unknown>): UserCommentItem {
   return {
-    id: c.id ?? c.ID,
+    id: toCommentId(c.id ?? c.ID),
     author: (c.author ?? c.userName ?? c.UserName ?? "") as string,
     content: (c.content ?? c.commentText ?? c.comment ?? "") as string,
     date: (c.date ?? c.Date ?? c.createdAt) != null ? String(c.date ?? c.Date ?? c.createdAt) : undefined,
