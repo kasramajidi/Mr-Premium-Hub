@@ -71,7 +71,7 @@ export async function getShopProductsForFilter(): Promise<ShopProductOption[]> {
   const raw = Array.isArray(data) ? data : data?.data ?? data?.list ?? data?.items ?? [];
   if (!Array.isArray(raw)) return [];
   return raw.map((item: Record<string, unknown>, i: number) => ({
-    id: item.id ?? item.ID ?? i + 1,
+    id: toId(item.id ?? item.ID ?? i + 1),
     name: String(item.title ?? item.name ?? item.Name ?? "محصول"),
   }));
 }
