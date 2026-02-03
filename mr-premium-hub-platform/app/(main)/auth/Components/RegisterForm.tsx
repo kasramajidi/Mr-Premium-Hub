@@ -151,7 +151,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchToLogin }) => {
               قبلاً ثبت‌نام کرده‌اید؟{" "}
               <button
                 type="button"
-                onClick={onSwitchToLogin}
+                onClick={() => onSwitchToLogin()}
                 className="text-[#ff5538] hover:opacity-80 cursor-pointer transition-opacity font-medium"
               >
                 ورود
