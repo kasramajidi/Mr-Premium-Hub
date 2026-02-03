@@ -369,7 +369,7 @@ export default function Cart() {
                             </svg>
                           </div>
                           <div className="flex-1">
-                            <h3 className="font-medium text-blue-800 text-sm">
+                            <h3 className="font-medium text-brand text-sm">
                               {item.product.name}
                             </h3>
                             <p className="text-gray-500 text-xs mt-1">

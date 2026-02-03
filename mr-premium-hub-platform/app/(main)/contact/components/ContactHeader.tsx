@@ -7,7 +7,7 @@ export default function ContactHeader() {
       <div className="order-1 lg:order-1">
         <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold mb-2 sm:mb-3 md:mb-4 text-right leading-tight sm:leading-normal">
           <span style={{ color: '#ff5538' }}>ما اینجاییم تا شبانه روزی</span>{" "}
-          <span className="text-blue-900">پاسخگوی شما باشیم ...</span>
+          <span className="text-brand">پاسخگوی شما باشیم ...</span>
         </h1>
         <div className="text-right text-gray-700 text-[11px] sm:text-xs md:text-sm leading-6 sm:leading-7 md:leading-8 mt-2 sm:mt-0">
           <p className="text-justify sm:text-right">

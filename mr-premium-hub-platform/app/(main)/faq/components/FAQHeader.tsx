@@ -10,14 +10,14 @@ export default function FAQHeader() {
         <div>
           <h1 className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold text-right leading-tight">
             <span style={{ color: '#ff5538' }}>سوالات</span>{" "}
-            <span className="text-blue-900">متداول</span>
+            <span className="text-brand">متداول</span>
           </h1>
         </div>
       </div>
       <div className="flex items-start gap-2 sm:gap-3">
         <div className="flex-shrink-0 mt-0.5">
-          <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-blue-100 flex items-center justify-center">
-            <HiInformationCircle className="text-blue-600 text-xs sm:text-sm" />
+          <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-brand-muted flex items-center justify-center">
+            <HiInformationCircle className="text-brand text-xs sm:text-sm" />
           </div>
         </div>
         <p className="text-gray-600 text-[10px] sm:text-xs md:text-sm leading-5 sm:leading-6 md:leading-7 text-justify sm:text-right flex-1">

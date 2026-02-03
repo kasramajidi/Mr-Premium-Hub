@@ -20,19 +20,19 @@ export default function AccountEmptyState({
 }: AccountEmptyStateProps) {
   if (isComingSoon) {
     return (
-      <div className="flex flex-col items-center justify-center py-14 sm:py-16 px-4">
-        <div className="mb-5 flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-50 to-amber-100/80 text-amber-600 shadow-inner ring-2 ring-amber-200/50">
+      <div className="flex flex-col items-center justify-center px-4 py-16">
+        <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-amber-100 text-amber-600">
           <Clock size={28} strokeWidth={2} />
         </div>
-        <h3 className="text-lg font-bold text-gray-900 tracking-tight mb-1.5">به زودی</h3>
-        <p className="text-sm text-gray-500 text-center mb-6 max-w-sm leading-relaxed">
+        <h3 className="mt-4 text-lg font-bold text-gray-900">به زودی</h3>
+        <p className="mt-1.5 max-w-sm text-center text-sm leading-relaxed text-gray-500">
           {message}
         </p>
         {buttonText && onButtonClick && (
           <button
             type="button"
             onClick={onButtonClick}
-            className="inline-flex items-center gap-2 rounded-xl border-2 border-[#ff5538] bg-white px-5 py-2.5 text-sm font-semibold text-[#ff5538] shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#ff5538] hover:text-white hover:shadow-md hover:shadow-[#ff5538]/20"
+            className="mt-6 inline-flex items-center gap-2 rounded-lg border-2 border-[#ff5538] bg-white px-5 py-2.5 text-sm font-medium text-[#ff5538] hover:bg-[#ff5538] hover:text-white"
           >
             <ArrowLeft size={16} strokeWidth={2} />
             {buttonText}
@@ -45,18 +45,18 @@ export default function AccountEmptyState({
   const Icon = icon ?? <Package size={32} className="text-gray-400" strokeWidth={2} />;
 
   return (
-    <div className="flex flex-col items-center justify-center py-12 sm:py-14 px-4">
-      <div className="mb-5 flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-gray-100 to-gray-50 shadow-inner ring-2 ring-gray-200/60">
+    <div className="flex flex-col items-center justify-center px-4 py-14">
+      <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-gray-100">
         {Icon}
       </div>
-      <p className="text-sm text-gray-600 text-center mb-6 max-w-sm leading-relaxed">
+      <p className="mt-4 max-w-sm text-center text-sm leading-relaxed text-gray-600">
         {message}
       </p>
       {buttonText && onButtonClick && (
         <button
           type="button"
           onClick={onButtonClick}
-          className="inline-flex items-center gap-2 rounded-xl bg-[#ff5538] px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-[#ff5538]/25 transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#ff5538]/95 hover:shadow-lg hover:shadow-[#ff5538]/30"
+          className="mt-6 inline-flex items-center gap-2 rounded-lg bg-[#ff5538] px-5 py-2.5 text-sm font-medium text-white hover:bg-[#e6452e]"
         >
           {buttonText}
         </button>

@@ -24,7 +24,7 @@ export default function FeatureCards() {
               <h3 className="text-xs sm:text-sm md:text-base font-bold text-gray-800 mb-0.5 sm:mb-1">قیمت مناسب</h3>
               <p className="text-[11px] sm:text-xs md:text-sm text-gray-600 leading-relaxed">خرید به صرفه و اقتصادی</p>
             </div>
-            <div className="w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 bg-blue-900 rounded-lg md:rounded-xl flex items-center justify-center shrink-0">
+            <div className="w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 bg-brand rounded-lg md:rounded-xl flex items-center justify-center shrink-0">
               <HiShoppingCart className="text-white text-sm sm:text-base md:text-lg" />
             </div>
           </div>
@@ -48,7 +48,7 @@ export default function FeatureCards() {
               <h3 className="text-xs sm:text-sm md:text-base font-bold text-gray-800 mb-0.5 sm:mb-1">ایجاد حساب</h3>
               <p className="text-[11px] sm:text-xs md:text-sm text-gray-600 leading-relaxed">ایجاد حساب اختصاصی</p>
             </div>
-            <div className="w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 bg-blue-900 rounded-lg md:rounded-xl flex items-center justify-center shrink-0">
+            <div className="w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 bg-brand rounded-lg md:rounded-xl flex items-center justify-center shrink-0">
               <HiUser className="text-white text-sm sm:text-base md:text-lg" />
             </div>
           </div>

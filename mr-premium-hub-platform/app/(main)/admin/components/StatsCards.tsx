@@ -27,7 +27,7 @@ const STAT_CONFIG: Record<
   orders: {
     title: "سفارشات",
     icon: "📦",
-    color: "bg-blue-50 text-blue-600",
+    color: "bg-brand-muted text-brand",
   },
 };
 

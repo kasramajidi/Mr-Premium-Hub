@@ -607,8 +607,8 @@ export default function ServiceDetailContent({ service }: ServiceDetailContentPr
         </div>
 
         {details.note && (
-          <div className="mt-4 sm:mt-6 p-3 sm:p-4 bg-blue-50 rounded-lg border-r-4 border-blue-500">
-            <p className="text-xs sm:text-sm text-blue-800 text-right">
+          <div className="mt-4 sm:mt-6 p-3 sm:p-4 bg-brand-muted rounded-lg border-r-4 border-brand">
+            <p className="text-xs sm:text-sm text-brand text-right">
               <strong>نکته:</strong> {details.note}
             </p>
           </div>

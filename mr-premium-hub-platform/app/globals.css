@@ -35,9 +35,33 @@
 }
 
 @theme inline {
+  /* طیف رنگی سایت - متغیرهای تم */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-iransans);
+  /* برند (نارنجی-قرمز اصلی) */
+  --color-brand: var(--brand);
+  --color-brand-hover: var(--brand-hover);
+  --color-brand-muted: var(--brand-muted);
+  --color-brand-foreground: var(--brand-foreground);
+  /* اکشن ثانویه (آبی) */
+  --color-action: var(--action);
+  --color-action-hover: var(--action-hover);
+  --color-action-muted: var(--action-muted);
+  --color-action-foreground: var(--action-foreground);
+  /* معنایی */
+  --color-success: var(--success);
+  --color-success-muted: var(--success-muted);
+  --color-warning: var(--warning);
+  --color-warning-muted: var(--warning-muted);
+  --color-error: var(--error);
+  --color-error-muted: var(--error-muted);
+  /* خنثی */
+  --color-surface: var(--surface);
+  --color-surface-elevated: var(--surface-elevated);
+  --color-border-light: var(--border-light);
+  --color-border-strong: var(--border-strong);
+  /* بقیه تم */
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -109,73 +133,129 @@ body {
   scrollbar-width: none;
 }
 
+/*
+  طیف رنگی سایت — استفاده در Tailwind:
+  برند:    bg-brand, text-brand, border-brand, bg-brand-muted, hover:bg-brand-hover
+  اکشن:    bg-action, text-action, bg-action-muted, hover:bg-action-hover
+  موفق:    bg-success, text-success, bg-success-muted
+  هشدار:   bg-warning, text-warning, bg-warning-muted
+  خطا:     bg-error, text-error, bg-error-muted
+  سطوح:    bg-surface, bg-surface-elevated, border-border-light, border-border-strong
+*/
 :root {
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+
+  /* ========== طیف رنگی سایت ========== */
+  /* برند (رنگ اصلی سایت) */
+  --brand: #ff5538;
+  --brand-hover: #e6452e;
+  --brand-muted: #fff0ee;
+  --brand-foreground: #ffffff;
+
+  /* اکشن ثانویه (دکمه‌های درگاه، فیلتر، لینک‌های اکشن) */
+  --action: #2563eb;
+  --action-hover: #1d4ed8;
+  --action-muted: #eff6ff;
+  --action-foreground: #ffffff;
+
+  /* معنایی */
+  --success: #16a34a;
+  --success-muted: #dcfce7;
+  --warning: #d97706;
+  --warning-muted: #fef3c7;
+  --error: #dc2626;
+  --error-muted: #fee2e2;
+
+  /* سطوح و خطوط */
+  --surface: #f9fafb;
+  --surface-elevated: #ffffff;
+  --border-light: #f3f4f6;
+  --border-strong: #e5e7eb;
+
+  /* تم پیش‌فرض (هماهنگ با طیف بالا) */
+  --background: #ffffff;
+  --foreground: #111827;
+  --card: #ffffff;
+  --card-foreground: #111827;
+  --popover: #ffffff;
+  --popover-foreground: #111827;
+  --primary: #ff5538;
+  --primary-foreground: #ffffff;
+  --secondary: #f3f4f6;
+  --secondary-foreground: #374151;
+  --muted: #f9fafb;
+  --muted-foreground: #6b7280;
+  --accent: #f3f4f6;
+  --accent-foreground: #111827;
+  --destructive: #dc2626;
+  --border: #e5e7eb;
+  --input: #e5e7eb;
+  --ring: #ff5538;
+  --chart-1: #ff5538;
+  --chart-2: #2563eb;
+  --chart-3: #16a34a;
+  --chart-4: #d97706;
+  --chart-5: #6b7280;
+  --sidebar: #ffffff;
+  --sidebar-foreground: #374151;
+  --sidebar-primary: #ff5538;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #fff0ee;
+  --sidebar-accent-foreground: #111827;
+  --sidebar-border: #e5e7eb;
+  --sidebar-ring: #ff5538;
 }
 
 .dark {
+  --brand: #ff6644;
+  --brand-hover: #ff5538;
+  --brand-muted: oklch(0.25 0.06 32);
+  --brand-foreground: #ffffff;
+  --action: #3b82f6;
+  --action-hover: #60a5fa;
+  --action-muted: oklch(0.25 0.05 250);
+  --action-foreground: #ffffff;
+  --success: #22c55e;
+  --success-muted: oklch(0.22 0.06 145);
+  --warning: #f59e0b;
+  --warning-muted: oklch(0.25 0.06 85);
+  --error: #ef4444;
+  --error-muted: oklch(0.28 0.08 25);
+  --surface: oklch(0.18 0 0);
+  --surface-elevated: oklch(0.22 0 0);
+  --border-light: oklch(1 0 0 / 8%);
+  --border-strong: oklch(1 0 0 / 18%);
   --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
+  --foreground: oklch(0.97 0 0);
   --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
+  --card-foreground: oklch(0.97 0 0);
   --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.97 0 0);
+  --primary: #ff6644;
+  --primary-foreground: #ffffff;
   --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
+  --secondary-foreground: oklch(0.97 0 0);
   --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
+  --muted-foreground: oklch(0.65 0 0);
   --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
+  --accent-foreground: oklch(0.97 0 0);
+  --destructive: #ef4444;
+  --border: oklch(1 0 0 / 12%);
   --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
+  --ring: #ff6644;
+  --chart-1: #ff6644;
+  --chart-2: #60a5fa;
+  --chart-3: #22c55e;
+  --chart-4: #f59e0b;
+  --chart-5: oklch(0.65 0 0);
   --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.97 0 0);
+  --sidebar-primary: #ff6644;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: oklch(0.28 0.04 32);
+  --sidebar-accent-foreground: oklch(0.97 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --sidebar-ring: #ff6644;
 }
 
 @layer base {
