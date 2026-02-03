@@ -36,6 +36,23 @@ export interface ArticleDetail {
   };
 }
 
+function normalizeApiArticle(raw: Record<string, unknown>): ApiArticle {
+  const category = raw.category ?? raw.Category;
+  const cat = category != null && String(category).trim() !== "" ? String(category).trim() : null;
+  return {
+    id: Number(raw.id ?? raw.ID ?? 0),
+    title: String(raw.title ?? raw.Title ?? ""),
+    slug: String(raw.slug ?? raw.Slug ?? ""),
+    category: cat,
+    image: String(raw.image ?? raw.Image ?? "").trim() || "/Images/Shop/product-pic1.jpg",
+    date: String(raw.date ?? raw.Date ?? ""),
+    comments: Number(raw.comments ?? raw.Comments ?? 0),
+    content: Array.isArray(raw.content) ? raw.content.map(String) : [],
+    headings: Array.isArray(raw.headings) ? raw.headings.map(String) : [],
+    Relatedservice: raw.Relatedservice as ApiArticle["Relatedservice"],
+  };
+}
+
 export async function getArticlesFromApi(): Promise<ApiArticle[]> {
   try {
     const res = await fetch(`${API_BASE}?action=Article&_t=${Date.now()}`, {
@@ -44,7 +61,14 @@ export async function getArticlesFromApi(): Promise<ApiArticle[]> {
       cache: "no-store",
     });
     const data = await res.json();
-    if (Array.isArray(data)) return data;
+    const rawArray = Array.isArray(data)
+      ? data
+      : (data?.data ?? data?.items ?? data?.list ?? []);
+    if (Array.isArray(rawArray)) {
+      return rawArray.map((item: unknown) =>
+        normalizeApiArticle(typeof item === "object" && item != null ? (item as Record<string, unknown>) : {})
+      );
+    }
   } catch {
     // در صورت خطای شبکه یا API
   }
@@ -100,4 +124,21 @@ export function getUniqueCategoriesFromArticles(articles: ApiArticle[]): string[
     if (a.category && a.category.trim()) set.add(a.category.trim());
   }
   return Array.from(set).sort();
+}
+
+/**
+ * با هر باز شدن صفحهٔ مقاله، این تابع فراخوانی می‌شود تا شمارندهٔ دیدگاه/بازدید در API یکی اضافه شود.
+ * بک‌اند باید یکی از این‌ها را پشتیبانی کند:
+ * - GET ?action=Article&id=ID&incrementView=1
+ * - GET ?action=ArticleView&id=ID
+ */
+export async function incrementArticleView(articleId: number): Promise<void> {
+  try {
+    await fetch(
+      `${API_BASE}?action=Article&id=${articleId}&incrementView=1`,
+      { method: "GET", cache: "no-store" }
+    );
+  } catch {
+    // در صورت خطا ساکت می‌مانیم تا صفحه خراب نشود
+  }
 }

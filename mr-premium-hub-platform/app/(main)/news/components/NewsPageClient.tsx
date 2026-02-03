@@ -1,11 +1,12 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { useMemo } from "react";
-import NewsBanner from "./NewsBanner";
+import { useMemo, useState, useEffect } from "react";
 import FeaturedArticles from "./FeaturedArticles";
 import LatestArticlesSection from "./LatestArticlesSection";
 import NewsSidebar from "./NewsSidebar";
+
+const LATEST_ARTICLES_PER_PAGE = 8;
 
 export interface ArticleForList {
   id: number;
@@ -60,6 +61,25 @@ export default function NewsPageClient({ articles, categories }: NewsPageClientP
     [filteredArticles]
   );
 
+  const [latestPage, setLatestPage] = useState(1);
+  const totalLatestPages = Math.max(1, Math.ceil(latestArticles.length / LATEST_ARTICLES_PER_PAGE));
+  const paginatedLatest = useMemo(
+    () =>
+      latestArticles.slice(
+        (latestPage - 1) * LATEST_ARTICLES_PER_PAGE,
+        latestPage * LATEST_ARTICLES_PER_PAGE
+      ),
+    [latestArticles, latestPage]
+  );
+
+  useEffect(() => {
+    setLatestPage(1);
+  }, [categoryParam]);
+
+  useEffect(() => {
+    if (latestPage > totalLatestPages) setLatestPage(totalLatestPages);
+  }, [latestPage, totalLatestPages]);
+
   return (
     <>
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
@@ -78,11 +98,33 @@ export default function NewsPageClient({ articles, categories }: NewsPageClientP
       </div>
       <div className="w-full mt-4 sm:mt-6 md:mt-8 lg:mt-10">
         {filteredArticles.length > 0 ? (
-          <LatestArticlesSection articles={latestArticles} />
+          <>
+            <LatestArticlesSection articles={paginatedLatest} />
+            {latestArticles.length > LATEST_ARTICLES_PER_PAGE && (
+              <div className="flex flex-wrap items-center justify-center gap-3 mt-6 sm:mt-8 mb-8 sm:mb-10">
+                <button
+                  type="button"
+                  onClick={() => setLatestPage((p) => Math.max(1, p - 1))}
+                  disabled={latestPage <= 1}
+                  className="min-w-[80px] h-10 px-4 rounded-xl border border-gray-200 bg-white text-gray-700 text-sm font-medium hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  قبلی
+                </button>
+                <span className="text-sm text-gray-600 px-2">
+                  صفحه {latestPage} از {totalLatestPages}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setLatestPage((p) => Math.min(totalLatestPages, p + 1))}
+                  disabled={latestPage >= totalLatestPages}
+                  className="min-w-[80px] h-10 px-4 rounded-xl border border-gray-200 bg-white text-gray-700 text-sm font-medium hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  بعدی
+                </button>
+              </div>
+            )}
+          </>
         ) : null}
-      </div>
-      <div className="w-full mt-4 sm:mt-6 md:mt-8 lg:mt-10">
-        <NewsBanner />
       </div>
     </>
   );

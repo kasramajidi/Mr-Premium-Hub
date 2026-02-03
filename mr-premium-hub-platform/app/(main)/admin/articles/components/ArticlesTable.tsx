@@ -81,28 +81,28 @@ export default function ArticlesTable({
               articles.map((article, index) => (
                 <tr
                   key={article.id}
-                  className={`border-b border-gray-50 transition-colors duration-150 hover:bg-[#ff5538]/5 ${
+                  className={`cursor-pointer border-b border-gray-50 transition-colors duration-150 hover:bg-[#ff5538]/5 ${
                     index % 2 === 1 ? "bg-gray-50/30" : "bg-white"
                   }`}
                 >
-                  <td className="py-4 px-5">
-                    <p className="text-gray-900 font-medium truncate max-w-[180px]">
+                  <td className="py-4 px-5 cursor-pointer">
+                    <p className="text-gray-900 font-medium truncate max-w-[180px] cursor-pointer">
                       {article.title}
                     </p>
                   </td>
-                  <td className="py-4 px-5">
-                    <span className="text-gray-600 truncate block max-w-[120px]">
+                  <td className="py-4 px-5 cursor-pointer">
+                    <span className="text-gray-600 truncate block max-w-[120px] cursor-pointer">
                       {article.category}
                     </span>
                   </td>
-                  <td className="py-4 px-5">
-                    <span className="text-gray-600 tabular-nums">
+                  <td className="py-4 px-5 cursor-pointer">
+                    <span className="text-gray-600 tabular-nums cursor-pointer">
                       {article.views}
                     </span>
                   </td>
-                  <td className="py-4 px-5">
+                  <td className="py-4 px-5 cursor-pointer">
                     <span
-                      className={`inline-flex items-center gap-1.5 px-3 py-1 text-xs font-medium rounded-full ${
+                      className={`inline-flex items-center gap-1.5 px-3 py-1 text-xs font-medium rounded-full cursor-pointer ${
                         article.status === "منتشر شده"
                           ? "bg-emerald-50 text-emerald-700 ring-1 ring-emerald-100"
                           : "bg-gray-100 text-gray-700"
@@ -118,15 +118,15 @@ export default function ArticlesTable({
                       {article.status}
                     </span>
                   </td>
-                  <td className="py-4 px-5">
-                    <span className="text-gray-600">{article.date}</span>
+                  <td className="py-4 px-5 cursor-pointer">
+                    <span className="text-gray-600 cursor-pointer">{article.date}</span>
                   </td>
-                  <td className="py-4 px-5">
+                  <td className="py-4 px-5 cursor-pointer">
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() => onEdit(article)}
                         disabled={editLoading}
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[#ff5538] bg-[#ff5538]/10 hover:bg-[#ff5538]/20 font-medium text-xs transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+                        className="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[#ff5538] bg-[#ff5538]/10 hover:bg-[#ff5538]/20 font-medium text-xs transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
                       >
                         <svg
                           className="w-3.5 h-3.5"
@@ -146,7 +146,7 @@ export default function ArticlesTable({
                       <button
                         onClick={() => onDelete(article.id)}
                         disabled={deletingId === article.id}
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-red-600 bg-red-50 hover:bg-red-100 font-medium text-xs transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+                        className="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-red-600 bg-red-50 hover:bg-red-100 font-medium text-xs transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
                       >
                         {deletingId === article.id ? (
                           <span className="w-3.5 h-3.5 border-2 border-red-600 border-t-transparent rounded-full animate-spin" />

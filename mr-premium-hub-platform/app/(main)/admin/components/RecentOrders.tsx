@@ -1,45 +1,37 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
-
-interface Order {
-  id: string;
-  customer: string;
-  product: string;
-  amount: string;
-  status: string;
-  date: string;
-}
-
-const recentOrders: Order[] = [
-  {
-    id: "#1234",
-    customer: "علی احمدی",
-    product: "لپ تاپ اپل",
-    amount: "25,000,000 تومان",
-    status: "در حال پردازش",
-    date: "1403/01/15",
-  },
-  {
-    id: "#1235",
-    customer: "مریم رضایی",
-    product: "گوشی سامسونگ",
-    amount: "15,000,000 تومان",
-    status: "ارسال شده",
-    date: "1403/01/14",
-  },
-  {
-    id: "#1236",
-    customer: "حسین محمدی",
-    product: "تبلت آیپد",
-    amount: "18,000,000 تومان",
-    status: "تحویل داده شده",
-    date: "1403/01/13",
-  },
-];
+import { getRecentOrders, type OrderItem } from "../lib/dashboard-api";
 
 export default function RecentOrders() {
+  const [orders, setOrders] = useState<OrderItem[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    getRecentOrders()
+      .then(setOrders)
+      .catch(() => setOrders([]))
+      .finally(() => setLoading(false));
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="bg-white rounded-xl border border-gray-200/80 overflow-hidden shadow-sm">
+        <div className="px-4 sm:px-6 py-4 border-b border-gray-100">
+          <h3 className="text-sm font-semibold text-gray-900">سفارشات اخیر</h3>
+        </div>
+        <div className="flex justify-center py-12">
+          <div className="w-8 h-8 border-2 border-[#ff5538]/30 border-t-[#ff5538] rounded-full animate-spin" />
+        </div>
+      </div>
+    );
+  }
+
+  if (orders.length === 0) {
+    return null;
+  }
+
   return (
     <div className="bg-white rounded-xl border border-gray-200/80 overflow-hidden shadow-sm">
       <div className="flex items-center justify-between px-4 sm:px-6 py-4 border-b border-gray-100">
@@ -76,7 +68,7 @@ export default function RecentOrders() {
             </tr>
           </thead>
           <tbody>
-            {recentOrders.map((order) => (
+            {orders.map((order) => (
               <tr
                 key={order.id}
                 className="border-b border-gray-50 last:border-0 hover:bg-gray-50/50 transition-colors"

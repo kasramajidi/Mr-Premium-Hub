@@ -88,24 +88,30 @@ export async function createArticle(payload: {
   headings: string[];
   relatedService?: ApiArticleRelatedService;
 }): Promise<ApiArticle> {
+  const categoryValue = (payload.category ?? "").trim();
+  const body: Record<string, unknown> = {
+    title: payload.title,
+    slug: payload.slug,
+    Category: categoryValue,
+    category: categoryValue,
+    image: payload.image ?? "/Images/Shop/product-pic1.jpg",
+    date: payload.date ?? new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "long", year: "numeric" }),
+    comments: payload.comments ?? 0,
+    content: payload.content,
+    headings: payload.headings,
+    relatedService: payload.relatedService,
+  };
   const res = await fetch(`${API_BASE}?action=Article`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      title: payload.title,
-      slug: payload.slug,
-      Category: payload.category?.trim() ?? "",
-      category: payload.category?.trim() ?? "",
-      image: payload.image ?? "/Images/Shop/product-pic1.jpg",
-      date: payload.date ?? new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "long", year: "numeric" }),
-      comments: payload.comments ?? 0,
-      content: payload.content,
-      headings: payload.headings,
-      relatedService: payload.relatedService,
-    }),
+    body: JSON.stringify(body),
   });
   const raw = await handleResponse<Record<string, unknown>>(res);
-  return normalizeArticle(raw ?? {});
+  const normalized = normalizeArticle(raw ?? {});
+  if (normalized.category == null && categoryValue) {
+    return { ...normalized, category: categoryValue };
+  }
+  return normalized;
 }
 
 export async function updateArticle(payload: {

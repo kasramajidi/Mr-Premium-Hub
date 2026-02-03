@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import {
   HiSparkles,
   HiChevronRight,
@@ -319,17 +318,16 @@ export default function CurrencyPaymentTabs() {
           <>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5 md:gap-6">
               {currentPageCards.map((card) => (
-                <Link
+                <div
                   key={card.id}
-                  href={card.href}
-                  className="group bg-white rounded-xl p-5 sm:p-6 shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer text-center border border-gray-100 hover:border-[#ff5538]/30 hover:-translate-y-1"
+                  className="group bg-white rounded-xl p-5 sm:p-6 shadow-sm text-center border border-gray-100"
                 >
                   <div className="mb-4 sm:mb-5 flex items-center justify-center">
-                    <div className="p-3 sm:p-4 rounded-xl bg-gray-50 group-hover:bg-[#ff5538]/5 transition-all duration-300 group-hover:scale-110">
+                    <div className="p-3 sm:p-4 rounded-xl bg-gray-50">
                       {card.icon}
                     </div>
                   </div>
-                  <h3 className="text-sm sm:text-base font-bold text-gray-900 mb-1.5 sm:mb-2 group-hover:text-[#ff5538] transition-colors">
+                  <h3 className="text-sm sm:text-base font-bold text-gray-900 mb-1.5 sm:mb-2">
                     {card.label}
                   </h3>
                   {card.labelEn && (
@@ -340,7 +338,7 @@ export default function CurrencyPaymentTabs() {
                   <p className="text-[10px] sm:text-xs text-gray-600 leading-5 sm:leading-6">
                     {card.description}
                   </p>
-                </Link>
+                </div>
               ))}
             </div>
 
@@ -399,23 +397,22 @@ export default function CurrencyPaymentTabs() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5 md:gap-6">
               {filteredCategories.map((category) => {
                 return category.items.map((item) => (
-                  <Link
+                  <div
                     key={item.href}
-                    href={item.href}
-                    className="group bg-white rounded-xl p-5 sm:p-6 shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer text-center border border-gray-100 hover:border-[#ff5538]/30 hover:-translate-y-1"
+                    className="group bg-white rounded-xl p-5 sm:p-6 shadow-sm text-center border border-gray-100"
                   >
                     <div className="mb-4 sm:mb-5 flex items-center justify-center">
-                      <div className="p-3 sm:p-4 rounded-xl bg-gray-50 group-hover:bg-[#ff5538]/5 transition-all duration-300 group-hover:scale-110">
+                      <div className="p-3 sm:p-4 rounded-xl bg-gray-50">
                         {item.icon || category.icon}
                       </div>
                     </div>
-                    <h3 className="text-sm sm:text-base font-bold text-gray-900 mb-1.5 sm:mb-2 group-hover:text-[#ff5538] transition-colors">
+                    <h3 className="text-sm sm:text-base font-bold text-gray-900 mb-1.5 sm:mb-2">
                       {item.label}
                     </h3>
                     <p className="text-[10px] sm:text-xs text-gray-600 leading-5 sm:leading-6">
                       {category.description}
                     </p>
-                  </Link>
+                  </div>
                 ));
               })}
             </div>

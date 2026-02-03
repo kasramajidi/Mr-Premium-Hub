@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 
-/** وقتی از API دسته‌ای نیامده، این دسته‌ها نمایش داده می‌شوند (محور سایت) */
+/** وقتی API دسته‌ای برنگرداند، این لیست نمایش داده می‌شود تا سایدبار خالی نباشد */
 const FALLBACK_CATEGORIES = [
   "خدمات ارزی",
   "پرداخت ارزی",
@@ -12,7 +12,7 @@ const FALLBACK_CATEGORIES = [
 ];
 
 interface NewsSidebarProps {
-  /** دسته‌بندی‌ها از مقالات API (همان ادمین) — داینامیک */
+  /** دسته‌بندی‌ها از API مقالات؛ در صورت خالی بودن از fallback استفاده می‌شود */
   categories?: string[];
   selectedCategory?: string;
 }

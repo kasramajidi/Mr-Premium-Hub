@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import React from "react";
 import Image from "next/image";
-import DOMPurify from "isomorphic-dompurify";
 import { notFound } from "next/navigation";
 import { getArticleBySlugFromApi, getRelatedArticlesFromApi } from "../lib/articles-api";
 import { HiLocationMarker, HiArrowLeft } from "react-icons/hi";
@@ -9,15 +8,47 @@ import { FaTelegram, FaWhatsapp, FaTwitter, FaFacebook } from "react-icons/fa";
 import TableOfContents from "./components/TableOfContents";
 import RelatedArticlesCarousel from "./components/RelatedArticlesCarousel";
 import CommentForm from "./components/CommentForm";
+import ArticleViewTracker from "./components/ArticleViewTracker";
 
-const ALLOWED_HTML_TAGS = [
+const ALLOWED_HTML_TAGS = new Set([
   "p", "br", "strong", "b", "em", "i", "u", "a", "img", "ul", "ol", "li",
   "table", "thead", "tbody", "tr", "th", "td", "h2", "h3", "h4", "div", "span", "figure", "figcaption",
-];
-const ALLOWED_ATTR = ["href", "src", "alt", "title", "class", "target", "rel"];
+]);
+const ALLOWED_ATTR = new Set(["href", "src", "alt", "title", "class", "target", "rel"]);
 
+/**
+ * سانیتایز HTML بدون jsdom برای جلوگیری از خطای ESM در سرور.
+ * فقط تگ‌ها و attributeهای مجاز را نگه می‌دارد و بقیه را حذف می‌کند.
+ */
 function sanitizeArticleHtml(html: string): string {
-  return DOMPurify.sanitize(html, { ALLOWED_TAGS: ALLOWED_HTML_TAGS, ALLOWED_ATTR });
+  let out = html
+    .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "")
+    .replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, "")
+    .replace(/<iframe\b[^>]*>[\s\S]*?<\/iframe>/gi, "")
+    .replace(/<object\b[^>]*>[\s\S]*?<\/object>/gi, "")
+    .replace(/<embed\b[^>]*>/gi, "");
+
+  out = out.replace(/<(\/?)([a-z][a-z0-9]*)\b([^>]*)>/gi, (_, close: string, tagName: string, attrs: string) => {
+    const tag = tagName.toLowerCase();
+    if (!ALLOWED_HTML_TAGS.has(tag)) return "";
+    if (close) return `</${tag}>`;
+    const allowedAttrs: string[] = [];
+    const attrRegex = /([a-z][a-z0-9-]*)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+)))?/gi;
+    let m: RegExpExecArray | null;
+    while ((m = attrRegex.exec(attrs)) !== null) {
+      const name = m[1].toLowerCase();
+      if (!ALLOWED_ATTR.has(name) || name.startsWith("on")) continue;
+      const val = (m[2] ?? m[3] ?? m[4] ?? "").trim();
+      if (name === "href" || name === "src") {
+        if (/^\s*javascript\s*:/i.test(val)) continue;
+      }
+      const v = val.includes('"') ? `'${val.replace(/'/g, "&#39;")}'` : `"${val.replace(/"/g, "&quot;")}"`;
+      allowedAttrs.push(`${name}=${v}`);
+    }
+    return allowedAttrs.length ? `<${tag} ${allowedAttrs.join(" ")}>` : `<${tag}>`;
+  });
+
+  return out;
 }
 
 const TABLE_ROW_REGEX = /^\|.+\|$/;
@@ -259,6 +290,7 @@ export default async function ArticlePage({ params }: PageProps) {
 
   return (
     <>
+      <ArticleViewTracker articleId={article.id} />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}

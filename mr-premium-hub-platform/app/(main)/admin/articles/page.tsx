@@ -263,7 +263,29 @@ export default function ArticlesPage() {
         </div>
 
         <div className="flex flex-col sm:flex-row gap-3">
-          <div className="relative flex-1">
+          <div className="relative flex shrink-0 sm:order-2 sm:min-w-[200px] w-full sm:w-auto">
+            <select
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+              className="h-12 w-full min-w-[200px] bg-white rounded-xl border border-gray-200 pl-10 pr-4 text-right text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#ff5538]/20 focus:border-[#ff5538] transition-all text-sm shadow-sm appearance-none cursor-pointer"
+            >
+              <option value="">همه دسته ها</option>
+              {categoriesFromArticles.map((cat) => (
+                <option key={cat} value={cat}>
+                  {cat}
+                </option>
+              ))}
+            </select>
+            <svg
+              className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500 pointer-events-none"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          </div>
+          <div className="relative flex-1 sm:order-1">
             <input
               type="text"
               placeholder="جستجو در لیست مقالات (عنوان یا دسته‌بندی)..."
@@ -280,18 +302,6 @@ export default function ArticlesPage() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
           </div>
-          <select
-            value={selectedCategory}
-            onChange={(e) => setSelectedCategory(e.target.value)}
-            className="h-12 min-w-[180px] bg-white rounded-xl border border-gray-200 pl-4 pr-10 text-right text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#ff5538]/20 focus:border-[#ff5538] transition-all text-sm shadow-sm"
-          >
-            <option value="">همه دسته‌ها</option>
-            {categoriesFromArticles.map((cat) => (
-              <option key={cat} value={cat}>
-                {cat}
-              </option>
-            ))}
-          </select>
         </div>
 
         {deleteError && (

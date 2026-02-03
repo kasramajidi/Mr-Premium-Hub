@@ -3,6 +3,9 @@
 import { useState } from "react";
 import { Service } from "../../components/servicesData";
 
+/** از پروکسی سمت سرور استفاده می‌کنیم تا CORS مانع ارسال نشود */
+const API_URL = "/api/auth-proxy?action=ExamRegister";
+
 interface ServiceFormProps {
   service: Service;
 }
@@ -12,14 +15,42 @@ export default function ServiceForm({ service }: ServiceFormProps) {
     name: "",
     email: "",
     phone: "",
-    amount: "",
+    subject: "",
     description: "",
   });
+  const [submitting, setSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission
-    console.log("Form submitted:", formData);
+    setSubmitting(true);
+    setSubmitStatus("idle");
+    setErrorMessage("");
+    try {
+      const payload = {
+        title: formData.subject.trim() || service.label,
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        comment: formData.description,
+        date: new Date().toISOString(),
+      };
+      const res = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(typeof data?.error === "string" ? data.error : "خطا در ارسال درخواست");
+      setSubmitStatus("success");
+      setFormData({ name: "", email: "", phone: "", subject: "", description: "" });
+    } catch (err) {
+      setSubmitStatus("error");
+      setErrorMessage(err instanceof Error ? err.message : "خطا در ارسال درخواست. لطفاً دوباره تلاش کنید.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -56,33 +87,30 @@ export default function ServiceForm({ service }: ServiceFormProps) {
             />
           </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
-          <div>
-            <label className="block text-xs sm:text-sm text-gray-700 mb-1.5 text-right">
-              شماره تماس
-            </label>
-            <input
-              type="tel"
-              required
-              value={formData.phone}
-              onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-              className="w-full px-3 py-2 text-xs sm:text-sm bg-gray-50 rounded-lg border border-gray-200 text-gray-800 focus:outline-none focus:ring-1 focus:ring-[#ff5538] focus:border-transparent text-right"
-              placeholder="09123456789"
-            />
-          </div>
-          <div>
-            <label className="block text-xs sm:text-sm text-gray-700 mb-1.5 text-right">
-              مبلغ (ریال)
-            </label>
-            <input
-              type="number"
-              required
-              value={formData.amount}
-              onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
-              className="w-full px-3 py-2 text-xs sm:text-sm bg-gray-50 rounded-lg border border-gray-200 text-gray-800 focus:outline-none focus:ring-1 focus:ring-[#ff5538] focus:border-transparent text-right"
-              placeholder="مبلغ را وارد کنید"
-            />
-          </div>
+        <div>
+          <label className="block text-xs sm:text-sm text-gray-700 mb-1.5 text-right">
+            شماره تماس
+          </label>
+          <input
+            type="tel"
+            required
+            value={formData.phone}
+            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+            className="w-full px-3 py-2 text-xs sm:text-sm bg-gray-50 rounded-lg border border-gray-200 text-gray-800 focus:outline-none focus:ring-1 focus:ring-[#ff5538] focus:border-transparent text-right"
+            placeholder="09123456789"
+          />
+        </div>
+        <div>
+          <label className="block text-xs sm:text-sm text-gray-700 mb-1.5 text-right">
+            موضوع
+          </label>
+          <input
+            type="text"
+            value={formData.subject}
+            onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
+            className="w-full px-3 py-2 text-xs sm:text-sm bg-gray-50 rounded-lg border border-gray-200 text-gray-800 focus:outline-none focus:ring-1 focus:ring-[#ff5538] focus:border-transparent text-right"
+            placeholder="موضوع درخواست را وارد کنید"
+          />
         </div>
         <div>
           <label className="block text-xs sm:text-sm text-gray-700 mb-1.5 text-right">
@@ -96,12 +124,21 @@ export default function ServiceForm({ service }: ServiceFormProps) {
             placeholder="توضیحات اضافی را اینجا وارد کنید"
           />
         </div>
+        {submitStatus === "success" && (
+          <p className="text-sm text-green-600 text-right">
+            درخواست شما با موفقیت ارسال شد.
+          </p>
+        )}
+        {submitStatus === "error" && (
+          <p className="text-sm text-red-600 text-right">{errorMessage}</p>
+        )}
         <button
           type="submit"
-          className="w-full text-white text-xs sm:text-sm font-medium py-2.5 sm:py-3 px-4 sm:px-6 rounded-lg transition-opacity hover:opacity-90"
+          disabled={submitting}
+          className="w-full text-white text-xs sm:text-sm font-medium py-2.5 sm:py-3 px-4 sm:px-6 rounded-lg transition-opacity hover:opacity-90 disabled:opacity-70 disabled:cursor-not-allowed"
           style={{ backgroundColor: '#ff5538' }}
         >
-          ارسال درخواست
+          {submitting ? "در حال ارسال..." : "ارسال درخواست"}
         </button>
       </form>
     </div>

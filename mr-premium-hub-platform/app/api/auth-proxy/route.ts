@@ -60,3 +60,29 @@ export async function POST(request: Request) {
     );
   }
 }
+
+/** پروکسی DELETE برای حذف (مثلاً نظرات: action=Comment&id=2) */
+export async function DELETE(request: Request) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const queryString = searchParams.toString();
+    if (!queryString) {
+      return NextResponse.json(
+        { error: "پارامتر action لازم است" },
+        { status: 400 }
+      );
+    }
+    const url = `${EXTERNAL_API}?${queryString}`;
+    const res = await fetch(url, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+    });
+    const data = await res.json().catch(() => ({}));
+    return NextResponse.json(data);
+  } catch (e) {
+    return NextResponse.json(
+      { error: "خطا در ارتباط با سرور" },
+      { status: 502 }
+    );
+  }
+}

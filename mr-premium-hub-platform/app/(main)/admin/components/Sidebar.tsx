@@ -16,7 +16,7 @@ const navItems: NavItem[] = [
   { name: "محصولات", href: "/admin/products", icon: "🛍️" },
   { name: "سفارشات", href: "/admin/orders", icon: "📦" },
   { name: "کاربران", href: "/admin/users", icon: "👥" },
-  { name: "نظرات", href: "/admin/comments", icon: "💬" },
+  { name: "انتقادات و پیشنهادات", href: "/admin/comments", icon: "💬" },
   { name: "تنظیمات", href: "/admin/settings", icon: "⚙️" },
 ];
 

@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useState } from "react";
 import { services, serviceCategories, Service } from "./servicesData";
 
@@ -35,20 +34,19 @@ export default function ServicesGrid() {
         ))}
       </div>
 
-      {/* Services Grid */}
+      {/* Services Grid - بدون لینک به صفحه محصول/سرویس */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5 md:gap-6">
         {filteredServices.map((service) => (
-          <Link
+          <div
             key={service.id}
-            href={service.href}
-            className="group bg-white rounded-xl p-5 sm:p-6 shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer text-center border border-gray-100 hover:border-[#ff5538]/30 hover:-translate-y-1"
+            className="group bg-white rounded-xl p-5 sm:p-6 shadow-sm border border-gray-100 text-center"
           >
             <div className="mb-4 sm:mb-5 flex items-center justify-center">
-              <div className="p-3 sm:p-4 rounded-xl bg-gray-50 group-hover:bg-[#ff5538]/5 transition-all duration-300 group-hover:scale-110">
+              <div className="p-3 sm:p-4 rounded-xl bg-gray-50">
                 {service.icon}
               </div>
             </div>
-            <h3 className="text-sm sm:text-base font-bold text-gray-900 mb-1.5 sm:mb-2 group-hover:text-[#ff5538] transition-colors">
+            <h3 className="text-sm sm:text-base font-bold text-gray-900 mb-1.5 sm:mb-2">
               {service.label}
             </h3>
             {service.labelEn && (
@@ -59,7 +57,7 @@ export default function ServicesGrid() {
             <p className="text-[10px] sm:text-xs text-gray-600 leading-5 sm:leading-6">
               {service.description}
             </p>
-          </Link>
+          </div>
         ))}
       </div>
 

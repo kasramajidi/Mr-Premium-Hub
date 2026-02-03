@@ -4,23 +4,25 @@ import React from "react";
 
 interface Comment {
   id: string;
-  author: string;
-  content: string;
-  post: string;
-  status: string;
-  date: string;
+  title: string;
+  name: string;
+  email: string;
+  phone: string;
+  comment: string;
+  date?: string;
 }
 
 interface CommentsTableProps {
   comments: Comment[];
   onApprove: (id: string) => void;
   onDelete: (id: string) => void;
+  deletingId?: string | null;
 }
 
 export default function CommentsTable({
   comments,
-  onApprove,
   onDelete,
+  deletingId = null,
 }: CommentsTableProps) {
   return (
     <div className="bg-white border-b border-gray-200 p-6">
@@ -29,16 +31,19 @@ export default function CommentsTable({
           <thead>
             <tr className="border-b border-gray-200">
               <th className="text-right py-3 px-4 font-medium text-gray-700">
-                نویسنده
+                عنوان
               </th>
               <th className="text-right py-3 px-4 font-medium text-gray-700">
-                محتوا
+                نام
               </th>
               <th className="text-right py-3 px-4 font-medium text-gray-700">
-                پست
+                ایمیل
               </th>
               <th className="text-right py-3 px-4 font-medium text-gray-700">
-                وضعیت
+                تماس
+              </th>
+              <th className="text-right py-3 px-4 font-medium text-gray-700">
+                متن درخواست
               </th>
               <th className="text-right py-3 px-4 font-medium text-gray-700">
                 تاریخ
@@ -51,52 +56,34 @@ export default function CommentsTable({
           <tbody>
             {comments.length === 0 ? (
               <tr>
-                <td colSpan={6} className="py-8 text-center text-gray-500">
-                  نظری یافت نشد
+                <td colSpan={7} className="py-8 text-center text-gray-500">
+                  موردی یافت نشد
                 </td>
               </tr>
             ) : (
-              comments.map((comment) => (
+              comments.map((row) => (
                 <tr
-                  key={comment.id}
+                  key={row.id}
                   className="border-b border-gray-100 hover:bg-gray-50 transition-colors"
                 >
                   <td className="py-3 px-4 text-gray-900 font-medium">
-                    {comment.author}
+                    {row.title}
                   </td>
+                  <td className="py-3 px-4 text-gray-700">{row.name}</td>
+                  <td className="py-3 px-4 text-gray-700">{row.email}</td>
+                  <td className="py-3 px-4 text-gray-600">{row.phone}</td>
                   <td className="py-3 px-4 text-gray-700 max-w-xs truncate">
-                    {comment.content}
+                    {row.comment}
                   </td>
-                  <td className="py-3 px-4 text-gray-700">{comment.post}</td>
+                  <td className="py-3 px-4 text-gray-600">{row.date ?? "—"}</td>
                   <td className="py-3 px-4">
-                    <span
-                      className={`px-2 py-1 text-xs font-medium rounded ${
-                        comment.status === "تایید شده"
-                          ? "bg-green-100 text-green-700"
-                          : "bg-yellow-100 text-yellow-700"
-                      }`}
+                    <button
+                      onClick={() => onDelete(row.id)}
+                      disabled={deletingId === row.id}
+                      className="text-red-600 hover:underline text-xs disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      {comment.status}
-                    </span>
-                  </td>
-                  <td className="py-3 px-4 text-gray-600">{comment.date}</td>
-                  <td className="py-3 px-4">
-                    <div className="flex items-center gap-2">
-                      {comment.status !== "تایید شده" && (
-                        <button
-                          onClick={() => onApprove(comment.id)}
-                          className="text-[#ff5538] hover:underline text-xs"
-                        >
-                          تایید
-                        </button>
-                      )}
-                      <button
-                        onClick={() => onDelete(comment.id)}
-                        className="text-red-600 hover:underline text-xs"
-                      >
-                        حذف
-                      </button>
-                    </div>
+                      {deletingId === row.id ? "در حال حذف..." : "حذف"}
+                    </button>
                   </td>
                 </tr>
               ))
