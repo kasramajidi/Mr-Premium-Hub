@@ -178,10 +178,10 @@ export async function fetchUserProfileFallback(): Promise<UserProfile | null> {
   const usersPhone = pickPhone(fromUsers as Record<string, unknown>);
   if (fromUsers?.name || fromUsers?.email || usersPhone) {
     return {
-      name: fromUsers.name ?? undefined,
-      username: fromUsers.name ?? undefined,
+      name: fromUsers?.name ?? undefined,
+      username: fromUsers?.name ?? undefined,
       phone: usersPhone ?? undefined,
-      email: fromUsers.email ?? undefined,
+      email: fromUsers?.email ?? undefined,
     };
   }
 
@@ -301,11 +301,12 @@ export async function fetchRecentOrders(limit = 10): Promise<OrderItem[]> {
   }
 }
 
-/** آخرین درخواست‌های پشتیبانی همین کاربر (فیلتر با شمارهٔ ورود) */
+/** آخرین درخواست‌های پشتیبانی فقط همین کاربر (فیلتر سمت سرور با شمارهٔ ورود؛ بدون شماره لیست خالی برمی‌گردد) */
 export async function fetchRecentSupportTickets(): Promise<SupportTicket[]> {
   try {
     const loginPhone = getLoginPhoneFromStorage();
-    const qs = loginPhone ? `?phone=${encodeURIComponent(loginPhone)}` : "";
+    if (!loginPhone?.trim()) return [];
+    const qs = `?phone=${encodeURIComponent(loginPhone.trim())}`;
     const res = await fetch(`/api/support/conversations${qs}`, { ...fetchOpts, credentials: "include" });
     if (!res.ok) return [];
     const list = await res.json().catch(() => []);
@@ -313,7 +314,7 @@ export async function fetchRecentSupportTickets(): Promise<SupportTicket[]> {
     return list.slice(0, 10).map((c: Record<string, unknown>) => ({
       id: String(c.id ?? ""),
       title: String(c.userName ?? c.userPhone ?? "پشتیبانی"),
-      status: "در حال بررسی",
+      status: String(c.status ?? "در حال بررسی"),
       lastUpdate: String(c.updatedAt ?? c.createdAt ?? ""),
       messageNumber: String(c.id ?? ""),
     }));

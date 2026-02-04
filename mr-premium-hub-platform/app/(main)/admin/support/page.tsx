@@ -45,7 +45,7 @@ export default function AdminSupportPage() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const prevMessagesLengthRef = useRef(0);
 
-  const POLL_INTERVAL_MS = 2000; // هر ۲ ثانیه به‌روزرسانی برای نمایش آنی پیام‌ها
+  const POLL_INTERVAL_MS = 5000; // هر ۵ ثانیه به‌روزرسانی تا صفحه کنده نشود
 
   const loadConversations = async (silent = false) => {
     if (!silent) setLoading(true);

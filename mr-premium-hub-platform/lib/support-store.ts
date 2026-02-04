@@ -30,6 +30,10 @@ export type Conversation = {
 
 const conversations = new Map<string, Conversation>();
 
+/** کش در حافظه: حداکثر هر ۱ ثانیه یک بار از فایل بخوان تا صفحه ادمین کنده نشود */
+const CACHE_TTL_MS = 1000;
+let lastLoadTime = 0;
+
 function getStoragePath(): string {
   const useTmp = typeof process.env.VERCEL !== "undefined" || typeof process.env.AWS_LAMBDA_FUNCTION_NAME !== "undefined";
   const dir = useTmp ? os.tmpdir() : path.join(process.cwd(), ".data");
@@ -95,6 +99,9 @@ function saveToFile(): void {
 }
 
 function ensureLoaded(): void {
+  const now = Date.now();
+  if (now - lastLoadTime < CACHE_TTL_MS) return;
+  lastLoadTime = now;
   loadFromFile();
 }
 

@@ -46,6 +46,12 @@ function formatTime(s: string): string {
   return new Date(s).toLocaleTimeString("fa-IR", { hour: "2-digit", minute: "2-digit" });
 }
 
+/** شماره موبایل کامل: ۰۹xxxxxxxxx (۱۱ رقم) یا 9xxxxxxxxx (۱۰ رقم) */
+function isPhoneComplete(phone: string): boolean {
+  const digits = phone.replace(/\D/g, "");
+  return (digits.length === 11 && digits.startsWith("09")) || (digits.length === 10 && digits.startsWith("9"));
+}
+
 interface ChatWidgetProps {
   title?: string;
   welcomeMessage?: string;
@@ -73,10 +79,13 @@ export default function ChatWidget({
   const [clientId, setClientId] = useState("");
   const cardRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const sendingRef = useRef(false);
 
   useEffect(() => {
     if (!open || typeof window === "undefined") return;
     try {
+      const loginPhone = localStorage.getItem("loginPhone");
+      if (loginPhone?.trim()) setChatUserPhone((prev) => prev || loginPhone.trim());
       const raw = localStorage.getItem("cart_order_details_v1");
       if (raw) {
         const parsed = JSON.parse(raw) as { contact?: { name?: string; phone?: string } };
@@ -129,20 +138,27 @@ export default function ChatWidget({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [open]);
 
-  const contactFilled = Boolean(chatUserName.trim() && chatUserPhone.trim());
+  const phoneComplete = isPhoneComplete(chatUserPhone);
+  const contactFilled = Boolean(phoneComplete && chatUserName.trim());
 
   const handleSend = async () => {
     const text = inputText.trim();
-    if (!text || sending || !clientId || !contactFilled) return;
-    const userName = chatUserName.trim() || undefined;
-    const userPhone = chatUserPhone.trim() || undefined;
+    if (!text || !clientId || !contactFilled) return;
+    if (sendingRef.current) return;
+    sendingRef.current = true;
     setSending(true);
-    const msg = await sendMessage(clientId, text, userName, userPhone);
-    if (msg) {
-      setMessages((prev) => [...prev, msg]);
-      setInputText("");
+    try {
+      const userName = chatUserName.trim() || undefined;
+      const userPhone = chatUserPhone.trim() || undefined;
+      const msg = await sendMessage(clientId, text, userName, userPhone);
+      if (msg) {
+        setMessages((prev) => [...prev, msg]);
+        setInputText("");
+      }
+    } finally {
+      sendingRef.current = false;
+      setSending(false);
     }
-    setSending(false);
   };
 
   return (
@@ -189,45 +205,52 @@ export default function ChatWidget({
               )}
             </div>
           </div>
-          <div className="shrink-0 p-3 pt-2 pb-2 border-b border-gray-100 bg-gray-50/50 space-y-2">
-            <div>
-              <label htmlFor="chat-name" className="sr-only">نام و نام خانوادگی</label>
-              <input
-                id="chat-name"
-                type="text"
-                value={chatUserName}
-                onChange={(e) => setChatUserName(e.target.value)}
-                placeholder="نام و نام خانوادگی"
-                className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm text-right placeholder-gray-500 focus:ring-2 focus:ring-[#0d9488] focus:border-transparent"
-              />
+          <div className="shrink-0 border-b border-gray-100 bg-gray-50/50">
+            <div className="p-3 pb-2">
+              <p className="text-gray-800 font-medium text-sm">{welcomeMessage}</p>
+              <p className="text-gray-600 text-sm mt-1">{welcomeSubtext}</p>
             </div>
-            <div>
-              <label htmlFor="chat-phone" className="sr-only">تلفن</label>
-              <input
-                id="chat-phone"
-                type="tel"
-                value={chatUserPhone}
-                onChange={(e) => setChatUserPhone(e.target.value)}
-                placeholder="شماره تماس (۰۹۱۲۳۴۵۶۷۸۹)"
-                disabled={!chatUserName.trim()}
-                className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm text-right placeholder-gray-500 focus:ring-2 focus:ring-[#0d9488] focus:border-transparent disabled:opacity-60 disabled:bg-gray-50"
-              />
+            <div className="p-3 pt-0 space-y-2">
+              <div>
+                <label htmlFor="chat-phone" className="sr-only">شماره تماس</label>
+                <input
+                  id="chat-phone"
+                  type="tel"
+                  inputMode="numeric"
+                  value={chatUserPhone}
+                  onChange={(e) => setChatUserPhone(e.target.value)}
+                  placeholder="شماره موبایل (۰۹۱۲۳۴۵۶۷۸۹)"
+                  className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm text-right placeholder-gray-500 focus:ring-2 focus:ring-[#0d9488] focus:border-transparent"
+                />
+              </div>
+              {!phoneComplete && (
+                <p className="text-xs text-amber-700 bg-amber-50 rounded-lg px-3 py-2">
+                  شماره را کامل وارد کنید (۱۱ رقم با ۰۹) تا چت باز شود.
+                </p>
+              )}
+              {phoneComplete && (
+                <div>
+                  <label htmlFor="chat-name" className="sr-only">نام و نام خانوادگی</label>
+                  <input
+                    id="chat-name"
+                    type="text"
+                    value={chatUserName}
+                    onChange={(e) => setChatUserName(e.target.value)}
+                    placeholder="نام و نام خانوادگی"
+                    className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm text-right placeholder-gray-500 focus:ring-2 focus:ring-[#0d9488] focus:border-transparent"
+                  />
+                </div>
+              )}
+              {phoneComplete && !contactFilled && (
+                <p className="text-xs text-amber-700 bg-amber-50 rounded-lg px-3 py-2">
+                  نام خود را وارد کنید تا بتوانید پیام بفرستید.
+                </p>
+              )}
             </div>
-            {!contactFilled && (
-              <p className="text-xs text-amber-700 bg-amber-50 rounded-lg px-3 py-2">
-                ابتدا نام و نام خانوادگی، سپس شماره تماس را وارد کنید تا چت فعال شود.
-              </p>
-            )}
           </div>
           {contactFilled && (
             <>
           <div className="flex-1 overflow-y-auto p-4 min-h-[140px] max-h-[340px] space-y-2">
-            {messages.length === 0 && (
-              <>
-                <p className="text-gray-800 font-medium text-sm">{welcomeMessage}</p>
-                <p className="text-gray-600 text-sm mt-1">{welcomeSubtext}</p>
-              </>
-            )}
             {messages.map((m) => (
               <div
                 key={m.id}

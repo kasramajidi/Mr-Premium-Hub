@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { listConversations } from "@/lib/support-store";
+import type { Conversation } from "@/lib/support-store";
 
 const ADMIN_COOKIE_NAME = "admin_session";
 
@@ -17,7 +18,10 @@ function normalizePhone(phone: string | undefined | null): string {
   return digits;
 }
 
-function toPayload(c: { id: string; clientId: string; userName?: string; userPhone?: string; createdAt: string; updatedAt: string; messages: { text: string; createdAt: string }[] }) {
+/** وضعیت بر اساس آخرین پیام: اگر پشتیبانی جواب داده → جواب داده، وگرنه در حال بررسی */
+function toPayload(c: Conversation) {
+  const lastMsg = c.messages.length > 0 ? c.messages[c.messages.length - 1] : null;
+  const status = lastMsg?.sender === "admin" ? "جواب داده" : "در حال بررسی";
   return {
     id: c.id,
     clientId: c.clientId,
@@ -25,38 +29,39 @@ function toPayload(c: { id: string; clientId: string; userName?: string; userPho
     userPhone: c.userPhone,
     createdAt: c.createdAt,
     updatedAt: c.updatedAt,
+    status,
     messageCount: c.messages.length,
     lastMessage:
-      c.messages.length > 0
+      lastMsg
         ? {
-            text: c.messages[c.messages.length - 1].text.slice(0, 60),
-            createdAt: c.messages[c.messages.length - 1].createdAt,
+            text: lastMsg.text.slice(0, 60),
+            createdAt: lastMsg.createdAt,
           }
         : null,
   };
 }
 
-/** لیست مکالمات: ادمین = همه، کاربر عادی = فقط مکالمات خودش (با ارسال شماره) */
+/** لیست مکالمات: اگر phone ارسال شده فقط مکالمات همان شماره؛ وگرنه ادمین = همه، کاربر عادی = هیچ. */
 export async function GET(request: NextRequest) {
   const all = listConversations();
-
-  if (isAdmin(request)) {
-    return NextResponse.json(all.map(toPayload));
-  }
 
   const userPhoneRaw =
     request.nextUrl.searchParams.get("phone") ??
     request.headers.get("x-user-phone") ??
     "";
   const userPhoneNorm = normalizePhone(userPhoneRaw);
-  if (!userPhoneNorm) {
-    return NextResponse.json([]);
+
+  if (userPhoneNorm) {
+    const filtered = all.filter((c) => {
+      if (!c.userPhone) return false;
+      return normalizePhone(c.userPhone) === userPhoneNorm;
+    });
+    return NextResponse.json(filtered.map(toPayload));
   }
 
-  const filtered = all.filter((c) => {
-    if (!c.userPhone) return false;
-    return normalizePhone(c.userPhone) === userPhoneNorm;
-  });
+  if (isAdmin(request)) {
+    return NextResponse.json(all.map(toPayload));
+  }
 
-  return NextResponse.json(filtered.map(toPayload));
+  return NextResponse.json([]);
 }
