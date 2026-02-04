@@ -58,7 +58,6 @@ export default function ArticlesPage() {
   const [showForm, setShowForm] = useState(false);
   const [editingArticle, setEditingArticle] = useState<ApiArticle | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [currentPage, setCurrentPage] = useState(1);
   const [saving, setSaving] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
@@ -213,25 +212,29 @@ export default function ArticlesPage() {
   }, [articles]);
 
   const rows: ArticleRow[] = articles.map(mapApiToRow);
-  const filteredBySearch = rows.filter(
+  const filteredArticles = rows.filter(
     (row) =>
       (row.title ?? "").toLowerCase().includes(searchTerm.toLowerCase()) ||
       (row.category ?? "").toLowerCase().includes(searchTerm.toLowerCase())
   );
-  const filteredArticles = selectedCategory
-    ? filteredBySearch.filter((row) => (row.category ?? "").trim() === selectedCategory)
-    : filteredBySearch;
 
   const totalPages = Math.max(1, Math.ceil(filteredArticles.length / ITEMS_PER_PAGE));
+  const categoriesCount = categoriesFromArticles.length;
+  const totalViews = articles.reduce((sum, a) => sum + (Number((a as { comments?: number }).comments) || 0), 0);
+  const articleStats = [
+    { title: "تعداد مقالات", value: articles.length, icon: "📝", color: "bg-amber-50 text-amber-600" },
+    { title: "دسته‌بندی‌ها", value: categoriesCount, icon: "📁", color: "bg-blue-50 text-blue-600" },
+    { title: "مجموع نظرات مقالات", value: totalViews, icon: "💬", color: "bg-violet-50 text-violet-600" },
+  ];
   const paginatedArticles = filteredArticles.slice(
     (currentPage - 1) * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE
   );
 
-  // وقتی جستجو یا دسته عوض شد به صفحهٔ اول برو
+  // وقتی جستجو عوض شد به صفحهٔ اول برو
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchTerm, selectedCategory]);
+  }, [searchTerm]);
 
   // اگر صفحهٔ فعلی از تعداد کل صفحات بیشتر شد (مثلاً بعد از فیلتر) به آخرین صفحه برو
   useEffect(() => {
@@ -265,46 +268,22 @@ export default function ArticlesPage() {
 
         <AdminStatsCards items={articleStats} />
 
-        <div className="flex flex-col sm:flex-row gap-3">
-          <div className="relative flex shrink-0 sm:order-2 sm:min-w-[200px] w-full sm:w-auto">
-            <select
-              value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
-              className="h-12 w-full min-w-[200px] bg-white rounded-xl border border-gray-200 pl-10 pr-4 text-right text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#ff5538]/20 focus:border-[#ff5538] transition-all text-sm shadow-sm appearance-none cursor-pointer"
-            >
-              <option value="">همه دسته ها</option>
-              {categoriesFromArticles.map((cat) => (
-                <option key={cat} value={cat}>
-                  {cat}
-                </option>
-              ))}
-            </select>
-            <svg
-              className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500 pointer-events-none"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-            </svg>
-          </div>
-          <div className="relative flex-1 sm:order-1">
-            <input
-              type="text"
-              placeholder="جستجو در لیست مقالات (عنوان یا دسته‌بندی)..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full h-12 bg-white rounded-xl border border-gray-200 pl-4 pr-12 text-right text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#ff5538]/20 focus:border-[#ff5538] transition-all text-sm shadow-sm"
-            />
-            <svg
-              className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
-          </div>
+        <div className="relative max-w-xl">
+          <input
+            type="text"
+            placeholder="جستجو در لیست مقالات (عنوان یا دسته‌بندی)..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full h-12 bg-white rounded-xl border border-gray-200 pl-4 pr-12 text-right text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#ff5538]/20 focus:border-[#ff5538] transition-all text-sm shadow-sm"
+          />
+          <svg
+            className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
         </div>
 
         {deleteError && (

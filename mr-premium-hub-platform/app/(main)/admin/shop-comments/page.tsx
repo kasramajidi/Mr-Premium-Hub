@@ -15,7 +15,7 @@ import {
 export default function ShopCommentsPage() {
   const [comments, setComments] = useState<ShopCommentItem[]>([]);
   const [products, setProducts] = useState<ShopProductOption[]>([]);
-  const [idshopFilter, setIdshopFilter] = useState<string>("");
+  const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
@@ -34,8 +34,7 @@ export default function ShopCommentsPage() {
     setLoading(true);
     setError(null);
     try {
-      const filter = idshopFilter.trim() ? idshopFilter : undefined;
-      const list = await getShopCommentsFromProducts(filter);
+      const list = await getShopCommentsFromProducts();
       setComments(list);
     } catch (e) {
       setError(e instanceof Error ? e.message : "خطا در دریافت نظرات");
@@ -51,13 +50,27 @@ export default function ShopCommentsPage() {
 
   useEffect(() => {
     fetchComments();
-  }, [idshopFilter]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const productNameById: Record<string, string> = {};
+  products.forEach((p) => {
+    productNameById[String(p.id)] = p.name ?? "";
+  });
+  const filteredComments = searchTerm.trim()
+    ? comments.filter((c) => {
+        const productName = c.productTitle ?? productNameById[String(c.idshop)] ?? "";
+        const text = (c.commentText ?? "").toLowerCase();
+        const user = (c.userName ?? "").toLowerCase();
+        const q = searchTerm.toLowerCase();
+        return productName.toLowerCase().includes(q) || text.includes(q) || user.includes(q);
+      })
+    : comments;
 
   const uniqueProducts = new Set(comments.map((c) => String(c.idshop))).size;
   const shopCommentStats = [
     { title: "کل نظرات فروشگاه", value: comments.length, icon: "🛒", color: "bg-blue-50 text-blue-600" },
     { title: "محصولات دارای نظر", value: uniqueProducts, icon: "📦", color: "bg-emerald-50 text-emerald-600" },
-    { title: "محصولات در فیلتر", value: products.length, icon: "📋", color: "bg-violet-50 text-violet-600" },
+    { title: "نتیجه جستجو", value: filteredComments.length, icon: "🔍", color: "bg-violet-50 text-violet-600" },
   ];
 
   const handleDelete = async (idshop: number | string, id: number | string) => {
@@ -90,20 +103,22 @@ export default function ShopCommentsPage() {
 
         <AdminStatsCards items={shopCommentStats} />
 
-        <div className="flex flex-wrap items-center gap-3">
-          <label className="text-sm font-medium text-gray-700">محصول (idshop):</label>
-          <select
-            value={idshopFilter}
-            onChange={(e) => setIdshopFilter(e.target.value)}
-            className="border border-gray-300 rounded-lg px-3 py-2 text-sm min-w-[180px] bg-white"
+        <div className="relative max-w-xl">
+          <input
+            type="text"
+            placeholder="جستجو (نام محصول، متن نظر، نام کاربر)..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full h-12 bg-white rounded-xl border border-gray-200 pl-4 pr-12 text-right text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#ff5538]/20 focus:border-[#ff5538] transition-all text-sm shadow-sm"
+          />
+          <svg
+            className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
           >
-            <option value="">همه محصولات</option>
-            {products.map((p) => (
-              <option key={String(p.id)} value={String(p.id)}>
-                {p.name} ({p.id})
-              </option>
-            ))}
-          </select>
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
         </div>
         {error && (
           <div className="bg-red-50 border border-red-200 rounded-lg p-3 text-sm text-red-700">
@@ -121,7 +136,7 @@ export default function ShopCommentsPage() {
           </div>
         ) : (
           <ShopCommentsTable
-            comments={comments}
+            comments={filteredComments}
             onDelete={handleDelete}
             deletingId={deletingId}
           />

@@ -15,7 +15,7 @@ import {
 export default function ArticleCommentsPage() {
   const [comments, setComments] = useState<ArticleCommentItem[]>([]);
   const [articles, setArticles] = useState<ArticleOption[]>([]);
-  const [idarticleFilter, setIdarticleFilter] = useState<string>("");
+  const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
@@ -34,8 +34,7 @@ export default function ArticleCommentsPage() {
     setLoading(true);
     setError(null);
     try {
-      const filter = idarticleFilter.trim() ? idarticleFilter : undefined;
-      const list = await getArticleComments(filter);
+      const list = await getArticleComments();
       setComments(list);
     } catch (e) {
       setError(e instanceof Error ? e.message : "خطا در دریافت نظرات");
@@ -51,13 +50,27 @@ export default function ArticleCommentsPage() {
 
   useEffect(() => {
     fetchComments();
-  }, [idarticleFilter]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const articleTitleById: Record<string, string> = {};
+  articles.forEach((a) => {
+    articleTitleById[String(a.id)] = a.title ?? "";
+  });
+  const filteredComments = searchTerm.trim()
+    ? comments.filter((c) => {
+        const title = c.articleTitle ?? articleTitleById[String(c.idarticle)] ?? "";
+        const text = (c.commentText ?? "").toLowerCase();
+        const user = (c.userName ?? "").toLowerCase();
+        const q = searchTerm.toLowerCase();
+        return title.toLowerCase().includes(q) || text.includes(q) || user.includes(q);
+      })
+    : comments;
 
   const uniqueArticles = new Set(comments.map((c) => String(c.idarticle))).size;
   const articleCommentStats = [
     { title: "کل نظرات مقالات", value: comments.length, icon: "📄", color: "bg-blue-50 text-blue-600" },
     { title: "مقالات دارای نظر", value: uniqueArticles, icon: "📝", color: "bg-emerald-50 text-emerald-600" },
-    { title: "مقالات در فیلتر", value: articles.length, icon: "📋", color: "bg-violet-50 text-violet-600" },
+    { title: "نتیجه جستجو", value: filteredComments.length, icon: "🔍", color: "bg-violet-50 text-violet-600" },
   ];
 
   const handleDelete = async (
@@ -99,22 +112,22 @@ export default function ArticleCommentsPage() {
 
         <AdminStatsCards items={articleCommentStats} />
 
-        <div className="flex flex-wrap items-center gap-3">
-          <label className="text-sm font-medium text-gray-700">
-            مقاله (idarticle):
-          </label>
-          <select
-            value={idarticleFilter}
-            onChange={(e) => setIdarticleFilter(e.target.value)}
-            className="border border-gray-300 rounded-lg px-3 py-2 text-sm min-w-[180px] bg-white"
+        <div className="relative max-w-xl">
+          <input
+            type="text"
+            placeholder="جستجو (عنوان مقاله، متن نظر، نام کاربر)..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full h-12 bg-white rounded-xl border border-gray-200 pl-4 pr-12 text-right text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#ff5538]/20 focus:border-[#ff5538] transition-all text-sm shadow-sm"
+          />
+          <svg
+            className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
           >
-            <option value="">همه مقالات</option>
-            {articles.map((p) => (
-              <option key={String(p.id)} value={String(p.id)}>
-                {p.title} ({p.id})
-              </option>
-            ))}
-          </select>
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
         </div>
         {error && (
           <div className="bg-red-50 border border-red-200 rounded-lg p-3 text-sm text-red-700">
@@ -132,7 +145,7 @@ export default function ArticleCommentsPage() {
           </div>
         ) : (
           <ArticleCommentsTable
-            comments={comments}
+            comments={filteredComments}
             onDelete={handleDelete}
             deletingId={deletingId}
           />
