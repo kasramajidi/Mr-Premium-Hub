@@ -34,6 +34,18 @@ const LoginForm: React.FC<LoginFormProps> = ({
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
   const [smsLoading, setSmsLoading] = useState(false);
+  const [otpCooldownSeconds, setOtpCooldownSeconds] = useState(0);
+
+  useEffect(() => {
+    if (otpCooldownSeconds <= 0) return;
+    const t = setInterval(() => {
+      setOtpCooldownSeconds((prev) => {
+        if (prev <= 1) return 0;
+        return prev - 1;
+      });
+    }, 1000);
+    return () => clearInterval(t);
+  }, [otpCooldownSeconds]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -120,12 +132,22 @@ const LoginForm: React.FC<LoginFormProps> = ({
       } else {
         setSuccess("رمز یکبار مصرف به شماره شما ارسال شد. در صورت عدم دریافت، پاسخ سرور را با پشتیبانی چک کنید.");
       }
+      setOtpCooldownSeconds(30);
     } catch (err) {
       setError(err instanceof Error ? err.message : "خطا در ارسال رمز.");
     } finally {
       setSmsLoading(false);
     }
   };
+
+  const otpButtonDisabled = smsLoading || otpCooldownSeconds > 0;
+  const otpSecondsFa = new Intl.NumberFormat("fa-IR").format(otpCooldownSeconds);
+  const otpButtonLabel =
+    smsLoading
+      ? "در حال ارسال…"
+      : otpCooldownSeconds > 0
+        ? `ارسال مجدد پس از ${otpSecondsFa} ثانیه`
+        : "دریافت رمز";
 
   return (
     <div className="w-full">
@@ -194,10 +216,10 @@ const LoginForm: React.FC<LoginFormProps> = ({
             <button
               type="button"
               onClick={handleRequestSms}
-              disabled={smsLoading}
-              className="whitespace-nowrap px-3 py-2.5 border border-[#ff5538] text-[#ff5538] rounded-lg hover:bg-[#ff5538] hover:text-white transition-colors disabled:opacity-50 text-sm"
+              disabled={otpButtonDisabled}
+              className="whitespace-nowrap px-3 py-2.5 border border-[#ff5538] text-[#ff5538] rounded-lg hover:bg-[#ff5538] hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm"
             >
-              {smsLoading ? "در حال ارسال…" : "دریافت رمز"}
+              {otpButtonLabel}
             </button>
           </div>
         </div>
