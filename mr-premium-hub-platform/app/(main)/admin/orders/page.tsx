@@ -57,7 +57,7 @@ export default function OrdersPage() {
         return {
           id: String(o.id ?? ""),
           customer: [o.contact?.name, o.contact?.phone].filter(Boolean).join(" — ") || "—",
-          products: Array.isArray(o.items) ? o.items.map((i: { productName?: string; quantity?: number }) => `${i.productName ?? "—"}${i.quantity > 1 ? ` (${i.quantity})` : ""}`).join("، ") : "—",
+          products: Array.isArray(o.items) ? o.items.map((i: { productName?: string; quantity?: number }) => `${i.productName ?? "—"}${(i.quantity ?? 0) > 1 ? ` (${i.quantity ?? 1})` : ""}`).join("، ") : "—",
           amount: o.total != null ? formatAmount(totalNum) : "—",
           totalNumber: totalNum,
           status: o.status && String(o.status).trim() ? String(o.status) : "در حال پردازش",
