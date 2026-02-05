@@ -14,11 +14,15 @@ interface Order {
 interface OrdersTableProps {
   orders: Order[];
   onStatusChange: (id: string, status: string) => void;
+  onDelete?: (id: string) => void;
+  onDetails?: (order: Order) => void;
 }
 
 export default function OrdersTable({
   orders,
   onStatusChange,
+  onDelete,
+  onDetails,
 }: OrdersTableProps) {
   const [editingStatus, setEditingStatus] = useState<string | null>(null);
 
@@ -107,10 +111,23 @@ export default function OrdersTable({
                     )}
                   </td>
                   <td className="py-3 px-4 text-gray-600">{order.date}</td>
-                  <td className="py-3 px-4">
-                    <button className="text-[#ff5538] hover:underline text-xs">
+                  <td className="py-3 px-4 flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => onDetails?.(order)}
+                      className="text-[#ff5538] hover:underline text-xs"
+                    >
                       جزئیات
                     </button>
+                    {onDelete && (
+                      <button
+                        type="button"
+                        onClick={() => onDelete(order.id)}
+                        className="text-red-600 hover:underline text-xs"
+                      >
+                        حذف
+                      </button>
+                    )}
                   </td>
                 </tr>
               ))

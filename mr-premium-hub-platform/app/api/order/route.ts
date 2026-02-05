@@ -35,6 +35,8 @@ export interface CreateOrderPayload {
 export interface StoredOrder extends CreateOrderPayload {
   id: string;
   createdAt: string;
+  /** وضعیت سفارش برای پنل ادمین */
+  status?: string;
 }
 
 async function readOrders(): Promise<StoredOrder[]> {
@@ -88,6 +90,7 @@ export async function POST(request: Request) {
     const order: StoredOrder = {
       id: generateOrderId(),
       createdAt: new Date().toISOString(),
+      status: "در حال پردازش",
       contact: {
         name: String(contact.name).trim(),
         phone: String(contact.phone).trim(),
@@ -128,7 +131,7 @@ export async function POST(request: Request) {
   }
 }
 
-/** لیست سفارشات (برای ادمین یا گزارش) */
+/** لیست سفارشات (برای ادمین یا گزارش) — تمام سفارشات تمام مشتریان */
 export async function GET() {
   try {
     const orders = await readOrders();
@@ -139,6 +142,63 @@ export async function GET() {
   } catch (e) {
     return NextResponse.json(
       { error: "خطا در خواندن سفارشات" },
+      { status: 500 }
+    );
+  }
+}
+
+/** به‌روزرسانی وضعیت یک سفارش (ادمین) */
+export async function PATCH(request: Request) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get("id");
+    const body = (await request.json()) as { status?: string };
+    if (!id?.trim() || !body.status?.trim()) {
+      return NextResponse.json(
+        { error: "شناسه سفارش و وضعیت الزامی است" },
+        { status: 400 }
+      );
+    }
+    const orders = await readOrders();
+    const index = orders.findIndex((o) => o.id === id.trim());
+    if (index < 0) {
+      return NextResponse.json({ error: "سفارش یافت نشد" }, { status: 404 });
+    }
+    orders[index] = { ...orders[index], status: String(body.status).trim() };
+    await writeOrders(orders);
+    return NextResponse.json({ ok: true, order: orders[index] });
+  } catch (e) {
+    console.error("Order PATCH error:", e);
+    return NextResponse.json(
+      { error: "خطا در به‌روزرسانی سفارش" },
+      { status: 500 }
+    );
+  }
+}
+
+/** حذف یک سفارش (ادمین) — با query id */
+export async function DELETE(request: Request) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get("id");
+    if (!id?.trim()) {
+      return NextResponse.json(
+        { error: "شناسه سفارش (id) الزامی است" },
+        { status: 400 }
+      );
+    }
+    const orders = await readOrders();
+    const index = orders.findIndex((o) => o.id === id.trim());
+    if (index < 0) {
+      return NextResponse.json({ error: "سفارش یافت نشد" }, { status: 404 });
+    }
+    orders.splice(index, 1);
+    await writeOrders(orders);
+    return NextResponse.json({ ok: true, message: "سفارش حذف شد" });
+  } catch (e) {
+    console.error("Order DELETE error:", e);
+    return NextResponse.json(
+      { error: "خطا در حذف سفارش" },
       { status: 500 }
     );
   }
