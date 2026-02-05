@@ -7,6 +7,7 @@ interface Order {
   customer: string;
   products: string;
   amount: string;
+  totalNumber: number;
   status: string;
   date: string;
 }
