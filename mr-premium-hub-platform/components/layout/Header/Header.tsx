@@ -18,7 +18,7 @@ export default function Header({
   return (
     <header className="z-50 bg-white border-b-2 border-[#ff5538]/20 shadow-sm">
       <div className="w-full px-3 sm:px-4 md:px-5 lg:px-6 xl:px-8">
-        <div className="flex items-center justify-between h-14 sm:h-16 md:h-18 lg:h-20 xl:h-20 max-w-7xl mx-auto gap-2 sm:gap-3 md:gap-4 lg:gap-4">
+        <div className="flex items-center justify-between h-16 sm:h-20 md:h-24 lg:h-28 xl:h-28 max-w-7xl mx-auto gap-2 sm:gap-3 md:gap-4 lg:gap-4">
           <div className="flex items-center gap-2 order-1 shrink-0 max-[500px]:flex">
             <MobileMenu cartCount={cartCount} isAuthenticated={isAuthenticated} />
           </div>
