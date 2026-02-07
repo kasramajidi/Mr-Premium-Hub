@@ -265,7 +265,11 @@ export default function ProductsPage() {
           failed++;
           continue;
         }
-        const payload: ShopApiPayload = { id: raw.id ?? id, price: priceNum };
+        const idValue =
+          typeof raw.id === "number" || typeof raw.id === "string"
+            ? raw.id
+            : id;
+        const payload: ShopApiPayload = { id: idValue, price: priceNum };
         if (raw.title != null && raw.title !== "") payload.title = String(raw.title);
         if (raw.groups != null && raw.groups !== "") payload.groups = String(raw.groups);
         if (raw.img != null && raw.img !== "") payload.img = String(raw.img);
