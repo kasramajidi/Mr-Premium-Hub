@@ -165,7 +165,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchToLogin }) => {
                 <button
                   type="button"
                   onClick={() => setShowTermsModal(false)}
-                  className="w-full py-2.5 px-4 cursor-pointer rounded-xl bg-[#ff5538] text-white font-medium hover:opacity-90 transition-opacity"
+                  className="w-full py-2.5 px-4 cursor-pointerimage.png rounded-xl bg-[#ff5538] text-white font-medium hover:opacity-90 transition-opacity"
                 >
                   بستن
                 </button>

@@ -29,7 +29,17 @@ import { MdCreditCard, MdCardGiftcard } from "react-icons/md";
 import React from "react";
 import { useCart, type CartItem } from "@/app/(main)/context/CartContext";
 import { createInvoice, getLoginPhoneFromStorage, normalizePhoneForComparison } from "@/app/(main)/my-account/lib/my-account-api";
+import { getAuthCookie } from "@/app/(main)/auth/lib/cookie";
 import type { ShopProduct } from "@/app/(main)/shop/lib/shop-api";
+
+function useIsLoggedIn(): boolean | null {
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
+  useEffect(() => {
+    const ok = !!(getAuthCookie() || getLoginPhoneFromStorage()?.trim());
+    setIsLoggedIn(ok);
+  }, []);
+  return isLoggedIn;
+}
 
 interface CategoryItem {
   label: string;
@@ -270,6 +280,7 @@ export default function CreditCardsTabs({ initialProducts = [] }: { initialProdu
   const router = useRouter();
   const searchParams = useSearchParams();
   const { addToCart } = useCart();
+  const isLoggedIn = useIsLoggedIn();
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [submittingId, setSubmittingId] = useState<number | null>(null);
@@ -450,21 +461,38 @@ export default function CreditCardsTabs({ initialProducts = [] }: { initialProdu
                         {card.description}
                       </p>
                       <div className="mt-auto flex flex-col sm:flex-row items-center justify-between gap-3 pt-3 border-t border-gray-100">
-                        <span className="text-base font-bold text-[#ff5538] tabular-nums">
-                          {formatPrice(matchedProduct.price)}
-                        </span>
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            handleRegisterOrder(matchedProduct);
-                          }}
-                          disabled={submittingId === matchedProduct.id}
-                          className="w-full sm:w-auto bg-[#ff5538] text-white px-4 py-2.5 rounded-xl text-sm font-medium hover:bg-[#e54d32] transition-colors disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer"
-                        >
-                          {submittingId === matchedProduct.id ? "در حال ثبت…" : "ثبت سفارش"}
-                        </button>
+                        {isLoggedIn ? (
+                          <>
+                            <span className="text-base font-bold text-[#ff5538] tabular-nums">
+                              {formatPrice(matchedProduct.price)}
+                            </span>
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                handleRegisterOrder(matchedProduct);
+                              }}
+                              disabled={submittingId === matchedProduct.id}
+                              className="w-full sm:w-auto bg-[#ff5538] text-white px-4 py-2.5 rounded-xl text-sm font-medium hover:bg-[#e54d32] transition-colors disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer"
+                            >
+                              {submittingId === matchedProduct.id ? "در حال ثبت…" : "ثبت سفارش"}
+                            </button>
+                          </>
+                        ) : (
+                          <>
+                            <span className="text-xs text-gray-600 flex-1 text-center">
+                              برای مشاهده قیمت و ثبت سفارش وارد حساب کاربری شوید.
+                            </span>
+                            <Link
+                              href="/auth?next=/valid-cards"
+                              onClick={(e) => e.stopPropagation()}
+                              className="w-full sm:w-auto bg-[#ff5538] text-white px-4 py-2.5 rounded-xl text-sm font-medium hover:bg-[#e54d32] transition-colors text-center"
+                            >
+                              ورود / ثبت‌نام
+                            </Link>
+                          </>
+                        )}
                       </div>
                     </Link>
                   );
@@ -570,21 +598,42 @@ export default function CreditCardsTabs({ initialProducts = [] }: { initialProdu
                           {category.description}
                         </p>
                         <div className="mt-auto flex flex-col sm:flex-row items-center justify-between gap-3 pt-3 border-t border-gray-100">
-                          <span className="text-base font-bold text-[#ff5538] tabular-nums">
-                            {formatPrice(matched.price)}
-                          </span>
-                          <button
-                            type="button"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              e.stopPropagation();
-                              handleRegisterOrder(matched);
-                            }}
-                            disabled={submittingId === matched.id}
-                            className="w-full sm:w-auto bg-[#ff5538] text-white px-4 py-2.5 rounded-xl text-sm font-medium hover:bg-[#e54d32] transition-colors disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer"
-                          >
-                            {submittingId === matched.id ? "در حال ثبت…" : "ثبت سفارش"}
-                          </button>
+                          {isLoggedIn ? (
+                            <>
+                              <span className="text-base font-bold text-[#ff5538] tabular-nums">
+                                {formatPrice(matched.price)}
+                              </span>
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  handleRegisterOrder(matched);
+                                }}
+                                disabled={submittingId === matched.id}
+                                className="w-full sm:w-auto bg-[#ff5538] text-white px-4 py-2.5 rounded-xl text-sm font-medium hover:bg-[#e54d32] transition-colors disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer"
+                              >
+                                {submittingId === matched.id ? "در حال ثبت…" : "ثبت سفارش"}
+                              </button>
+                            </>
+                          ) : (
+                            <>
+                              <span className="text-xs text-gray-600 flex-1 text-center">
+                                برای مشاهده قیمت و ثبت سفارش وارد حساب کاربری شوید.
+                              </span>
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  router.push("/auth?next=/valid-cards");
+                                }}
+                                className="w-full sm:w-auto bg-[#ff5538] text-white px-4 py-2.5 rounded-xl text-sm font-medium hover:bg-[#e54d32] transition-colors text-center"
+                              >
+                                ورود / ثبت‌نام
+                              </button>
+                            </>
+                          )}
                         </div>
                       </Link>
                     );

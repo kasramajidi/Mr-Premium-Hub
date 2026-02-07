@@ -11,10 +11,8 @@ import {
   HiServer,
   HiOutlineDesktopComputer,
 } from "react-icons/hi";
-import { SiAmazon } from "react-icons/si";
 import { FaGamepad, FaBrain, FaSearch } from "react-icons/fa";
 import { MdSimCard, MdPhone, MdDomain, MdCloud, MdCode } from "react-icons/md";
-import { BiShoppingBag } from "react-icons/bi";
 import React from "react";
 
 interface CategoryItem {
@@ -195,20 +193,6 @@ const currencyPaymentCategories: Category[] = [
         href: "/currency-payment/host",
         icon: React.createElement(MdCloud, {
           className: "text-3xl sm:text-4xl md:text-5xl text-blue-500",
-        }),
-      },
-      {
-        label: "خرید از آمازون",
-        href: "/currency-payment/amazon",
-        icon: React.createElement(SiAmazon, {
-          className: "text-3xl sm:text-4xl md:text-5xl text-[#FF9900]",
-        }),
-      },
-      {
-        label: "خرید از ترندیول ترکیه",
-        href: "/currency-payment/trendyol",
-        icon: React.createElement(BiShoppingBag, {
-          className: "text-3xl sm:text-4xl md:text-5xl text-red-500",
         }),
       },
     ],

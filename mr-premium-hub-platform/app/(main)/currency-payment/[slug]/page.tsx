@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { services } from "../components/servicesData";
+import { fetchShopProducts } from "@/app/(main)/shop/lib/shop-api";
+import { InternationalSimSelectionProvider } from "./context/InternationalSimSelectionContext";
 import {
   ServiceDetailHeader,
   ServiceDetailContent,
@@ -16,8 +18,6 @@ import {
   DomainProviders,
   HostTypes,
   HostTips,
-  AmazonSites,
-  TrendyolCategories,
   AIAccounts,
   SeoTools,
   GameAccounts,
@@ -26,7 +26,6 @@ import {
   StudentPaymentTypes,
   StudentPaymentServices,
   InternationalExamTypes,
-  InternationalLanguageExams,
   VPSTradingSteps,
   VPSTradingPlans,
   VPSTradingBenefits,
@@ -104,6 +103,14 @@ export default async function ServicePage({ params }: ServicePageProps) {
     notFound();
   }
 
+  let shopProducts: Awaited<ReturnType<typeof fetchShopProducts>> = [];
+  try {
+    shopProducts = await fetchShopProducts();
+  } catch {
+    // باکس ثبت سفارش بدون قیمت یا با دکمه fallback نمایش داده می‌شود
+  }
+  const simCardProducts = shopProducts;
+
   const baseUrl =
     process.env.NEXT_PUBLIC_SITE_URL || "https://mrpremiumhub.com";
   const breadcrumbJsonLd = {
@@ -140,13 +147,276 @@ export default async function ServicePage({ params }: ServicePageProps) {
       <div className="container mx-auto px-3 sm:px-4 md:px-6 lg:px-8 max-w-7xl">
         <ServiceDetailHeader service={service} />
 
+        {service.id === "international-sim" ? (
+          <InternationalSimSelectionProvider>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
+              <div className="lg:col-span-2 space-y-4 sm:space-y-6">
+                <ServiceDetailContent service={service} />
+                <ServiceBenefits service={service} />
+                <ServiceStats service={service} />
+                <SimCardTypes initialProducts={simCardProducts} />
+                <ServiceFAQ service={service} />
+                <RelatedServices currentService={service} />
+              </div>
+              <div className="lg:col-span-1">
+                <div className="sticky top-4">
+                  <ServiceForm service={service} initialProducts={simCardProducts} />
+                </div>
+              </div>
+            </div>
+          </InternationalSimSelectionProvider>
+        ) : service.id === "virtual-number" ? (
+          <InternationalSimSelectionProvider>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
+              <div className="lg:col-span-2 space-y-4 sm:space-y-6">
+                <ServiceDetailContent service={service} />
+                <ServiceBenefits service={service} />
+                <ServiceStats service={service} />
+                <VirtualNumberTypes initialProducts={shopProducts} />
+                <ServiceFAQ service={service} />
+                <RelatedServices currentService={service} />
+              </div>
+              <div className="lg:col-span-1">
+                <div className="sticky top-4">
+                  <ServiceForm service={service} initialProducts={shopProducts} />
+                </div>
+              </div>
+            </div>
+          </InternationalSimSelectionProvider>
+        ) : service.id === "domain" ? (
+          <InternationalSimSelectionProvider>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
+              <div className="lg:col-span-2 space-y-4 sm:space-y-6">
+                <ServiceDetailContent service={service} />
+                <ServiceBenefits service={service} />
+                <ServiceStats service={service} />
+                <DomainExtensions initialProducts={shopProducts} />
+                <DomainTips />
+                <DomainProviders />
+                <ServiceFAQ service={service} />
+                <RelatedServices currentService={service} />
+              </div>
+              <div className="lg:col-span-1">
+                <div className="sticky top-4">
+                  <ServiceForm service={service} initialProducts={shopProducts} />
+                </div>
+              </div>
+            </div>
+          </InternationalSimSelectionProvider>
+        ) : service.id === "host" ? (
+          <InternationalSimSelectionProvider>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
+              <div className="lg:col-span-2 space-y-4 sm:space-y-6">
+                <ServiceDetailContent service={service} />
+                <ServiceBenefits service={service} />
+                <ServiceStats service={service} />
+                <HostTypes initialProducts={shopProducts} />
+                <HostTips />
+                <ServiceFAQ service={service} />
+                <RelatedServices currentService={service} />
+              </div>
+              <div className="lg:col-span-1">
+                <div className="sticky top-4">
+                  <ServiceForm service={service} initialProducts={shopProducts} />
+                </div>
+              </div>
+            </div>
+          </InternationalSimSelectionProvider>
+        ) : service.id === "ai-account" ? (
+          <InternationalSimSelectionProvider>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
+              <div className="lg:col-span-2 space-y-4 sm:space-y-6">
+                <ServiceDetailContent service={service} />
+                <ServiceBenefits service={service} />
+                <ServiceStats service={service} />
+                <AIAccounts initialProducts={shopProducts} />
+                <ServiceFAQ service={service} />
+                <RelatedServices currentService={service} />
+              </div>
+              <div className="lg:col-span-1">
+                <div className="sticky top-4">
+                  <ServiceForm service={service} initialProducts={shopProducts} />
+                </div>
+              </div>
+            </div>
+          </InternationalSimSelectionProvider>
+        ) : service.id === "seo-account" ? (
+          <InternationalSimSelectionProvider>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
+              <div className="lg:col-span-2 space-y-4 sm:space-y-6">
+                <ServiceDetailContent service={service} />
+                <ServiceBenefits service={service} />
+                <ServiceStats service={service} />
+                <SeoTools initialProducts={shopProducts} />
+                <ServiceFAQ service={service} />
+                <RelatedServices currentService={service} />
+              </div>
+              <div className="lg:col-span-1">
+                <div className="sticky top-4">
+                  <ServiceForm service={service} initialProducts={shopProducts} />
+                </div>
+              </div>
+            </div>
+          </InternationalSimSelectionProvider>
+        ) : service.id === "game-account" ? (
+          <InternationalSimSelectionProvider>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
+              <div className="lg:col-span-2 space-y-4 sm:space-y-6">
+                <ServiceDetailContent service={service} />
+                <ServiceBenefits service={service} />
+                <ServiceStats service={service} />
+                <GameAccounts initialProducts={shopProducts} />
+                <ServiceFAQ service={service} />
+                <RelatedServices currentService={service} />
+              </div>
+              <div className="lg:col-span-1">
+                <div className="sticky top-4">
+                  <ServiceForm service={service} initialProducts={shopProducts} />
+                </div>
+              </div>
+            </div>
+          </InternationalSimSelectionProvider>
+        ) : service.id === "software-account" ? (
+          <InternationalSimSelectionProvider>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
+              <div className="lg:col-span-2 space-y-4 sm:space-y-6">
+                <ServiceDetailContent service={service} />
+                <ServiceBenefits service={service} />
+                <ServiceStats service={service} />
+                <ServiceFAQ service={service} />
+                <RelatedServices currentService={service} />
+              </div>
+              <div className="lg:col-span-1">
+                <div className="sticky top-4">
+                  <ServiceForm service={service} initialProducts={shopProducts} />
+                </div>
+              </div>
+            </div>
+          </InternationalSimSelectionProvider>
+        ) : service.id === "language-exam" ? (
+          <InternationalSimSelectionProvider>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
+              <div className="lg:col-span-2 space-y-4 sm:space-y-6">
+                <ServiceDetailContent service={service} />
+                <ServiceBenefits service={service} />
+                <ServiceStats service={service} />
+                <LanguageExamTypes initialProducts={shopProducts} />
+                <LanguageExamServices initialProducts={shopProducts} />
+                <ServiceFAQ service={service} />
+                <RelatedServices currentService={service} />
+              </div>
+              <div className="lg:col-span-1">
+                <div className="sticky top-4">
+                  <ServiceForm service={service} initialProducts={shopProducts} />
+                </div>
+              </div>
+            </div>
+          </InternationalSimSelectionProvider>
+        ) : service.id === "international-exam" ? (
+          <InternationalSimSelectionProvider>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
+              <div className="lg:col-span-2 space-y-4 sm:space-y-6">
+                <ServiceDetailContent service={service} />
+                <ServiceBenefits service={service} />
+                <ServiceStats service={service} />
+                <InternationalExamTypes initialProducts={shopProducts} />
+                <ServiceFAQ service={service} />
+                <RelatedServices currentService={service} />
+              </div>
+              <div className="lg:col-span-1">
+                <div className="sticky top-4">
+                  <ServiceForm service={service} initialProducts={shopProducts} />
+                </div>
+              </div>
+            </div>
+          </InternationalSimSelectionProvider>
+        ) : service.id === "vps-trading" ? (
+          <InternationalSimSelectionProvider>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
+              <div className="lg:col-span-2 space-y-4 sm:space-y-6">
+                <ServiceDetailContent service={service} />
+                <ServiceBenefits service={service} />
+                <ServiceStats service={service} />
+                <VPSTradingSteps />
+                <VPSTradingPlans initialProducts={shopProducts} />
+                <VPSTradingBenefits />
+                <ServiceFAQ service={service} />
+                <RelatedServices currentService={service} />
+              </div>
+              <div className="lg:col-span-1">
+                <div className="sticky top-4">
+                  <ServiceForm service={service} initialProducts={shopProducts} />
+                </div>
+              </div>
+            </div>
+          </InternationalSimSelectionProvider>
+        ) : service.id === "vps-usa" ? (
+          <InternationalSimSelectionProvider>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
+              <div className="lg:col-span-2 space-y-4 sm:space-y-6">
+                <ServiceDetailContent service={service} />
+                <ServiceBenefits service={service} />
+                <ServiceStats service={service} />
+                <VPSUSASteps />
+                <VPSUSAPlans initialProducts={shopProducts} />
+                <VPSUSABenefits />
+                <ServiceFAQ service={service} />
+                <RelatedServices currentService={service} />
+              </div>
+              <div className="lg:col-span-1">
+                <div className="sticky top-4">
+                  <ServiceForm service={service} initialProducts={shopProducts} />
+                </div>
+              </div>
+            </div>
+          </InternationalSimSelectionProvider>
+        ) : service.id === "vps-netherlands" ? (
+          <InternationalSimSelectionProvider>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
+              <div className="lg:col-span-2 space-y-4 sm:space-y-6">
+                <ServiceDetailContent service={service} />
+                <ServiceBenefits service={service} />
+                <ServiceStats service={service} />
+                <VPSNetherlandsSteps />
+                <VPSNetherlandsPlans initialProducts={shopProducts} />
+                <VPSNetherlandsBenefits />
+                <ServiceFAQ service={service} />
+                <RelatedServices currentService={service} />
+              </div>
+              <div className="lg:col-span-1">
+                <div className="sticky top-4">
+                  <ServiceForm service={service} initialProducts={shopProducts} />
+                </div>
+              </div>
+            </div>
+          </InternationalSimSelectionProvider>
+        ) : service.id === "vps-france" ? (
+          <InternationalSimSelectionProvider>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
+              <div className="lg:col-span-2 space-y-4 sm:space-y-6">
+                <ServiceDetailContent service={service} />
+                <ServiceBenefits service={service} />
+                <ServiceStats service={service} />
+                <VPSFranceSteps />
+                <VPSFrancePlans initialProducts={shopProducts} />
+                <VPSFranceBenefits />
+                <VPSFranceFeatures />
+                <ServiceFAQ service={service} />
+                <RelatedServices currentService={service} />
+              </div>
+              <div className="lg:col-span-1">
+                <div className="sticky top-4">
+                  <ServiceForm service={service} initialProducts={shopProducts} />
+                </div>
+              </div>
+            </div>
+          </InternationalSimSelectionProvider>
+        ) : (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
           <div className="lg:col-span-2 space-y-4 sm:space-y-6">
             <ServiceDetailContent service={service} />
             <ServiceBenefits service={service} />
             <ServiceStats service={service} />
-            {service.id === "international-sim" && <SimCardTypes />}
-            {service.id === "virtual-number" && <VirtualNumberTypes />}
             {service.id === "domain" && (
               <>
                 <DomainExtensions />
@@ -154,21 +424,12 @@ export default async function ServicePage({ params }: ServicePageProps) {
                 <DomainProviders />
               </>
             )}
-            {service.id === "host" && (
-              <>
-                <HostTypes />
-                <HostTips />
-              </>
-            )}
-            {service.id === "amazon" && <AmazonSites />}
-            {service.id === "trendyol" && <TrendyolCategories />}
-            {service.id === "ai-account" && <AIAccounts />}
-            {service.id === "seo-account" && <SeoTools />}
-            {service.id === "game-account" && <GameAccounts />}
             {service.id === "language-exam" && (
               <>
-                <LanguageExamTypes />
-                <LanguageExamServices />
+                <LanguageExamTypes initialProducts={shopProducts} />
+                <LanguageExamServices initialProducts={shopProducts} />
+                <ServiceFAQ service={service} />
+                <RelatedServices currentService={service} />
               </>
             )}
             {service.id === "student-payment" && (
@@ -177,57 +438,16 @@ export default async function ServicePage({ params }: ServicePageProps) {
                 <StudentPaymentServices />
               </>
             )}
-            {service.id === "international-exam" && (
-              <>
-                <InternationalExamTypes />
-                <InternationalLanguageExams />
-              </>
-            )}
-            {service.id === "vps-trading" && (
-              <>
-                <VPSTradingSteps />
-                <VPSTradingPlans />
-                <VPSTradingBenefits />
-              </>
-            )}
-            {service.id === "vps-daily" && (
-              <>
-                <VPSDailySteps />
-                <VPSDailyPlans />
-                <VPSDailyBenefits />
-              </>
-            )}
-            {service.id === "vps-usa" && (
-              <>
-                <VPSUSASteps />
-                <VPSUSAPlans />
-                <VPSUSABenefits />
-              </>
-            )}
-            {service.id === "vps-netherlands" && (
-              <>
-                <VPSNetherlandsSteps />
-                <VPSNetherlandsPlans />
-                <VPSNetherlandsBenefits />
-              </>
-            )}
-            {service.id === "vps-france" && (
-              <>
-                <VPSFranceSteps />
-                <VPSFrancePlans />
-                <VPSFranceBenefits />
-                <VPSFranceFeatures />
-              </>
-            )}
             <ServiceFAQ service={service} />
             <RelatedServices currentService={service} />
           </div>
           <div className="lg:col-span-1">
             <div className="sticky top-4">
-              <ServiceForm service={service} />
+              <ServiceForm service={service} initialProducts={shopProducts} />
             </div>
           </div>
         </div>
+        )}
       </div>
     </main>
   );

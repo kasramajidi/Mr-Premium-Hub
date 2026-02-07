@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { Service } from "../../components/servicesData";
 import type { ShopProduct } from "@/app/(main)/shop/lib/shop-api";
 import { useCart, type CartItem } from "@/app/(main)/context/CartContext";
@@ -10,6 +11,7 @@ import {
   getLoginPhoneFromStorage,
   normalizePhoneForComparison,
 } from "@/app/(main)/my-account/lib/my-account-api";
+import { getAuthCookie } from "@/app/(main)/auth/lib/cookie";
 
 function findProductForCard(
   cardLabel: string,
@@ -29,6 +31,15 @@ function formatPrice(price: number): string {
   return new Intl.NumberFormat("fa-IR").format(price) + " تومان";
 }
 
+function useIsLoggedIn(): boolean | null {
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
+  useEffect(() => {
+    const ok = !!(getAuthCookie() || getLoginPhoneFromStorage()?.trim());
+    setIsLoggedIn(ok);
+  }, []);
+  return isLoggedIn;
+}
+
 interface ServiceFormProps {
   service: Service;
   initialProducts?: ShopProduct[];
@@ -40,6 +51,7 @@ export default function ServiceForm({
 }: ServiceFormProps) {
   const router = useRouter();
   const { addToCart } = useCart();
+  const isLoggedIn = useIsLoggedIn();
   const [submitting, setSubmitting] = useState(false);
   const [orderError, setOrderError] = useState<string | null>(null);
 
@@ -95,26 +107,41 @@ export default function ServiceForm({
       </h2>
 
       {matchedProduct ? (
-        <div className="space-y-4">
-          <p className="text-base font-bold text-[#ff5538] tabular-nums text-right">
-            {formatPrice(matchedProduct.price)}
-          </p>
-          {orderError && (
-            <p className="text-sm text-red-600 text-right">{orderError}</p>
-          )}
-          <button
-            type="button"
-            onClick={handleRegisterOrder}
-            disabled={submitting}
-            className="w-full text-white text-xs sm:text-sm font-medium py-2.5 sm:py-3 px-4 sm:px-6 rounded-lg transition-opacity hover:opacity-90 disabled:opacity-70 disabled:cursor-not-allowed"
-            style={{ backgroundColor: "#ff5538" }}
-          >
-            {submitting ? "در حال ثبت…" : "ثبت سفارش"}
-          </button>
-          <p className="text-[10px] sm:text-xs text-gray-500 text-right">
-            برای ثبت سفارش وارد حساب کاربری شوید. پس از ثبت، به سبد خرید منتقل می‌شوید.
-          </p>
-        </div>
+        isLoggedIn ? (
+          <div className="space-y-4">
+            <p className="text-base font-bold text-[#ff5538] tabular-nums text-right">
+              {formatPrice(matchedProduct.price)}
+            </p>
+            {orderError && (
+              <p className="text-sm text-red-600 text-right">{orderError}</p>
+            )}
+            <button
+              type="button"
+              onClick={handleRegisterOrder}
+              disabled={submitting}
+              className="w-full text-white text-xs sm:text-sm font-medium py-2.5 sm:py-3 px-4 sm:px-6 rounded-lg transition-opacity hover:opacity-90 disabled:opacity-70 disabled:cursor-not-allowed"
+              style={{ backgroundColor: "#ff5538" }}
+            >
+              {submitting ? "در حال ثبت…" : "ثبت سفارش"}
+            </button>
+            <p className="text-[10px] sm:text-xs text-gray-500 text-right">
+              پس از ثبت، به سبد خرید منتقل می‌شوید.
+            </p>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            <p className="text-sm text-gray-600 text-right">
+              برای مشاهده قیمت و ثبت سفارش وارد حساب کاربری شوید.
+            </p>
+            <Link
+              href={`/auth?next=${encodeURIComponent(`/valid-cards/${service.id}`)}`}
+              className="block w-full text-white text-xs sm:text-sm font-medium py-2.5 sm:py-3 px-4 sm:px-6 rounded-lg transition-opacity hover:opacity-90 text-center"
+              style={{ backgroundColor: "#ff5538" }}
+            >
+              ورود / ثبت‌نام
+            </Link>
+          </div>
+        )
       ) : (
         <div className="space-y-3 text-right">
           <p className="text-xs sm:text-sm text-gray-600">

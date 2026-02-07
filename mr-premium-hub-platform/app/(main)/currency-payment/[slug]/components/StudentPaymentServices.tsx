@@ -1,15 +1,24 @@
 "use client";
 
-import Link from "next/link";
-import { HiAcademicCap, HiDocumentText } from "react-icons/hi";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { HiDocumentText } from "react-icons/hi";
 import { FaChartLine, FaUsers } from "react-icons/fa";
+import { useCart, type CartItem } from "@/app/(main)/context/CartContext";
+import {
+  createInvoice,
+  getLoginPhoneFromStorage,
+  normalizePhoneForComparison,
+} from "@/app/(main)/my-account/lib/my-account-api";
+
+/** همان شناسهٔ محصول سفارشی پرداخت دانشجویی */
+const STUDENT_PAYMENT_CUSTOM_SHOP_ID = 999000;
 
 interface StudentPaymentService {
   id: string;
   title: string;
   description: string;
   titleEn: string;
-  href: string;
   icon: React.ReactNode;
   iconColor: string;
 }
@@ -20,7 +29,6 @@ const studentPaymentServices: StudentPaymentService[] = [
     title: "پرداخت هزینه EA",
     description: "پرداخت هزینه‌های مربوط به معماری سازمانی",
     titleEn: "EA Payment",
-    href: "/shop",
     icon: <FaChartLine className="text-3xl" />,
     iconColor: "text-green-700",
   },
@@ -29,7 +37,6 @@ const studentPaymentServices: StudentPaymentService[] = [
     title: "عضویت در PMI",
     description: "پرداخت هزینه عضویت در انجمن مدیریت پروژه",
     titleEn: "PMI Membership",
-    href: "/shop",
     icon: <FaUsers className="text-3xl" />,
     iconColor: "text-green-700",
   },
@@ -38,11 +45,27 @@ const studentPaymentServices: StudentPaymentService[] = [
     title: "چاپ مقاله در مجلات خارجی",
     description: "پرداخت هزینه چاپ مقاله در مجلات معتبر بین‌المللی",
     titleEn: "International Journal Publication",
-    href: "/shop",
     icon: <HiDocumentText className="text-3xl" />,
     iconColor: "text-green-700",
   },
 ];
+
+function makeSyntheticProduct(title: string, price: number): CartItem["product"] {
+  return {
+    id: STUDENT_PAYMENT_CUSTOM_SHOP_ID,
+    name: title,
+    price,
+    image: "",
+    rating: 0,
+    reviews: 0,
+    isNew: false,
+    category: "پرداخت دانشجویی",
+    brand: "",
+    createdAt: new Date().toISOString().slice(0, 10),
+    sales: 0,
+    description: "",
+  };
+}
 
 const itemListJsonLd = {
   "@context": "https://schema.org",
@@ -55,11 +78,65 @@ const itemListJsonLd = {
     position: index + 1,
     name: item.title,
     description: item.description,
-    url: `https://mrpremiumhub.com${item.href}`,
   })),
 };
 
 export default function StudentPaymentServices() {
+  const router = useRouter();
+  const { addToCart } = useCart();
+  const [amounts, setAmounts] = useState<Record<string, string>>({});
+  const [submittingId, setSubmittingId] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleAddToCart = async (item: StudentPaymentService) => {
+    const raw = amounts[item.id]?.replace(/\D/g, "") || "0";
+    const amount = parseInt(raw, 10);
+    if (!amount || amount < 1) {
+      setError("لطفاً مبلغ را به دلار وارد کنید.");
+      return;
+    }
+    setError(null);
+    setSubmittingId(item.id);
+    try {
+      const loginPhone = getLoginPhoneFromStorage();
+      if (!loginPhone?.trim()) {
+        router.push("/auth?next=/currency-payment/student-payment");
+        return;
+      }
+      const userid = normalizePhoneForComparison(loginPhone);
+      if (!userid) {
+        setError("شماره تماس معتبر یافت نشد.");
+        return;
+      }
+      const ok = await createInvoice([
+        {
+          shopid: STUDENT_PAYMENT_CUSTOM_SHOP_ID,
+          userid,
+          quantity: 1,
+          isPaid: false,
+          paymentStatus: "not payed",
+          price: amount,
+        },
+      ]);
+      if (!ok) {
+        setError("ثبت سفارش در سامانه انجام نشد. لطفاً دوباره تلاش کنید.");
+        return;
+      }
+      const product = makeSyntheticProduct(item.title, amount);
+      const cartItem: CartItem = {
+        product,
+        quantity: 1,
+        selectedColor: "",
+        selectedWarranty: "",
+        finalPrice: amount,
+      };
+      addToCart(cartItem);
+      router.push("/cart");
+    } finally {
+      setSubmittingId(null);
+    }
+  };
+
   return (
     <section
       aria-labelledby="student-payment-services-heading"
@@ -81,17 +158,22 @@ export default function StudentPaymentServices() {
       <p className="text-sm text-gray-600 mb-6 text-center leading-relaxed max-w-3xl mx-auto">
         پرداخت هزینه ارزیابی مدارک، شرکت در رویدادهای علمی و سایر هزینه‌های تحصیلی در کوتاه‌ترین زمان
       </p>
-      <nav
+      <p className="text-xs text-gray-500 text-center mb-4">
+        برای هر مورد مبلغ (دلار) را وارد کنید و با زدن «افزودن به سبد خرید» به سبد خرید منتقل شوید.
+      </p>
+      {error && (
+        <div className="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm text-center">
+          {error}
+        </div>
+      )}
+      <div
         aria-label="فعالیت‌های علمی بین‌المللی"
         className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"
       >
         {studentPaymentServices.map((item) => (
-          <Link
+          <div
             key={item.id}
-            href={item.href}
-            title={item.title}
-            aria-label={`${item.title} - ${item.description}`}
-            className="bg-gradient-to-br from-gray-50 to-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-md hover:border-gray-200 transition-all duration-200 group flex flex-col"
+            className="bg-gradient-to-br from-gray-50 to-white rounded-xl p-6 shadow-sm border border-gray-100 flex flex-col"
           >
             <div className="flex items-center justify-center mb-5">
               <div
@@ -110,15 +192,32 @@ export default function StudentPaymentServices() {
             <p className="text-xs text-gray-500 text-center mb-4">
               {item.titleEn}
             </p>
-            <div className="text-sm text-blue-600 font-semibold text-center mt-auto pt-2">
-              <span className="inline-flex items-center gap-1.5">
-                ثبت درخواست
-                <span className="text-blue-400">&lt;</span>
-              </span>
+            <div className="mt-auto pt-3 border-t border-gray-200 space-y-3">
+              <label className="block text-xs font-medium text-gray-700 text-right">
+                مبلغ (دلار)
+              </label>
+              <input
+                type="text"
+                inputMode="numeric"
+                placeholder="مثال: ۵۰ یا ۱۰۰"
+                value={amounts[item.id] ?? ""}
+                onChange={(e) =>
+                  setAmounts((prev) => ({ ...prev, [item.id]: e.target.value }))
+                }
+                className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg text-left placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-[#ff5538] focus:border-transparent"
+              />
+              <button
+                type="button"
+                onClick={() => handleAddToCart(item)}
+                disabled={submittingId === item.id}
+                className="w-full py-2.5 px-4 rounded-lg text-sm font-semibold text-white bg-[#ff5538] hover:bg-[#e54d32] transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
+              >
+                {submittingId === item.id ? "در حال ثبت…" : "افزودن به سبد خرید"}
+              </button>
             </div>
-          </Link>
+          </div>
         ))}
-      </nav>
+      </div>
     </section>
   );
 }

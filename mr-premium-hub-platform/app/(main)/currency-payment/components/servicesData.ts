@@ -9,11 +9,11 @@ import {
   HiServer,
   HiOutlineDesktopComputer
 } from "react-icons/hi";
-import { SiPaypal, SiMastercard, SiAmazon } from "react-icons/si";
+import { SiPaypal, SiMastercard } from "react-icons/si";
 import { HiOutlineTemplate } from "react-icons/hi";
 import { SiDigitalocean } from "react-icons/si";
 import { FaBitcoin, FaGamepad, FaBrain, FaSearch } from "react-icons/fa";
-import { BiTransfer, BiShoppingBag } from "react-icons/bi";
+import { BiTransfer } from "react-icons/bi";
 import { MdSimCard, MdPhone, MdDomain, MdCloud, MdCode } from "react-icons/md";
 
 export interface Service {
@@ -304,24 +304,6 @@ export const services: Service[] = [
     href: "/currency-payment/host",
     icon: React.createElement(MdCloud, { className: "text-3xl sm:text-4xl md:text-5xl text-blue-500" }),
     description: "هاست خارجی برای راه‌اندازی وب‌سایت‌های حرفه‌ای؛ خرید از ارائه‌دهندگان معتبر با کیفیت بالا و پشتیبانی ۲۴ ساعته",
-    category: "international",
-  },
-  {
-    id: "amazon",
-    label: "خرید از آمازون",
-    labelEn: "Amazon Purchase",
-    href: "/currency-payment/amazon",
-    icon: React.createElement(SiAmazon, { className: "text-3xl sm:text-4xl md:text-5xl text-[#FF9900]" }),
-    description: "خرید کالا از فروشگاه اینترنتی آمازون با تحویل درب منزل؛ خرید از آمازون انگلیس، آمریکا، کانادا و سایر کشورها از طریق مستر پریمیوم هاب",
-    category: "international",
-  },
-  {
-    id: "trendyol",
-    label: "خرید از ترندیول ترکیه",
-    labelEn: "Trendyol Turkey",
-    href: "/currency-payment/trendyol",
-    icon: React.createElement(BiShoppingBag, { className: "text-3xl sm:text-4xl md:text-5xl text-red-500" }),
-    description: "خرید از ترندیول ترکیه با تحویل درب منزل؛ پوشاک، الکترونیک، عطر و ادکلن و سایر دسته‌بندی‌ها از طریق مستر پریمیوم هاب",
     category: "international",
   },
 ];
