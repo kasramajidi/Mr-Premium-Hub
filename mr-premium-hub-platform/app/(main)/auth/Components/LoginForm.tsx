@@ -7,6 +7,7 @@ import SubmitButton from "./SubmitButton";
 import { login, requestSmsPass, normalizePhoneForApi } from "@/app/(main)/auth/lib/auth-api";
 import { setAuthCookie } from "@/app/(main)/auth/lib/cookie";
 import { LOGIN_PHONE_KEY } from "@/app/(main)/my-account/lib/my-account-api";
+import { TERMS_TITLE, TERMS_FULL } from "@/app/(main)/auth/lib/terms-text";
 
 const AUTH_STORAGE_KEY = "loginval";
 
@@ -29,7 +30,8 @@ const LoginForm: React.FC<LoginFormProps> = ({
   useEffect(() => {
     setPhone(initialPhone ?? "");
   }, [initialPhone]);
-  const [rememberMe, setRememberMe] = useState(false);
+  const [termsAccepted, setTermsAccepted] = useState(false);
+  const [showTermsModal, setShowTermsModal] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
@@ -61,7 +63,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
     try {
       const data = await login({ phone: p, pass: pw });
       if (data.cookie) {
-        setAuthCookie(data.cookie, rememberMe);
+        setAuthCookie(data.cookie, false);
         if (typeof localStorage !== "undefined") {
           localStorage.setItem(AUTH_STORAGE_KEY, data.cookie);
           const normalized = normalizePhoneForApi(p);
@@ -223,22 +225,49 @@ const LoginForm: React.FC<LoginFormProps> = ({
             </button>
           </div>
         </div>
-        <div className="flex items-center gap-2 text-sm pt-2">
+        <div className="flex items-start gap-3 pt-2">
           <input
+            id="login-terms"
             type="checkbox"
-            id="remember-me"
-            checked={rememberMe}
-            onChange={(e) => setRememberMe(e.target.checked)}
-            className="w-4 h-4 cursor-pointer text-[#ff5538] focus:ring-[#ff5538]"
+            checked={termsAccepted}
+            onChange={(e) => setTermsAccepted(e.target.checked)}
+            className="mt-1 w-4 h-4 rounded border-gray-300 text-[#ff5538] focus:ring-[#ff5538] cursor-pointer"
+            aria-describedby="login-terms-desc"
           />
-          <label
-            htmlFor="remember-me"
-            className="text-sm text-gray-600 cursor-pointer"
-          >
-            مرا به خاطر بسپار
+          <label id="login-terms-desc" htmlFor="login-terms" className="text-sm text-gray-700 leading-relaxed cursor-pointer flex-1">
+            <button
+              type="button"
+              onClick={() => setShowTermsModal(true)}
+              className="text-[#ff5538] cursor-pointer hover:opacity-80 transition-opacity font-medium underline underline-offset-1"
+            >
+              قوانین مستر پریمیوم هاب
+            </button>
+            {" "}
+            را خوانده و آن را تایید می‌کنم.
           </label>
         </div>
-        <SubmitButton disabled={loading}>
+        {showTermsModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50" role="dialog" aria-modal="true" aria-labelledby="login-terms-modal-title">
+            <div className="bg-white rounded-2xl shadow-xl max-w-2xl w-full max-h-[85vh] flex flex-col">
+              <h2 id="login-terms-modal-title" className="text-lg font-semibold text-gray-900 p-4 border-b border-gray-200 shrink-0">
+                {TERMS_TITLE}
+              </h2>
+              <div className="p-4 overflow-y-auto text-sm text-gray-700 leading-relaxed whitespace-pre-line">
+                {TERMS_FULL}
+              </div>
+              <div className="p-4 border-t border-gray-200 shrink-0">
+                <button
+                  type="button"
+                  onClick={() => setShowTermsModal(false)}
+                  className="w-full py-2.5 cursor-pointer px-4 rounded-xl bg-[#ff5538] text-white font-medium hover:opacity-90 transition-opacity"
+                >
+                  بستن
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+        <SubmitButton disabled={loading || !termsAccepted}>
           {loading ? "در حال ورود…" : "ورود"}
         </SubmitButton>
         {onSwitchToRegister && (

@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import SubmitButton from "./SubmitButton";
 import { signup } from "@/app/(main)/auth/lib/auth-api";
+import { TERMS_TITLE, TERMS_FULL } from "@/app/(main)/auth/lib/terms-text";
 
 interface RegisterFormProps {
   onSwitchToLogin?: (phone?: string) => void;
@@ -15,6 +16,8 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchToLogin }) => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
+  const [termsAccepted, setTermsAccepted] = useState(false);
+  const [showTermsModal, setShowTermsModal] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -127,25 +130,51 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchToLogin }) => {
           </p>
         </div>
 
-        <p className="text-xs text-gray-500 pt-2 text-center leading-relaxed">
-          با عضویت، شما{" "}
-          <a
-            href="#"
-            className="text-[#ff5538] hover:opacity-80 transition-opacity"
-          >
-            شرایط استفاده
-          </a>{" "}
-          و{" "}
-          <a
-            href="#"
-            className="text-[#ff5538] hover:opacity-80 transition-opacity"
-          >
-            حریم خصوصی
-          </a>{" "}
-          را می‌پذیرید.
-        </p>
+        <div className="flex items-start gap-3 pt-2">
+          <input
+            id="register-terms"
+            type="checkbox"
+            checked={termsAccepted}
+            onChange={(e) => setTermsAccepted(e.target.checked)}
+            className="mt-1 w-4 h-4 rounded border-gray-300 text-[#ff5538] focus:ring-[#ff5538] cursor-pointer"
+            aria-describedby="register-terms-desc"
+          />
+          <label id="register-terms-desc" htmlFor="register-terms" className="text-sm text-gray-700 leading-relaxed cursor-pointer flex-1">
+            <button
+              type="button"
+              onClick={() => setShowTermsModal(true)}
+              className="text-[#ff5538] cursor-pointer hover:opacity-80 transition-opacity font-medium underline underline-offset-1"
+            >
+              قوانین مستر پریمیوم هاب
+            </button>
+            {" "}
+            را خوانده و آن را تایید می‌کنم.
+          </label>
+        </div>
 
-        <SubmitButton disabled={loading}>
+        {showTermsModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50" role="dialog" aria-modal="true" aria-labelledby="terms-modal-title">
+            <div className="bg-white rounded-2xl shadow-xl max-w-2xl w-full max-h-[85vh] flex flex-col">
+              <h2 id="terms-modal-title" className="text-lg font-semibold text-gray-900 p-4 border-b border-gray-200 shrink-0">
+                {TERMS_TITLE}
+              </h2>
+              <div className="p-4 overflow-y-auto text-sm text-gray-700 leading-relaxed whitespace-pre-line">
+                {TERMS_FULL}
+              </div>
+              <div className="p-4 border-t border-gray-200 shrink-0">
+                <button
+                  type="button"
+                  onClick={() => setShowTermsModal(false)}
+                  className="w-full py-2.5 px-4 cursor-pointer rounded-xl bg-[#ff5538] text-white font-medium hover:opacity-90 transition-opacity"
+                >
+                  بستن
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        <SubmitButton disabled={loading || !termsAccepted}>
           {loading ? "در حال ثبت‌نام…" : "عضویت"}
         </SubmitButton>
         {onSwitchToLogin && (
