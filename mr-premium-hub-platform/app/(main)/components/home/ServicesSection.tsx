@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { SiPaypal, SiDigitalocean } from "react-icons/si";
-import { HiOutlineTemplate } from "react-icons/hi";
+import { HiServer, HiGlobe, HiAcademicCap } from "react-icons/hi";
+import { HiOutlineDesktopComputer } from "react-icons/hi";
 
 interface ServiceCard {
   icon: React.ReactNode;
@@ -14,35 +14,35 @@ interface ServiceCard {
 const services: ServiceCard[] = [
   {
     icon: (
-      <SiPaypal className="text-4xl sm:text-5xl md:text-6xl text-[#0070BA]" />
+      <HiOutlineDesktopComputer className="text-4xl sm:text-5xl md:text-6xl text-green-500" />
     ),
-    title: "نقد درآمد پی‌پال",
-    description: "تبدیل موجودی پی‌پال به ریال با بهترین نرخ",
-    href: "/currency-payment",
+    title: "اکانت‌های پریمیوم",
+    description: "خرید اکانت هوش مصنوعی، سئو، بازی و نرم‌افزار",
+    href: "/currency-payment/ai-account",
   },
   {
     icon: (
-      <HiOutlineTemplate className="text-4xl sm:text-5xl md:text-6xl text-[#81B441]" />
+      <HiAcademicCap className="text-4xl sm:text-5xl md:text-6xl text-[#ff5538]" />
     ),
-    title: "تم فارست",
-    description: "خرید قالب از تم فارست و پرداخت ارزی",
-    href: "/currency-payment",
+    title: "آموزش و آزمون",
+    description: "ثبت نام آزمون زبان و بین‌المللی، پرداخت دانشجویی",
+    href: "/currency-payment/language-exam",
   },
   {
     icon: (
-      <SiDigitalocean className="text-4xl sm:text-5xl md:text-6xl text-[#0080FF]" />
+      <HiGlobe className="text-4xl sm:text-5xl md:text-6xl text-blue-500" />
     ),
-    title: "دیجیتال اوشن",
-    description: "نقد کردن درآمد و پرداخت سرویس‌های ابری",
-    href: "/currency-payment",
+    title: "خدمات بین‌المللی",
+    description: "سیم کارت، شماره مجازی، دامنه و هاست",
+    href: "/currency-payment/international-sim",
   },
   {
     icon: (
-      <SiPaypal className="text-4xl sm:text-5xl md:text-6xl text-[#0070BA]" />
+      <HiServer className="text-4xl sm:text-5xl md:text-6xl text-red-500" />
     ),
-    title: "پرداخت با پی‌پال",
-    description: "پرداخت صورتحساب و خرید با پی‌پال",
-    href: "/currency-payment",
+    title: "سرویس‌های VPS",
+    description: "VPS تریدینگ، روزانه، آمریکا، هلند و فرانسه",
+    href: "/currency-payment/vps-trading",
   },
 ];
 
@@ -55,7 +55,7 @@ export default function ServicesSection() {
             خدمات ارزی و پرداخت ارزی
           </h2>
           <p className="text-sm text-gray-600 max-w-2xl mx-auto">
-            مستر پریمیوم هاب (Mr Premium Hub) نقد درآمد پی‌پال، پرداخت با مسترکارت، پرداخت هزینه ویزا و سفارت، ثبت نام آزمون‌های بین‌المللی و خرید بلیت هواپیما و هتل را با امنیت و بهترین نرخ ارائه می‌دهد.
+            مستر پریمیوم هاب (Mr Premium Hub) پرداخت ارزی، اکانت پریمیوم، آزمون و ویزا، سیم کارت و VPS را با امنیت و بهترین نرخ ارائه می‌دهد.
           </p>
         </div>
 
