@@ -484,13 +484,17 @@ export default function CreditCardsTabs({ initialProducts = [] }: { initialProdu
                             <span className="text-xs text-gray-600 flex-1 text-center">
                               برای مشاهده قیمت و ثبت سفارش وارد حساب کاربری شوید.
                             </span>
-                            <Link
-                              href="/auth?next=/valid-cards"
-                              onClick={(e) => e.stopPropagation()}
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                router.push("/auth?next=/valid-cards");
+                              }}
                               className="w-full sm:w-auto bg-[#ff5538] text-white px-4 py-2.5 rounded-xl text-sm font-medium hover:bg-[#e54d32] transition-colors text-center"
                             >
                               ورود / ثبت‌نام
-                            </Link>
+                            </button>
                           </>
                         )}
                       </div>
