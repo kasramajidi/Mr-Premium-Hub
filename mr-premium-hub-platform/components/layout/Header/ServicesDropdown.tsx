@@ -80,7 +80,9 @@ export default function ServicesDropdown() {
       {isOpen && services.length > 0 && (
         <div className="absolute top-full left-0 mt-2 w-56 bg-white rounded-lg shadow-xl border border-gray-200 py-2 z-50">
           {services.map((service) => {
-            const isServiceActive = pathname === service.href;
+            const isServiceActive =
+                pathname === service.href ||
+                pathname?.startsWith(service.href + "/");
             return (
               <Link
                 key={service.href}

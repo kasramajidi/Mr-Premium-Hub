@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { HiMenu, HiX } from "react-icons/hi";
 import LoginButton from "./LoginButton";
 import CartIcon from "./CartIcon";
+import MobileServicesMenu from "./MobileServicesMenu";
 
 interface NavLink {
   label: string;
@@ -14,6 +15,7 @@ interface NavLink {
 
 const navLinks: NavLink[] = [
   { label: "صفحه اصلی", href: "/" },
+  { label: "خدمات", href: "/services" },
   { label: "اخبار و مقالات", href: "/news" },
   { label: "سوالات متداول", href: "/faq" },
   { label: "درباره ما", href: "/about" },
@@ -91,7 +93,12 @@ export default function MobileMenu({
 
         <nav className="flex flex-col py-4 flex-1 overflow-y-auto min-h-0">
           {navLinks.map((link) => {
-            const isActive = pathname === link.href;
+            if (link.href === "/services") {
+              return <MobileServicesMenu key={link.href} onClose={closeMenu} />;
+            }
+            const isActive =
+              pathname === link.href ||
+              (link.href !== "/" && pathname?.startsWith(link.href));
             return (
               <Link
                 key={link.href}

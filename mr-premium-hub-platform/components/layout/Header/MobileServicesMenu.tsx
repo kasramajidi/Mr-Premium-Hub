@@ -65,7 +65,9 @@ export default function MobileServicesMenu({
       {isOpen && services.length > 0 && (
         <div className="bg-gray-50">
           {services.map((service) => {
-            const isServiceActive = pathname === service.href;
+            const isServiceActive =
+              pathname === service.href ||
+              pathname?.startsWith(service.href + "/");
             return (
               <Link
                 key={service.href}
