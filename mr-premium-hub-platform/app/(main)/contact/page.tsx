@@ -7,12 +7,12 @@ import {
 } from "./components";
 
 export const metadata: Metadata = {
-  title: "تماس با ما | مستر پریمیوم هاب",
-  description: "تماس با مستر پریمیوم هاب: ۰۲۱-۹۱۳۲۰۷۰۰ | support@mrpremiumhub.org | تهران، کارگر شمالی، جلال آل احمد، کوچه چهارم، پلاک ۴۰",
+  title: "تماس با ما | ريتكس",
+  description: "تماس با ريتكس: ۰۲۱-۹۱۳۲۰۷۰۰ | support@mrpremiumhub.org | تهران، کارگر شمالی، جلال آل احمد، کوچه چهارم، پلاک ۴۰",
   keywords: [
     "تماس با ما",
     "پشتیبانی",
-    "مستر پریمیوم هاب",
+    "ريتكس",
     "۰۲۱۹۱۳۲۰۷۰۰",
     "support@mrpremiumhub.org",
   ],

@@ -29,7 +29,7 @@ export default function VisaPayments() {
           </Link>
         </h2>
         <p className="text-sm text-gray-600 text-center max-w-2xl mx-auto mb-8">
-          خرید اکانت‌های پریمیوم برای هوش مصنوعی، سئو، بازی و نرم‌افزار از طریق مستر پریمیوم هاب با امنیت و بهترین نرخ.
+          خرید اکانت‌های پریمیوم برای هوش مصنوعی، سئو، بازی و نرم‌افزار از طریق ريتكس با امنیت و بهترین نرخ.
         </p>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">

@@ -240,7 +240,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
               onClick={() => setShowTermsModal(true)}
               className="text-[#ff5538] cursor-pointer hover:opacity-80 transition-opacity font-medium underline underline-offset-1"
             >
-              قوانین مستر پریمیوم هاب
+              قوانین ريتكس
             </button>
             {" "}
             را خوانده و آن را تایید می‌کنم.

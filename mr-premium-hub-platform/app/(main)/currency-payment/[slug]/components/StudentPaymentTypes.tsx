@@ -110,7 +110,7 @@ const itemListJsonLd = {
   "@context": "https://schema.org",
   "@type": "ItemList",
   name: "پرداخت هزینه‌های دانشجویی",
-  description: "پرداخت تمامی هزینه‌های دانشجویی و تحصیل در خارج از کشور با مستر پریمیوم هاب",
+  description: "پرداخت تمامی هزینه‌های دانشجویی و تحصیل در خارج از کشور با ريتكس",
   numberOfItems: 6,
   itemListElement: studentPayments.map((item, index) => ({
     "@type": "ListItem",
@@ -192,7 +192,7 @@ export default function StudentPaymentTypes() {
         پرداخت هزینه‌های دانشجویی
       </h2>
       <p className="text-sm text-gray-600 mb-6 text-center leading-relaxed">
-        پرداخت تمامی هزینه‌های دانشجویی و تحصیل در خارج از کشور با مستر پریمیوم هاب
+        پرداخت تمامی هزینه‌های دانشجویی و تحصیل در خارج از کشور با ريتكس
       </p>
       <p className="text-xs text-gray-500 text-center mb-4">
         برای هر مورد مبلغ (دلار) را وارد کنید و با زدن «افزودن به سبد خرید» به سبد خرید منتقل شوید.

@@ -51,7 +51,7 @@ export default function NotFound() {
           className="mt-10 text-xs text-gray-400 animate-notfound-fade-up"
           style={{ animationDelay: "1s" }}
         >
-          مستر پریمیوم هاب | Mr Premium Hub
+          ريتكس | RAITX
         </p>
       </div>
     </section>

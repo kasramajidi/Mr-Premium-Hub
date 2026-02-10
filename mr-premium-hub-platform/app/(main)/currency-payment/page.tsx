@@ -3,14 +3,14 @@ import CurrencyPaymentTabs from "./components/CurrencyPaymentTabs";
 
 export const metadata: Metadata = {
   title: "پرداخت ارزی",
-  description: "خدمات پرداخت ارزی، اکانت‌های پریمیوم، سرویس‌های VPS و خدمات آموزشی مسترپریمیوم هاب",
+  description: "خدمات پرداخت ارزی، اکانت‌های پریمیوم، سرویس‌های VPS و خدمات آموزشی ريتكس",
   keywords: [
     "پرداخت ارزی",
     "اکانت پریمیوم",
     "VPS",
     "خدمات بین‌المللی",
     "آموزش و آزمون",
-    "مسترپریمیوم هاب",
+    "ريتكس",
   ],
   alternates: {
     canonical: "/currency-payment",

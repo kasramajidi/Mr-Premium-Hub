@@ -35,7 +35,7 @@ export default function ArticlesSection({ articles }: ArticlesSectionProps) {
           className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold mb-4 sm:mb-6 md:mb-8 text-center"
           style={{ color: "#1a3760" }}
         >
-          آخرین مقالات مستر پریمیوم هاب
+          آخرین مقالات ريتكس
         </h2>
       </div>
 

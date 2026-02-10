@@ -99,7 +99,7 @@ const itemListJsonLd = {
   "@context": "https://schema.org",
   "@type": "ItemList",
   name: "خرید انواع اکانت بازی",
-  description: "خرید اکانت‌های پریمیوم بازی از Xbox، PlayStation، Steam و سایر پلتفرم‌ها از طریق مستر پریمیوم هاب",
+  description: "خرید اکانت‌های پریمیوم بازی از Xbox، PlayStation، Steam و سایر پلتفرم‌ها از طریق ريتكس",
   numberOfItems: 8,
   itemListElement: gameAccounts.map((item, index) => ({
     "@type": "ListItem",

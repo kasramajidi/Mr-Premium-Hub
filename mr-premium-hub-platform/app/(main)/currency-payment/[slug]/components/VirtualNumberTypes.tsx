@@ -114,7 +114,7 @@ export default function VirtualNumberTypes({
         انواع شماره مجازی
       </h2>
       <p className="text-[10px] sm:text-xs md:text-sm text-gray-600 text-center mb-4 sm:mb-6">
-        خرید انواع شماره های مجازی برای سرویسهای مختلف از طریق مستر پریمیوم هاب
+        خرید انواع شماره های مجازی برای سرویسهای مختلف از طریق ريتكس
       </p>
       <p className="text-[10px] sm:text-xs text-gray-500 text-center mb-4">
         روی هر شماره مجازی کلیک کنید تا در باکس ثبت سفارش سمت چپ قیمت و گزینه ثبت سفارش نمایش داده شود.

@@ -433,7 +433,7 @@ export default function CreditCardsTabs({ initialProducts = [] }: { initialProdu
           </div>
         </div>
         <p className="text-gray-600 text-xs sm:text-sm md:text-base leading-6 sm:leading-7 max-w-2xl mx-auto">
-          مسترپریمیوم هاب ارائه‌دهنده انواع کارت‌های اعتباری بین‌المللی، گیفت
+          ريتكس ارائه‌دهنده انواع کارت‌های اعتباری بین‌المللی، گیفت
           کارت‌های بازی، مسترکارت و ویزا کارت است. ما با سال‌ها تجربه در زمینه
           کارت‌های اعتباری و پرداخت‌های بین‌المللی، آماده خدمت‌رسانی به شما
           هستیم.

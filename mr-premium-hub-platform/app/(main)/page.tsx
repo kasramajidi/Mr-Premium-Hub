@@ -8,9 +8,9 @@ import {
 } from "@/app/(main)/components/home";
 
 export const metadata: Metadata = {
-  title: "مستر پریمیوم هاب | Mr Premium Hub - خدمات ارزی و پرداخت ارزی",
+  title: "ريتكس | RAITX - خدمات ارزی و پرداخت ارزی",
   description:
-    "مستر پریمیوم هاب (Mr Premium Hub) - نقد درآمد پی‌پال، پرداخت با مسترکارت، پرداخت هزینه ویزا و سفارت، ثبت نام آزمون‌های بین‌المللی، خرید بلیت هواپیما و هتل. تماس: ۰۲۱-۹۱۳۲۰۷۰۰ | support@mrpremiumhub.org",
+    "ريتكس (RAITX) - نقد درآمد پی‌پال، پرداخت با مسترکارت، پرداخت هزینه ویزا و سفارت، ثبت نام آزمون‌های بین‌المللی، خرید بلیت هواپیما و هتل. تماس: ۰۲۱-۹۱۳۲۰۷۰۰ | support@mrpremiumhub.org",
   keywords: [
     "نقد درآمد ارزی",
     "پرداخت پی‌پال",
@@ -20,12 +20,12 @@ export const metadata: Metadata = {
     "ثبت نام آزمون بین‌المللی",
     "خرید بلیت هواپیما",
     "پرداخت هتل",
-    "مستر پریمیوم هاب",
-    "Mr Premium Hub",
+    "ريتكس",
+    "RAITX",
     "خدمات ارزی",
   ],
   openGraph: {
-    title: "مستر پریمیوم هاب | خدمات ارزی و پرداخت ارزی",
+    title: "ريتكس | خدمات ارزی و پرداخت ارزی",
     description:
       "نقد درآمد پی‌پال، پرداخت با مسترکارت، ویزا و سفارت، آزمون‌های بین‌المللی، بلیت و هتل. تماس: ۰۲۱-۹۱۳۲۰۷۰۰",
   },
@@ -41,8 +41,8 @@ export default function Home() {
     serviceType: "خدمات پرداخت ارزی و نقد کردن درآمد",
     provider: {
       "@type": "Organization",
-      name: "مسترپریمیوم هاب",
-      alternateName: "Mr Premium Hub",
+      name: "ريتكس",
+      alternateName: "RAITX",
     },
     areaServed: "IR",
     hasOfferCatalog: {

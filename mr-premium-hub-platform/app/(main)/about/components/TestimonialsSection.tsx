@@ -15,7 +15,7 @@ const testimonials = [
     name: "مونا لطفی",
     image: "/Images/tp-best-mens-hairstyles.jpg",
     rating: 5,
-    text: "نقد درآمد پی‌پال و پرداخت ارزی را از مستر پریمیوم هاب انجام دادم. سریع و بدون دردسر بود. پشتیبانی هم همیشه پاسخگو.",
+    text: "نقد درآمد پی‌پال و پرداخت ارزی را از ريتكس انجام دادم. سریع و بدون دردسر بود. پشتیبانی هم همیشه پاسخگو.",
   },
   {
     id: 2,
@@ -29,7 +29,7 @@ const testimonials = [
     name: "سارا احمدی",
     image: "/Images/tp-best-mens-hairstyles.jpg",
     rating: 5,
-    text: "برای ثبت نام آزمون بین‌المللی و خرید بلیت هواپیما از مستر پریمیوم هاب استفاده کردم. راضی هستم.",
+    text: "برای ثبت نام آزمون بین‌المللی و خرید بلیت هواپیما از ريتكس استفاده کردم. راضی هستم.",
   },
   {
     id: 4,
@@ -50,14 +50,14 @@ const testimonials = [
     name: "مریم حسینی",
     image: "/Images/tp-best-mens-hairstyles.jpg",
     rating: 4,
-    text: "کارت اعتباری و پرداخت ارزی را از مستر پریمیوم هاب گرفتم. فرایند ساده و شفاف بود.",
+    text: "کارت اعتباری و پرداخت ارزی را از ريتكس گرفتم. فرایند ساده و شفاف بود.",
   },
   {
     id: 7,
     name: "نرگس محمدی",
     image: "/Images/tp-best-mens-hairstyles.jpg",
     rating: 5,
-    text: "سال‌هاست برای پرداخت‌های بین‌المللی از Mr Premium Hub استفاده می‌کنم. همیشه راضی بوده‌ام.",
+    text: "سال‌هاست برای پرداخت‌های بین‌المللی از RAITX استفاده می‌کنم. همیشه راضی بوده‌ام.",
   },
   {
     id: 8,
@@ -90,7 +90,7 @@ export default function TestimonialsSection() {
               مشتریان درباره ما چه می گویند؟
             </h3>
             <p className="text-center text-gray-600 text-[10px] sm:text-xs md:text-sm leading-5 sm:leading-6 md:leading-7 mb-4 sm:mb-6">
-              مشتریان مستر پریمیوم هاب از سرعت، امنیت و پشتیبانی خدمات ارزی و پرداخت ارزی ما راضی هستند.
+              مشتریان ريتكس از سرعت، امنیت و پشتیبانی خدمات ارزی و پرداخت ارزی ما راضی هستند.
             </p>
             <div className="flex items-center justify-center gap-2 mt-auto">
               <CarouselNext className="relative right-0 top-0 translate-y-0 h-8 w-8 sm:h-10 sm:w-10 bg-[#ff5538] text-white border-none hover:bg-[#ff5538]/90 rounded-full" />

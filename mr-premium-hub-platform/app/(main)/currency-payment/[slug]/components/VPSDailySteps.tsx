@@ -4,8 +4,8 @@ import { HiUserAdd, HiDocumentText, HiCreditCard, HiCheckCircle } from "react-ic
 
 const steps = [
   {
-    title: "ثبت نام در سایت مستر پریمیوم هاب",
-    description: "شما هم به مستر پریمیوم هاب بپیوندید. برای خرید سرور مجازی، در سایت ثبت نام کنید.",
+    title: "ثبت نام در سایت ريتكس",
+    description: "شما هم به ريتكس بپیوندید. برای خرید سرور مجازی، در سایت ثبت نام کنید.",
     icon: <HiUserAdd className="text-3xl" />,
     bgColor: "bg-[#ff5538]/10",
     iconColor: "text-[#ff5538]",
@@ -43,7 +43,7 @@ export default function VPSDailySteps() {
         id="vps-daily-steps-heading"
         className="text-lg md:text-xl font-bold text-gray-900 mb-6 text-center"
       >
-        مراحل خرید سرور مجازی روزانه از مستر پریمیوم هاب
+        مراحل خرید سرور مجازی روزانه از ريتكس
       </h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         {steps.map((step, index) => (

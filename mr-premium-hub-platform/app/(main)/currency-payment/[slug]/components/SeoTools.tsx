@@ -84,7 +84,7 @@ const itemListJsonLd = {
   "@context": "https://schema.org",
   "@type": "ItemList",
   name: "ابزارهای سئو",
-  description: "خرید انواع اکانت‌های پریمیوم ابزارهای سئو از طریق مستر پریمیوم هاب",
+  description: "خرید انواع اکانت‌های پریمیوم ابزارهای سئو از طریق ريتكس",
   numberOfItems: 6,
   itemListElement: seoTools.map((item, index) => ({
     "@type": "ListItem",
@@ -123,7 +123,7 @@ export default function SeoTools({
         <span className="w-1 h-6 bg-[#ff5538] rounded hidden sm:block" aria-hidden></span>
       </h2>
       <p className="text-xs sm:text-sm text-gray-600 text-center mb-5 sm:mb-6 max-w-2xl mx-auto leading-relaxed">
-        خرید انواع اکانت‌های پریمیوم ابزارهای سئو از طریق مستر پریمیوم هاب
+        خرید انواع اکانت‌های پریمیوم ابزارهای سئو از طریق ريتكس
       </p>
       <p className="text-[10px] sm:text-xs text-gray-500 text-center mb-4">
         روی هر ابزار کلیک کنید تا در باکس ثبت سفارش سمت چپ قیمت و گزینه ثبت سفارش نمایش داده شود.

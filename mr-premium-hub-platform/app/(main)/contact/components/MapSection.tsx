@@ -59,7 +59,7 @@ export default function MapSection() {
         {/* نقشه: تهران، کارگر شمالی، نبش جلال آل احمد، کوچه چهارم، پلاک ۴۰ */}
         <div className="relative flex-1 min-h-[200px] sm:min-h-[220px] md:min-h-[240px]">
           <iframe
-            title="نقشه آدرس مستر پریمیوم هاب - تهران، خیابان کارگر شمالی، نبش بزرگراه جلال آل احمد، کوچه چهارم، پلاک ۴۰"
+            title="نقشه آدرس ريتكس - تهران، خیابان کارگر شمالی، نبش بزرگراه جلال آل احمد، کوچه چهارم، پلاک ۴۰"
             src="https://www.openstreetmap.org/export/embed.html?bbox=51.382%2C35.728%2C51.392%2C35.736&layer=mapnik&marker=35.732%2C51.387"
             width="100%"
             height="100%"

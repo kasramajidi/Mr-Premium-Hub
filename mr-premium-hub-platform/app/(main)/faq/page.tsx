@@ -3,12 +3,12 @@ import FAQPageClient from "./FAQPageClient";
 
 export const metadata: Metadata = {
   title: "سوالات متداول",
-  description: "پاسخ به سوالات رایج شما درباره خدمات مسترپریمیوم هاب",
+  description: "پاسخ به سوالات رایج شما درباره خدمات ريتكس",
   keywords: [
     "سوالات متداول",
     "FAQ",
     "پرسش و پاسخ",
-    "مسترپریمیوم هاب",
+    "ريتكس",
   ],
   alternates: {
     canonical: "/faq",

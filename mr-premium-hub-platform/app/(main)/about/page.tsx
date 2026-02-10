@@ -10,11 +10,11 @@ import { getArticlesFromApi } from "../news/lib/articles-api";
 
 export const metadata: Metadata = {
   title: "درباره ما",
-  description: "درباره مستر پریمیوم هاب - خدمات ارزی و پرداخت ارزی، نقد پی‌پال، مسترکارت، ویزا و سفارت",
+  description: "درباره ريتكس - خدمات ارزی و پرداخت ارزی، نقد پی‌پال، مسترکارت، ویزا و سفارت",
   keywords: [
     "درباره ما",
-    "مستر پریمیوم هاب",
-    "Mr Premium Hub",
+    "ريتكس",
+    "RAITX",
     "خدمات ارزی",
     "پرداخت ارزی",
   ],

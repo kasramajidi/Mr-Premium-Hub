@@ -72,7 +72,7 @@ export default function AdminLoginForm({ nextPath }: AdminLoginFormProps) {
               <h1 className="text-xl font-bold text-gray-900">
                 ورود به پنل ادمین
               </h1>
-              <p className="text-sm text-gray-500 mt-1.5">مستر پریمیوم هاب</p>
+              <p className="text-sm text-gray-500 mt-1.5">ريتكس</p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-5">

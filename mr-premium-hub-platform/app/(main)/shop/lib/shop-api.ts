@@ -113,7 +113,7 @@ export function mapApiItemToShopProduct(item: ApiShopItem, index: number): ShopP
   const groups = String(item.groups ?? item.category ?? item.Category ?? "—");
   const price = Math.max(0, Number(item.price ?? item.Price ?? 0));
   const image = String(item.img ?? item.image ?? "/Images/Shop/product-pic1.jpg").trim() || "/Images/Shop/product-pic1.jpg";
-  const rawText = String(item.text ?? "").trim() || "خرید از مستر پریمیوم هاب.";
+  const rawText = String(item.text ?? "").trim() || "خرید از ريتكس.";
   const description =
     rawText
       .replace(/\r\n/g, "\n")
@@ -121,7 +121,7 @@ export function mapApiItemToShopProduct(item: ApiShopItem, index: number): ShopP
       .split("\n")
       .map((l) => l.trim())
       .filter(Boolean)
-      .join("\n\n") || "خرید از مستر پریمیوم هاب.";
+      .join("\n\n") || "خرید از ريتكس.";
   const userComments = parseUserComments(item.UserComments);
   const reviewsCount = userComments.length || Math.max(0, Number(item.NumberOfComments ?? 0));
   const ratingsFromComments = userComments

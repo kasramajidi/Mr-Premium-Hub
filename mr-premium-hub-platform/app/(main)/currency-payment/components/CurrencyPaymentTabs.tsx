@@ -272,7 +272,7 @@ export default function CurrencyPaymentTabs() {
           </div>
         </div>
         <p className="text-gray-600 text-xs sm:text-sm md:text-base leading-6 sm:leading-7 max-w-2xl mx-auto">
-          مسترپریمیوم هاب ارائه‌دهنده انواع خدمات پرداخت ارزی، اکانت‌های پریمیوم،
+          ريتكس ارائه‌دهنده انواع خدمات پرداخت ارزی، اکانت‌های پریمیوم،
           سرویس‌های VPS و خدمات آموزشی است. ما با سال‌ها تجربه در زمینه پرداخت‌های
           بین‌المللی، آماده خدمت‌رسانی به شما هستیم.
         </p>

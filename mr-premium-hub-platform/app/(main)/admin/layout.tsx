@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "پنل مدیریت | مستر پریمیوم هاب",
-  description: "پنل مدیریت مستر پریمیوم هاب",
+  title: "پنل مدیریت | ريتكس",
+  description: "پنل مدیریت ريتكس",
   robots: {
     index: false,
     follow: false,

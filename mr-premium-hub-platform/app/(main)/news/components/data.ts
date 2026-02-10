@@ -179,7 +179,7 @@ export const allArticles: ArticleDetail[] = [
     content: defaultContent,
     relatedService: {
       title: "طراحی وبسایت وردپرس",
-      description: "خدمات مرتبط با مستر پریمیوم هاب - پرداخت ارزی و خدمات بین‌المللی.",
+      description: "خدمات مرتبط با ريتكس - پرداخت ارزی و خدمات بین‌المللی.",
       image: "/Images/tp-best-mens-hairstyles.jpg",
       link: "/services/wordpress",
     },
@@ -196,7 +196,7 @@ export const allArticles: ArticleDetail[] = [
     content: defaultContent,
     relatedService: {
       title: "طراحی وبسایت وردپرس",
-      description: "خدمات مرتبط با مستر پریمیوم هاب - پرداخت ارزی و خدمات بین‌المللی.",
+      description: "خدمات مرتبط با ريتكس - پرداخت ارزی و خدمات بین‌المللی.",
       image: "/Images/tp-best-mens-hairstyles.jpg",
       link: "/services/wordpress",
     },
@@ -213,7 +213,7 @@ export const allArticles: ArticleDetail[] = [
     content: defaultContent,
     relatedService: {
       title: "طراحی وبسایت وردپرس",
-      description: "خدمات مرتبط با مستر پریمیوم هاب - پرداخت ارزی و خدمات بین‌المللی.",
+      description: "خدمات مرتبط با ريتكس - پرداخت ارزی و خدمات بین‌المللی.",
       image: "/Images/tp-best-mens-hairstyles.jpg",
       link: "/services/wordpress",
     },
@@ -230,7 +230,7 @@ export const allArticles: ArticleDetail[] = [
     content: defaultContent,
     relatedService: {
       title: "طراحی وبسایت وردپرس",
-      description: "خدمات مرتبط با مستر پریمیوم هاب - پرداخت ارزی و خدمات بین‌المللی.",
+      description: "خدمات مرتبط با ريتكس - پرداخت ارزی و خدمات بین‌المللی.",
       image: "/Images/tp-best-mens-hairstyles.jpg",
       link: "/services/wordpress",
     },
@@ -247,7 +247,7 @@ export const allArticles: ArticleDetail[] = [
     content: defaultContent,
     relatedService: {
       title: "طراحی وبسایت وردپرس",
-      description: "خدمات مرتبط با مستر پریمیوم هاب - پرداخت ارزی و خدمات بین‌المللی.",
+      description: "خدمات مرتبط با ريتكس - پرداخت ارزی و خدمات بین‌المللی.",
       image: "/Images/tp-best-mens-hairstyles.jpg",
       link: "/services/wordpress",
     },
@@ -264,7 +264,7 @@ export const allArticles: ArticleDetail[] = [
     content: defaultContent,
     relatedService: {
       title: "طراحی وبسایت وردپرس",
-      description: "خدمات مرتبط با مستر پریمیوم هاب - پرداخت ارزی و خدمات بین‌المللی.",
+      description: "خدمات مرتبط با ريتكس - پرداخت ارزی و خدمات بین‌المللی.",
       image: "/Images/tp-best-mens-hairstyles.jpg",
       link: "/services/wordpress",
     },
@@ -281,7 +281,7 @@ export const allArticles: ArticleDetail[] = [
     content: defaultContent,
     relatedService: {
       title: "طراحی وبسایت وردپرس",
-      description: "خدمات مرتبط با مستر پریمیوم هاب - پرداخت ارزی و خدمات بین‌المللی.",
+      description: "خدمات مرتبط با ريتكس - پرداخت ارزی و خدمات بین‌المللی.",
       image: "/Images/tp-best-mens-hairstyles.jpg",
       link: "/services/wordpress",
     },
@@ -298,7 +298,7 @@ export const allArticles: ArticleDetail[] = [
     content: defaultContent,
     relatedService: {
       title: "طراحی وبسایت وردپرس",
-      description: "خدمات مرتبط با مستر پریمیوم هاب - پرداخت ارزی و خدمات بین‌المللی.",
+      description: "خدمات مرتبط با ريتكس - پرداخت ارزی و خدمات بین‌المللی.",
       image: "/Images/tp-best-mens-hairstyles.jpg",
       link: "/services/wordpress",
     },
@@ -315,7 +315,7 @@ export const allArticles: ArticleDetail[] = [
     content: defaultContent,
     relatedService: {
       title: "طراحی وبسایت وردپرس",
-      description: "خدمات مرتبط با مستر پریمیوم هاب - پرداخت ارزی و خدمات بین‌المللی.",
+      description: "خدمات مرتبط با ريتكس - پرداخت ارزی و خدمات بین‌المللی.",
       image: "/Images/tp-best-mens-hairstyles.jpg",
       link: "/services/wordpress",
     },
@@ -332,7 +332,7 @@ export const allArticles: ArticleDetail[] = [
     content: defaultContent,
     relatedService: {
       title: "طراحی وبسایت وردپرس",
-      description: "خدمات مرتبط با مستر پریمیوم هاب - پرداخت ارزی و خدمات بین‌المللی.",
+      description: "خدمات مرتبط با ريتكس - پرداخت ارزی و خدمات بین‌المللی.",
       image: "/Images/tp-best-mens-hairstyles.jpg",
       link: "/services/wordpress",
     },

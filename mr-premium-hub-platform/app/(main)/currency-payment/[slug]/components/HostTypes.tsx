@@ -89,7 +89,7 @@ export default function HostTypes({
         انواع هاست خارجی
       </h2>
       <p className="text-xs sm:text-sm text-gray-600 text-center mb-4 sm:mb-6">
-        خرید انواع هاست‌های خارجی از بهترین ارائه‌دهندگان جهان از طریق مستر پریمیوم هاب
+        خرید انواع هاست‌های خارجی از بهترین ارائه‌دهندگان جهان از طریق ريتكس
       </p>
       <p className="text-[10px] sm:text-xs text-gray-500 text-center mb-4">
         روی هر نوع هاست کلیک کنید تا در باکس ثبت سفارش سمت چپ قیمت و گزینه ثبت سفارش نمایش داده شود.

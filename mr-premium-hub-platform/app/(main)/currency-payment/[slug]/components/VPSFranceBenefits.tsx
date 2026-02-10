@@ -20,7 +20,7 @@ const benefits = [
   {
     title: "سرعت بالا و کیفیت مناسب از پاریس",
     description:
-      "در واقع شما می‌توانید با سفارش سرور مجازی فرانسه از مستر پریمیوم هاب، از سرعت بالای سرورهای آن بهره‌مند گردید.",
+      "در واقع شما می‌توانید با سفارش سرور مجازی فرانسه از ريتكس، از سرعت بالای سرورهای آن بهره‌مند گردید.",
     icon: <HiChartBar className="text-3xl" />,
     iconColor: "text-[#ff5538]",
   },
@@ -36,7 +36,7 @@ export default function VPSFranceBenefits() {
         id="vps-france-benefits-heading"
         className="text-lg md:text-xl font-bold text-gray-900 mb-2 text-center"
       >
-        مزایا و ویژگی‌های خرید سرور مجازی فرانسه از مستر پریمیوم هاب
+        مزایا و ویژگی‌های خرید سرور مجازی فرانسه از ريتكس
       </h2>
       <p className="text-sm text-gray-600 mb-6 text-center leading-relaxed">
         چرا سرور مجازی فرانسه انتخاب مناسبی است؟

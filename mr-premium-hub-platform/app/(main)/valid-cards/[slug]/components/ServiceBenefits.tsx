@@ -1189,7 +1189,7 @@ export default function ServiceBenefits({ service }: ServiceBenefitsProps) {
 
           <div className="bg-white rounded-lg sm:rounded-xl shadow-sm p-4 sm:p-5 md:p-6 mb-6">
             <h2 className="text-sm sm:text-base md:text-lg font-bold text-gray-900 mb-4 sm:mb-6 text-center">
-              پیشنهاد مستر پرمینیوم هاب به شما
+              پیشنهاد ريتكس به شما
             </h2>
             <h3 className="text-xs sm:text-sm md:text-base font-bold text-gray-900 mb-4 sm:mb-6 text-center">
               سایر گیفت کارت‌های نتفلیکس

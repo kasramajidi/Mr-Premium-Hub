@@ -22,7 +22,7 @@ export default function ExamRegistration() {
           ثبت نام آزمون‌های بین‌المللی
         </h2>
         <p className="text-sm text-gray-600 text-center max-w-2xl mx-auto mb-8">
-          پرداخت و ثبت نام آزمون‌های GRE، TOEFL و سایر آزمون‌های بین‌المللی از طریق مستر پریمیوم هاب.
+          پرداخت و ثبت نام آزمون‌های GRE، TOEFL و سایر آزمون‌های بین‌المللی از طریق ريتكس.
         </p>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">

@@ -63,7 +63,7 @@ interface ChatWidgetProps {
 }
 
 export default function ChatWidget({
-  title = "پشتیبانی مسترپریمیوم هاب",
+  title = "پشتیبانی ريتكس",
   welcomeMessage = "سلام",
   welcomeSubtext = "چطور می‌تونم کمکتون کنم؟",
   avatarSrc,

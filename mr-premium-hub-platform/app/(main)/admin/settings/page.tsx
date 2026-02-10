@@ -43,7 +43,7 @@ const settingsStats = [
 
 export default function SettingsPage() {
   const [settings, setSettings] = useState({
-    siteName: "مستر پریمیوم هاب",
+    siteName: "ريتكس",
     siteDescription: "خدمات ارزی و پرداخت ارزی",
     email: "support@mrpremiumhub.org",
   });
@@ -92,7 +92,7 @@ export default function SettingsPage() {
                   onChange={(e) =>
                     setSettings({ ...settings, siteName: e.target.value })
                   }
-                  placeholder="مثال: مستر پریمیوم هاب"
+                  placeholder="مثال: ريتكس"
                   className={inputBase}
                 />
               </Field>

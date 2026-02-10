@@ -15,7 +15,7 @@ export default function AdminDashboard() {
             داشبورد
           </h1>
           <p className="text-sm text-gray-500">
-            خوش آمدید به پنل مدیریت مستر پریمیوم هاب
+            خوش آمدید به پنل مدیریت ريتكس
           </p>
         </div>
 

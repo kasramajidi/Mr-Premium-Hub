@@ -29,13 +29,13 @@ export async function generateMetadata({ params }: ServicePageProps): Promise<Me
   }
 
   return {
-    title: `${service.label} | مسترپریمیوم هاب`,
+    title: `${service.label} | ريتكس`,
     description: service.description,
     keywords: [
       service.label,
       service.labelEn || "",
       "خدمات",
-      "مسترپریمیوم هاب",
+      "ريتكس",
     ],
     alternates: {
       canonical: `/valid-cards/${service.id}`,

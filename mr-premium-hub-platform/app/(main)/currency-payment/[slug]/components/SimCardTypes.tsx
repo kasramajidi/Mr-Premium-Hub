@@ -104,7 +104,7 @@ export default function SimCardTypes({
         خرید انواع سیم کارت خارجی و بین المللی
       </h2>
       <p className="text-[10px] sm:text-xs md:text-sm text-gray-600 text-center mb-4 sm:mb-6">
-        خرید معتبرترین سیم کارت‌های بین المللی از طریق خدمت پرداخت ارزی مستر پریمیوم هاب
+        خرید معتبرترین سیم کارت‌های بین المللی از طریق خدمت پرداخت ارزی ريتكس
       </p>
       <p className="text-[10px] sm:text-xs text-gray-500 text-center mb-4">
         روی هر سیم کارت کلیک کنید تا در باکس ثبت سفارش سمت چپ قیمت و گزینه ثبت سفارش نمایش داده شود.

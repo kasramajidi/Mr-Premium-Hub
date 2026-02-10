@@ -74,7 +74,7 @@ const itemListJsonLd = {
   "@context": "https://schema.org",
   "@type": "ItemList",
   name: "انواع آزمون زبان",
-  description: "پرداخت هزینه ثبت نام تمامی آزمون‌های زبان در سراسر دنیا از طریق مستر پریمیوم هاب",
+  description: "پرداخت هزینه ثبت نام تمامی آزمون‌های زبان در سراسر دنیا از طریق ريتكس",
   numberOfItems: 7,
   itemListElement: languageExams.map((item, index) => ({
     "@type": "ListItem",
@@ -114,7 +114,7 @@ export default function LanguageExamTypes({
         </h2>
       </div>
       <p className="text-sm text-gray-600 mb-6 leading-relaxed">
-        پرداخت هزینه ثبت نام تمامی آزمون‌های زبان در سراسر دنیا از طریق مستر پریمیوم هاب
+        پرداخت هزینه ثبت نام تمامی آزمون‌های زبان در سراسر دنیا از طریق ريتكس
       </p>
       <p className="text-[10px] sm:text-xs text-gray-500 text-center mb-4">
         روی هر آزمون کلیک کنید تا در باکس ثبت سفارش سمت چپ قیمت و گزینه ثبت سفارش نمایش داده شود.

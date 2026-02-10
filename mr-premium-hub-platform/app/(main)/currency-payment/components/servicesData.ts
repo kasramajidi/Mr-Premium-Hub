@@ -168,7 +168,7 @@ export const services: Service[] = [
     labelEn: "VPS Trading",
     href: "/currency-payment/vps-trading",
     icon: React.createElement(HiServer, { className: "text-3xl sm:text-4xl md:text-5xl text-red-500" }),
-    description: "خرید سرور مجازی ترید با آی‌پی ثابت از مستر پریمیوم هاب؛ پلن‌های رم ۶ و رم ۸، تحویل ۲ تا ۲۴ ساعت کاری",
+    description: "خرید سرور مجازی ترید با آی‌پی ثابت از ريتكس؛ پلن‌های رم ۶ و رم ۸، تحویل ۲ تا ۲۴ ساعت کاری",
     category: "vps",
   },
   {
@@ -177,7 +177,7 @@ export const services: Service[] = [
     labelEn: "Daily VPS",
     href: "/currency-payment/vps-daily",
     icon: React.createElement(HiServer, { className: "text-3xl sm:text-4xl md:text-5xl text-red-500" }),
-    description: "سرور مجازی روزانه یک‌روزه و پنج‌روزه از مستر پریمیوم هاب؛ آمریکا و انگلیس، ویندوز، تحویل ۱ تا ۵ ساعت",
+    description: "سرور مجازی روزانه یک‌روزه و پنج‌روزه از ريتكس؛ آمریکا و انگلیس، ویندوز، تحویل ۱ تا ۵ ساعت",
     category: "vps",
   },
   {
@@ -186,7 +186,7 @@ export const services: Service[] = [
     labelEn: "VPS USA",
     href: "/currency-payment/vps-usa",
     icon: React.createElement(HiServer, { className: "text-3xl sm:text-4xl md:text-5xl text-red-500" }),
-    description: "سرور مجازی آمریکا از مستر پریمیوم هاب؛ پلن پایه و حرفه‌ای، آی‌پی آمریکا، تحویل ۲ تا ۲۴ ساعت",
+    description: "سرور مجازی آمریکا از ريتكس؛ پلن پایه و حرفه‌ای، آی‌پی آمریکا، تحویل ۲ تا ۲۴ ساعت",
     category: "vps",
   },
   {
@@ -195,7 +195,7 @@ export const services: Service[] = [
     labelEn: "VPS Netherlands",
     href: "/currency-payment/vps-netherlands",
     icon: React.createElement(HiServer, { className: "text-3xl sm:text-4xl md:text-5xl text-red-500" }),
-    description: "سرور مجازی هلند از مستر پریمیوم هاب؛ پلن پایه و حرفه‌ای، آی‌پی آمستردام، تحویل ۲ تا ۲۴ ساعت",
+    description: "سرور مجازی هلند از ريتكس؛ پلن پایه و حرفه‌ای، آی‌پی آمستردام، تحویل ۲ تا ۲۴ ساعت",
     category: "vps",
   },
   {
@@ -204,7 +204,7 @@ export const services: Service[] = [
     labelEn: "VPS France",
     href: "/currency-payment/vps-france",
     icon: React.createElement(HiServer, { className: "text-3xl sm:text-4xl md:text-5xl text-red-500" }),
-    description: "سرور مجازی فرانسه از مستر پریمیوم هاب؛ پلن پایه و حرفه‌ای، آی‌پی پاریس، تحویل ۲ تا ۲۴ ساعت",
+    description: "سرور مجازی فرانسه از ريتكس؛ پلن پایه و حرفه‌ای، آی‌پی پاریس، تحویل ۲ تا ۲۴ ساعت",
     category: "vps",
   },
   {
@@ -213,7 +213,7 @@ export const services: Service[] = [
     labelEn: "AI Account",
     href: "/currency-payment/ai-account",
     icon: React.createElement(FaBrain, { className: "text-3xl sm:text-4xl md:text-5xl text-green-500" }),
-    description: "خرید اکانت‌های پریمیوم هوش مصنوعی؛ ChatGPT، Midjourney، Jasper و سایر ابزارهای AI از طریق مستر پریمیوم هاب",
+    description: "خرید اکانت‌های پریمیوم هوش مصنوعی؛ ChatGPT، Midjourney، Jasper و سایر ابزارهای AI از طریق ريتكس",
     category: "premium",
   },
   {
@@ -222,7 +222,7 @@ export const services: Service[] = [
     labelEn: "SEO Tools Account",
     href: "/currency-payment/seo-account",
     icon: React.createElement(FaSearch, { className: "text-3xl sm:text-4xl md:text-5xl text-green-500" }),
-    description: "خرید اکانت پریمیوم ابزارهای سئو؛ SEMrush، Ahrefs، KWFinder، MOZ و سایر ابزارها از طریق مستر پریمیوم هاب",
+    description: "خرید اکانت پریمیوم ابزارهای سئو؛ SEMrush، Ahrefs، KWFinder، MOZ و سایر ابزارها از طریق ريتكس",
     category: "premium",
   },
   {
@@ -231,7 +231,7 @@ export const services: Service[] = [
     labelEn: "Game Account",
     href: "/currency-payment/game-account",
     icon: React.createElement(FaGamepad, { className: "text-3xl sm:text-4xl md:text-5xl text-green-500" }),
-    description: "خرید اکانت‌های پریمیوم بازی؛ Xbox Game Pass، PlayStation Plus، Steam، Epic Games و سایر پلتفرم‌ها از طریق مستر پریمیوم هاب",
+    description: "خرید اکانت‌های پریمیوم بازی؛ Xbox Game Pass، PlayStation Plus، Steam، Epic Games و سایر پلتفرم‌ها از طریق ريتكس",
     category: "premium",
   },
   {
@@ -249,7 +249,7 @@ export const services: Service[] = [
     labelEn: "Language Exam",
     href: "/currency-payment/language-exam",
     icon: React.createElement(HiAcademicCap, { className: "text-3xl sm:text-4xl md:text-5xl text-[#ff5538]" }),
-    description: "ثبت نام و پرداخت هزینه آزمون‌های زبان؛ IELTS، TOEFL، PTE، GRE، Duolingo و سایر آزمون‌ها از طریق مستر پریمیوم هاب",
+    description: "ثبت نام و پرداخت هزینه آزمون‌های زبان؛ IELTS، TOEFL، PTE، GRE، Duolingo و سایر آزمون‌ها از طریق ريتكس",
     category: "education",
   },
   {
@@ -258,7 +258,7 @@ export const services: Service[] = [
     labelEn: "Student Payment",
     href: "/currency-payment/student-payment",
     icon: React.createElement(HiAcademicCap, { className: "text-3xl sm:text-4xl md:text-5xl text-[#ff5538]" }),
-    description: "پرداخت هزینه‌های دانشجویی؛ شهریه، خوابگاه، اپلیکیشن فی، WES و فعالیت‌های علمی بین‌المللی از طریق مستر پریمیوم هاب",
+    description: "پرداخت هزینه‌های دانشجویی؛ شهریه، خوابگاه، اپلیکیشن فی، WES و فعالیت‌های علمی بین‌المللی از طریق ريتكس",
     category: "education",
   },
   {
@@ -267,7 +267,7 @@ export const services: Service[] = [
     labelEn: "International Exams",
     href: "/currency-payment/international-exam",
     icon: React.createElement(HiGlobe, { className: "text-3xl sm:text-4xl md:text-5xl text-[#ff5538]" }),
-    description: "ثبت نام و پرداخت آزمون‌های بین‌المللی؛ GMAT، USMLE، PMP، IMAT، SAT، Prometric، ICF، CFA و آزمون‌های زبان از طریق مستر پریمیوم هاب",
+    description: "ثبت نام و پرداخت آزمون‌های بین‌المللی؛ GMAT، USMLE، PMP، IMAT، SAT، Prometric، ICF، CFA و آزمون‌های زبان از طریق ريتكس",
     category: "education",
   },
   {

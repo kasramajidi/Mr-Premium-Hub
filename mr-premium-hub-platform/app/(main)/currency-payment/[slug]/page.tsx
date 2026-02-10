@@ -61,7 +61,7 @@ export async function generateMetadata({
     };
   }
 
-  const title = `${service.label} | مسترپریمیوم هاب`;
+  const title = `${service.label} | ريتكس`;
   const description =
     service.description.length > 160
       ? service.description.slice(0, 157) + "..."
@@ -74,7 +74,7 @@ export async function generateMetadata({
       service.label,
       service.labelEn || "",
       "خدمات پرداخت ارزی",
-      "مسترپریمیوم هاب",
+      "ريتكس",
     ],
     alternates: {
       canonical: `/currency-payment/${service.id}`,
@@ -85,7 +85,7 @@ export async function generateMetadata({
       url: `/currency-payment/${service.id}`,
       locale: "fa_IR",
       type: "website",
-      siteName: "مسترپریمیوم هاب",
+      siteName: "ريتكس",
     },
     twitter: {
       card: "summary_large_image",

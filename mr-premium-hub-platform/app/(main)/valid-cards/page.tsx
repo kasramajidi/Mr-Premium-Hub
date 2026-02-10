@@ -12,7 +12,7 @@ export const metadata: Metadata = {
     "ویزا کارت",
     "گیفت کارت",
     "کارت بازی",
-    "مسترپریمیوم هاب",
+    "ريتكس",
   ],
   alternates: {
     canonical: "/valid-cards",

@@ -36,18 +36,18 @@ export const metadata: Metadata = {
     process.env.NEXT_PUBLIC_SITE_URL || "https://mrpremiumhub.com"
   ),
   title: {
-    default: "مسترپریمیوم هاب | Mr Premium Hub - خدمات پرداخت ارزی و پی پال",
-    template: "%s | مسترپریمیوم هاب",
+    default: "ريتكس | RAITX - خدمات پرداخت ارزی و پی پال",
+    template: "%s | ريتكس",
   },
   description:
-    "مسترپریمیوم هاب ارائه‌دهنده خدمات پرداخت ارزی، نقد کردن درآمد پی پال، پرداخت هزینه ویزا و سفارت، ثبت نام آزمون‌های بین‌المللی، خرید بلیت هواپیما و هتل",
+    "ريتكس ارائه‌دهنده خدمات پرداخت ارزی، نقد کردن درآمد پی پال، پرداخت هزینه ویزا و سفارت، ثبت نام آزمون‌های بین‌المللی، خرید بلیت هواپیما و هتل",
   icons: {
-    icon: "/Images/Logo/logo.png",
-    apple: "/Images/Logo/logo.png",
+    icon: "/Images/Logo/Raitx%20international%20payments%20logo%20design%20(1).png",
+    apple: "/Images/Logo/Raitx%20international%20payments%20logo%20design%20(1).png",
   },
   keywords: [
-    "مسترپریمیوم هاب",
-    "Mr Premium Hub",
+    "ريتكس",
+    "RAITX",
     "پرداخت ارزی",
     "پی پال",
     "نقد کردن پی پال",
@@ -58,9 +58,9 @@ export const metadata: Metadata = {
     "خرید بلیت هواپیما",
     "پرداخت هتل",
   ],
-  authors: [{ name: "Mr Premium Hub" }],
-  creator: "Mr Premium Hub",
-  publisher: "Mr Premium Hub",
+  authors: [{ name: "RAITX" }],
+  creator: "RAITX",
+  publisher: "RAITX",
   formatDetection: {
     email: false,
     address: false,
@@ -70,24 +70,24 @@ export const metadata: Metadata = {
     type: "website",
     locale: "fa_IR",
     url: "/",
-    siteName: "مسترپریمیوم هاب",
-    title: "مسترپریمیوم هاب | Mr Premium Hub - خدمات پرداخت ارزی و پی پال",
+    siteName: "ريتكس",
+    title: "ريتكس | RAITX - خدمات پرداخت ارزی و پی پال",
     description:
-      "مسترپریمیوم هاب ارائه‌دهنده خدمات پرداخت ارزی، نقد کردن درآمد پی پال، پرداخت هزینه ویزا و سفارت، ثبت نام آزمون‌های بین‌المللی، خرید بلیت هواپیما و هتل",
+      "ريتكس ارائه‌دهنده خدمات پرداخت ارزی، نقد کردن درآمد پی پال، پرداخت هزینه ویزا و سفارت، ثبت نام آزمون‌های بین‌المللی، خرید بلیت هواپیما و هتل",
     images: [
       {
         url: "/Images/Baner/Layer 5.png",
         width: 1200,
         height: 630,
-        alt: "مسترپریمیوم هاب - Mr Premium Hub",
+        alt: "ريتكس - RAITX",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "مسترپریمیوم هاب | Mr Premium Hub",
+    title: "ريتكس | RAITX",
     description:
-      "مسترپریمیوم هاب ارائه‌دهنده خدمات پرداخت ارزی، نقد کردن درآمد پی پال، پرداخت هزینه ویزا و سفارت",
+      "ريتكس ارائه‌دهنده خدمات پرداخت ارزی، نقد کردن درآمد پی پال، پرداخت هزینه ویزا و سفارت",
     images: ["/Images/Baner/Layer 5.png"],
   },
   robots: {
@@ -118,14 +118,14 @@ export default function RootLayout({
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Organization",
-    name: "مسترپریمیوم هاب",
-    alternateName: "Mr Premium Hub",
+    name: "ريتكس",
+    alternateName: "RAITX",
     url: process.env.NEXT_PUBLIC_SITE_URL || "https://mrpremiumhub.com",
     logo: `${
       process.env.NEXT_PUBLIC_SITE_URL || "https://mrpremiumhub.com"
-    }/Images/Logo/logo.png`,
+    }/Images/Logo/Raitx%20international%20payments%20logo%20design%20(1).png`,
     description:
-      "مسترپریمیوم هاب ارائه‌دهنده خدمات پرداخت ارزی، نقد کردن درآمد پی پال، پرداخت هزینه ویزا و سفارت، ثبت نام آزمون‌های بین‌المللی، خرید بلیت هواپیما و هتل",
+      "ريتكس ارائه‌دهنده خدمات پرداخت ارزی، نقد کردن درآمد پی پال، پرداخت هزینه ویزا و سفارت، ثبت نام آزمون‌های بین‌المللی، خرید بلیت هواپیما و هتل",
     address: {
       "@type": "PostalAddress",
       addressCountry: "IR",
@@ -136,8 +136,8 @@ export default function RootLayout({
   const websiteJsonLd = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    name: "مسترپریمیوم هاب",
-    alternateName: "Mr Premium Hub",
+    name: "ريتكس",
+    alternateName: "RAITX",
     url: process.env.NEXT_PUBLIC_SITE_URL || "https://mrpremiumhub.com",
     potentialAction: {
       "@type": "SearchAction",

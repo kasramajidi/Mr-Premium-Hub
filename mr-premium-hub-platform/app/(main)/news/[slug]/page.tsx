@@ -276,7 +276,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       title: article.title,
       description,
       url: articleUrl,
-      siteName: "مسترپریمیوم هاب",
+      siteName: "ريتكس",
       locale: "fa_IR",
       images: [
         {
@@ -327,11 +327,11 @@ export default async function ArticlePage({ params }: PageProps) {
     image: articleImage,
     datePublished: article.date,
     dateModified: article.date,
-    author: { "@type": "Organization", name: "مسترپریمیوم هاب" },
+    author: { "@type": "Organization", name: "ريتكس" },
     publisher: {
       "@type": "Organization",
-      name: "مسترپریمیوم هاب",
-      logo: { "@type": "ImageObject", url: `${baseUrl}/Images/Logo/logo.png` },
+      name: "ريتكس",
+      logo: { "@type": "ImageObject", url: `${baseUrl}/Images/Logo/Raitx%20international%20payments%20logo%20design%20(1).png` },
     },
     mainEntityOfPage: { "@type": "WebPage", "@id": articleUrl },
     url: articleUrl,

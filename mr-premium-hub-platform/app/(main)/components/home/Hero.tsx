@@ -16,7 +16,7 @@ export default function Hero() {
         {!imageError && (
           <Image
             src={HERO_IMAGE_SRC}
-            alt="نقد کردن درآمدهای ارزی - مسترپریمیوم هاب"
+            alt="نقد کردن درآمدهای ارزی - ريتكس"
             fill
             className="object-cover object-center"
             priority
@@ -40,7 +40,7 @@ export default function Hero() {
             نقد کردن درآمدهای ارزی
           </h1>
           <p className="text-sm sm:text-base md:text-lg text-gray-200 leading-relaxed">
-            با Mr Premium Hub، درآمدهای ارزی خود را به راحتی و با بهترین نرخ
+            با RAITX، درآمدهای ارزی خود را به راحتی و با بهترین نرخ
             تبدیل کنید. ما با سال‌ها تجربه در زمینه پرداخت‌های بین‌المللی،
             خدمات متنوعی از جمله نقد کردن پی‌پال، پرداخت هزینه‌های سفارت، خرید
             بلیت هواپیما و هتل، و ثبت نام آزمون‌های بین‌المللی را ارائه

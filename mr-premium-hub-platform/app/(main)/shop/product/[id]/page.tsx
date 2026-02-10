@@ -44,7 +44,7 @@ export async function generateMetadata({
     : product.image ?? "";
 
   return {
-    title: `${product.name} | مسترپریمیوم هاب`,
+    title: `${product.name} | ريتكس`,
     description:
       product.description || `${product.name} از برند ${product.brand}`,
     keywords: [
@@ -52,10 +52,10 @@ export async function generateMetadata({
       product.brand,
       product.category,
       "گیفت کارت",
-      "مستر پریمیوم هاب",
+      "ريتكس",
     ],
     openGraph: {
-      title: `${product.name} | مسترپریمیوم هاب`,
+      title: `${product.name} | ريتكس`,
       description:
         product.description || `${product.name} از برند ${product.brand}`,
       type: "website",
