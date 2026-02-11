@@ -7,6 +7,8 @@ import {
   fetchWalletBalance,
   fetchInvoicesForUser,
   fetchRecentSupportTickets,
+  getLoginPhoneFromStorage,
+  normalizePhoneForComparison,
   type InvoiceItem,
   type SupportTicket,
 } from "../lib/my-account-api";
@@ -21,9 +23,19 @@ export default function DashboardMain() {
   const [wallet, setWallet] = useState<{ total?: number; available?: number; blocked?: number }>({});
   const [invoices, setInvoices] = useState<InvoiceItem[]>([]);
   const [supportTickets, setSupportTickets] = useState<SupportTicket[]>([]);
+  const [ordersPage, setOrdersPage] = useState(1);
   const [loadingWallet, setLoadingWallet] = useState(true);
   const [loadingOrders, setLoadingOrders] = useState(true);
   const [loadingSupport, setLoadingSupport] = useState(true);
+
+  const ORDERS_PER_PAGE = 5;
+  const ordersTotalPages = Math.max(1, Math.ceil(invoices.length / ORDERS_PER_PAGE));
+  const ordersStart = (ordersPage - 1) * ORDERS_PER_PAGE;
+  const ordersPageItems = invoices.slice(ordersStart, ordersStart + ORDERS_PER_PAGE);
+
+  useEffect(() => {
+    if (ordersPage > ordersTotalPages && ordersTotalPages >= 1) setOrdersPage(1);
+  }, [invoices.length, ordersTotalPages, ordersPage]);
 
   useEffect(() => {
     fetchWalletBalance().then((w) => {
@@ -32,10 +44,47 @@ export default function DashboardMain() {
     });
   }, []);
   useEffect(() => {
-    fetchInvoicesForUser().then((list) => {
-      setInvoices(list.slice(0, 10));
-      setLoadingOrders(false);
-    });
+    (async () => {
+      try {
+        // همان منبع «سفارش‌های من»: اول سفارش‌های محلی، بعد فاکتور بک‌اند
+        const res = await fetch("/api/order", { cache: "no-store" });
+        const data = await res.json().catch(() => null);
+        let orders: any[] = Array.isArray(data?.orders) ? data.orders : [];
+        const loginPhone = getLoginPhoneFromStorage();
+        if (loginPhone?.trim()) {
+          const normalized = normalizePhoneForComparison(loginPhone);
+          const orderPhone = (o: any) => (o.contact?.phone && normalizePhoneForComparison(String(o.contact.phone).trim())) || "";
+          orders = orders.filter((o) => orderPhone(o) === normalized);
+        }
+        if (orders.length > 0) {
+          const mapped: InvoiceItem[] = orders.flatMap((order) => {
+            const items = Array.isArray(order.items) ? order.items : [];
+            if (!items.length) return [];
+            const first = items[0];
+            const paid = order.isPaid === true || String(order.status || "").trim() === "پرداخت شده";
+            return [
+              {
+                id: order.id,
+                shopid: first.productId,
+                quantity: first.quantity,
+                isPaid: paid,
+                paymentStatus: paid ? "پرداخت شده" : (order.status ?? "در حال پردازش"),
+                price: first.finalPrice,
+                shop: { id: first.productId, title: first.productName, price: first.finalPrice },
+                user: { phone: order.contact?.phone },
+              },
+            ];
+          });
+          setInvoices(mapped.slice(0, 10));
+          setLoadingOrders(false);
+          return;
+        }
+        const list = await fetchInvoicesForUser();
+        setInvoices(list.slice(0, 10));
+      } finally {
+        setLoadingOrders(false);
+      }
+    })();
   }, []);
   useEffect(() => {
     fetchRecentSupportTickets().then((list) => {
@@ -148,7 +197,7 @@ export default function DashboardMain() {
               type="button"
               onClick={() => router.push("/my-account/orders")}
               className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#ff5538] text-white hover:bg-[#e6452e]"
-              title="مشاهده همه"
+              title="مشاهده همه سفارش‌ها"
             >
               <Plus size={16} />
             </button>
@@ -177,26 +226,59 @@ export default function DashboardMain() {
                     </td>
                   </tr>
                 ) : (
-                  invoices.map((item) => (
-                    <tr
-                      key={String(item.id ?? item.shopid ?? Math.random())}
-                      className="border-b border-gray-50 cursor-pointer hover:bg-gray-50/50"
-                      onClick={() => router.push("/my-account/orders")}
-                    >
-                      <td className="px-4 py-3 text-gray-700">{item.id ?? "—"}</td>
-                      <td className="px-4 py-3 font-medium text-gray-900">{shopTitle(item)}</td>
-                      <td className="px-4 py-3 text-gray-500">—</td>
-                      <td className="px-4 py-3">
-                        <span className={item.isPaid ? "text-emerald-600 font-medium" : "text-amber-600"}>
-                          {item.isPaid ? "پرداخت شده" : "پرداخت نشده"}
-                        </span>
-                      </td>
-                    </tr>
-                  ))
+                  ordersPageItems.map((item) => {
+                    const paid = item.isPaid === true || String(item.paymentStatus || "").trim() === "پرداخت شده";
+                    return (
+                      <tr
+                        key={String(item.id ?? item.shopid ?? Math.random())}
+                        className="border-b border-gray-50 cursor-pointer hover:bg-gray-50/50"
+                        onClick={() => router.push("/my-account/orders")}
+                      >
+                        <td className="px-4 py-3 text-gray-700">{item.id ?? "—"}</td>
+                        <td className="px-4 py-3 font-medium text-gray-900">{shopTitle(item)}</td>
+                        <td className="px-4 py-3 text-gray-500">—</td>
+                        <td className="px-4 py-3">
+                          <span className={paid ? "text-emerald-600 font-medium" : "text-amber-600"}>
+                            {paid ? "پرداخت شده" : "پرداخت نشده"}
+                          </span>
+                        </td>
+                      </tr>
+                    );
+                  })
                 )}
               </tbody>
             </table>
           </div>
+          {invoices.length > ORDERS_PER_PAGE && (
+            <div className="flex flex-wrap items-center justify-center gap-3 border-t border-gray-100 bg-gray-50/50 px-4 py-3">
+              <span className="text-xs text-gray-600">
+                تعداد: <span className="font-medium">{new Intl.NumberFormat("fa-IR").format(invoices.length)}</span>
+              </span>
+              <div className="flex items-center gap-1">
+                <button
+                  type="button"
+                  onClick={() => setOrdersPage((p) => Math.max(1, p - 1))}
+                  disabled={ordersPage <= 1}
+                  className="rounded-lg p-1.5 text-gray-500 hover:bg-gray-200 hover:text-gray-700 disabled:opacity-40 disabled:cursor-not-allowed"
+                  aria-label="صفحه قبل"
+                >
+                  <ChevronRight size={18} />
+                </button>
+                <span className="flex h-8 min-w-8 items-center justify-center rounded-full bg-[#ff5538] text-xs font-medium text-white">
+                  {new Intl.NumberFormat("fa-IR").format(ordersPage)} / {new Intl.NumberFormat("fa-IR").format(ordersTotalPages)}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setOrdersPage((p) => Math.min(ordersTotalPages, p + 1))}
+                  disabled={ordersPage >= ordersTotalPages}
+                  className="rounded-lg p-1.5 text-gray-500 hover:bg-gray-200 hover:text-gray-700 disabled:opacity-40 disabled:cursor-not-allowed"
+                  aria-label="صفحه بعد"
+                >
+                  <ChevronLeft size={18} />
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </section>
     </div>

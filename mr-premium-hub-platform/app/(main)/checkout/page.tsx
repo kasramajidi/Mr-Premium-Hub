@@ -118,6 +118,7 @@ export default function CheckoutPage() {
         setSubmitError(data.error || "خطا در ثبت سفارش.");
         return;
       }
+      const orderId = data.orderId as string | undefined;
       if (DISABLE_PAYMENT_GATEWAY) {
         clearCart();
         router.push("/my-account/orders");
