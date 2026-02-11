@@ -1,6 +1,6 @@
 <div align="center">
 
-# مستر پریمیوم هاب | Mr Premium Hub
+# ریتکس | Raitx
 
 **پلتفرم خدمات ارزی و پرداخت ارزی**
 
@@ -18,9 +18,9 @@
 
 ## درباره پروژه | About
 
-**مستر پریمیوم هاب** پلتفرمی برای نقد درآمدهای ارزی، پرداخت با پی‌پال و مسترکارت، پرداخت هزینه‌های سفارت و ویزا، ثبت‌نام آزمون‌های بین‌المللی و خرید بلیت هواپیما و هتل است. این ریپازیتوری کد فرانت‌اند وب‌سایت رسمی این سرویس است.
+**ریتکس** پلتفرمی برای نقد درآمدهای ارزی، پرداخت با پی‌پال و مسترکارت، پرداخت هزینه‌های سفارت و ویزا، ثبت‌نام آزمون‌های بین‌المللی و خرید بلیت هواپیما و هتل است. این ریپازیتوری کد فرانت‌اند وب‌سایت رسمی این سرویس است.
 
-**Mr Premium Hub** is a platform for cashing out foreign currency earnings, payments via PayPal and Mastercard, visa and embassy fee payments, international exam registration, and flight and hotel bookings. This repository contains the front-end of the official website.
+**Raitx** is a platform for cashing out foreign currency earnings, payments via PayPal and Mastercard, visa and embassy fee payments, international exam registration, and flight and hotel bookings. This repository contains the front-end of the official website.
 
 ---
 
@@ -59,8 +59,8 @@
 
 ```bash
 # کلون ریپو
-git clone https://github.com/YOUR_USERNAME/Mr-Premium-Hub.git
-cd Mr-Premium-Hub/mr-premium-hub-platform
+git clone https://github.com/YOUR_USERNAME/raitx.git
+cd raitx
 
 # نصب وابستگی‌ها
 npm install
@@ -85,7 +85,7 @@ npm run dev
 ## ساختار پروژه | Project Structure
 
 ```
-mr-premium-hub-platform/
+raitx/
 ├── app/                    # Next.js App Router (صفحات، API، لایه‌ها)
 │   ├── (main)/             # صفحات اصلی سایت
 │   └── api/                # API routes
@@ -113,6 +113,6 @@ mr-premium-hub-platform/
 
 <div align="center">
 
-**مستر پریمیوم هاب** — خدمات ارزی و پرداخت ارزی با امنیت و بهترین نرخ
+**ریتکس** — خدمات ارزی و پرداخت ارزی با امنیت و بهترین نرخ
 
 </div>
