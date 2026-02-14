@@ -1,14 +1,7 @@
 import AdminLoginForm from "./AdminLoginForm";
 
-interface AdminLoginPageProps {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
-}
+export const dynamic = "force-static";
 
-export default async function AdminLoginPage({
-  searchParams,
-}: AdminLoginPageProps) {
-  const resolvedSearchParams = await searchParams;
-  const nextRaw = resolvedSearchParams?.next;
-  const nextPath = Array.isArray(nextRaw) ? nextRaw[0] : nextRaw ?? null;
-  return <AdminLoginForm nextPath={nextPath} />;
+export default function AdminLoginPage() {
+  return <AdminLoginForm />;
 }

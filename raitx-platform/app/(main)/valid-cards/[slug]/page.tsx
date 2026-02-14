@@ -2,6 +2,10 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { services } from "../components/servicesData";
 import { fetchShopProducts } from "@/app/(main)/shop/lib/shop-api";
+
+export function generateStaticParams() {
+  return services.map((s) => ({ slug: s.id }));
+}
 import {
   ServiceDetailHeader,
   ServiceDetailContent,

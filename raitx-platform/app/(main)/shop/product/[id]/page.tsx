@@ -7,6 +7,15 @@ interface ProductPageProps {
   params: Promise<{ id: string }>;
 }
 
+export async function generateStaticParams() {
+  try {
+    const apiProducts = await fetchShopProducts();
+    return apiProducts.map((p) => ({ id: String(p.id) }));
+  } catch {
+    return products.map((p) => ({ id: String(p.id) }));
+  }
+}
+
 async function getProductById(id: string) {
   const productId = parseInt(id, 10);
   if (Number.isNaN(productId)) return null;

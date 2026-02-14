@@ -3,7 +3,12 @@ import React from "react";
 import Image from "next/image";
 import { shouldUnoptimizeImage } from "@/app/(main)/lib/image-utils";
 import { notFound } from "next/navigation";
-import { getArticleBySlugFromApi, getRelatedArticlesFromApi } from "../lib/articles-api";
+import { getArticleBySlugFromApi, getRelatedArticlesFromApi, getAllArticleSlugsFromApi } from "../lib/articles-api";
+
+export async function generateStaticParams() {
+  const slugs = await getAllArticleSlugsFromApi();
+  return slugs.map((slug) => ({ slug }));
+}
 import { HiLocationMarker, HiArrowLeft } from "react-icons/hi";
 import { FaTelegram, FaWhatsapp, FaTwitter, FaFacebook } from "react-icons/fa";
 import TableOfContents from "./components/TableOfContents";

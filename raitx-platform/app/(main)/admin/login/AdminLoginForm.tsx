@@ -1,14 +1,17 @@
 "use client";
 
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 interface AdminLoginFormProps {
   nextPath?: string | null;
 }
 
-export default function AdminLoginForm({ nextPath }: AdminLoginFormProps) {
+export default function AdminLoginForm({ nextPath: nextPathProp }: AdminLoginFormProps) {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const nextPath =
+    nextPathProp ?? searchParams.get("next") ?? null;
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");

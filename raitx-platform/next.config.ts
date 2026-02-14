@@ -1,6 +1,9 @@
 import type { NextConfig } from "next";
 
+const isStaticExport = process.env.BUILD_STATIC === "1";
+
 const nextConfig: NextConfig = {
+  ...(isStaticExport ? { output: "export" as const, trailingSlash: true } : {}),
   async headers() {
     return [
       {
@@ -41,7 +44,7 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "res.cloudinary.com", pathname: "/**" },
       { protocol: "http", hostname: "res.cloudinary.com", pathname: "/**" },
     ],
-    unoptimized: false,
+    unoptimized: isStaticExport,
     loader: "default",
     qualities: [100, 25, 50, 75, 90, 92, 95],
   },
