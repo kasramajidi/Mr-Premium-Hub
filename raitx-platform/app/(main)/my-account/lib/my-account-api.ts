@@ -1,8 +1,7 @@
 /**
  * API داده‌های حساب کاربری — با ارسال کوکی برای داده‌های کاربر لاگین‌شده
  */
-
-const PROXY = "/api/auth-proxy";
+import { getApiBase, getApiUrl } from "@/lib/api-base";
 const fetchOpts: RequestInit = { credentials: "include", cache: "no-store" };
 
 /** کلید localStorage برای شمارهٔ ورود (همان که کد اس‌ام‌اس براش فرستاده شده) */
@@ -77,7 +76,7 @@ export function getLoginPhoneFromStorage(): string | null {
  */
 export async function fetchCurrentUserFromUsersApi(loginPhone?: string | null): Promise<UsersApiItem | null> {
   try {
-    const res = await fetch(`${PROXY}?action=users`, fetchOpts);
+    const res = await fetch(`${getApiBase()}?action=users`, fetchOpts);
     if (!res.ok) return null;
     const data = await res.json().catch(() => null);
     if (data?.error) return null;
@@ -165,6 +164,7 @@ export interface InvoiceGetParams {
   inID?: number | string;
 }
 
+/** آدرس کامل GET فاکتور — مثلاً https://mrpremiumhub.org/api.ashx?action=invoice&shopid=3&phone=...&isPaid=false&inID=-1 */
 function buildInvoiceGetUrl(params: InvoiceGetParams): string {
   const qs = new URLSearchParams({
     action: "invoice",
@@ -173,7 +173,7 @@ function buildInvoiceGetUrl(params: InvoiceGetParams): string {
     isPaid: params.isPaid !== undefined ? String(params.isPaid) : "false",
     inID: params.inID != null && params.inID !== "" ? String(params.inID) : "-1",
   });
-  return `${PROXY}?${qs.toString()}`;
+  return getApiUrl(qs.toString());
 }
 
 function parseInvoiceResponse(data: unknown): InvoiceItem[] {
@@ -263,7 +263,7 @@ export async function createInvoice(items: InvoiceItem[]): Promise<boolean> {
     if (loginPhoneRaw && loginPhoneRaw !== userid) row.phone = loginPhoneRaw;
     return row;
   });
-  const res = await fetch(`${PROXY}?action=invoice`, {
+  const res = await fetch(getApiUrl("action=invoice"), {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     credentials: "include",
@@ -277,7 +277,7 @@ export async function createInvoice(items: InvoiceItem[]): Promise<boolean> {
 
 /** به‌روزرسانی فاکتور (PATCH) — مثلاً برای علامت‌زدن پرداخت‌شده */
 export async function updateInvoice(id: string | number, payload: Partial<InvoiceItem>): Promise<boolean> {
-  const res = await fetch(`${PROXY}?action=invoice&id=${encodeURIComponent(String(id))}`, {
+  const res = await fetch(getApiUrl(`action=invoice&id=${encodeURIComponent(String(id))}`), {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     credentials: "include",
@@ -303,7 +303,7 @@ function toOrderItem(raw: Record<string, unknown>): OrderItem {
 /** دریافت پروفایل کاربر (در صورت پشتیبانی بک‌اند: action=UserProfile یا GetProfile) */
 export async function fetchUserProfile(): Promise<UserProfile | null> {
   try {
-    const res = await fetch(`${PROXY}?action=UserProfile`, fetchOpts);
+    const res = await fetch(`${getApiBase()}?action=UserProfile`, fetchOpts);
     if (!res.ok) return null;
     const data = await res.json().catch(() => ({}));
     if (data?.error) return null;
@@ -339,7 +339,7 @@ export async function fetchUserProfileFallback(): Promise<UserProfile | null> {
       const cookie = getAuthCookie();
       if (cookie) {
         const res = await fetch(
-          `${PROXY}?action=LoginCookie&Cookie=${encodeURIComponent(cookie)}`,
+          `${getApiBase()}?action=LoginCookie&Cookie=${encodeURIComponent(cookie)}`,
           fetchOpts
         );
         if (res.ok) {
@@ -383,7 +383,7 @@ export async function fetchUserProfileFallback(): Promise<UserProfile | null> {
   ];
   for (const action of actions) {
     try {
-      const res = await fetch(`${PROXY}?action=${action}`, fetchOpts);
+      const res = await fetch(`${getApiBase()}?action=${action}`, fetchOpts);
       if (!res.ok) continue;
       const data = await res.json().catch(() => ({}));
       if (data?.error || !data) continue;
@@ -439,7 +439,7 @@ export async function fetchWalletBalance(): Promise<WalletBalance> {
     }
   }
   try {
-    const res = await fetch(`${PROXY}?action=Wallet`, fetchOpts);
+    const res = await fetch(`${getApiBase()}?action=Wallet`, fetchOpts);
     if (!res.ok) return {};
     const data = (await res.json().catch(() => ({}))) as Record<string, unknown>;
     if (data?.error) return {};
@@ -468,7 +468,7 @@ export async function fetchWalletBalance(): Promise<WalletBalance> {
 /** آخرین سفارش‌های کاربر */
 export async function fetchRecentOrders(limit = 10): Promise<OrderItem[]> {
   try {
-    const res = await fetch(`${PROXY}?action=Order`, fetchOpts);
+    const res = await fetch(`${getApiBase()}?action=Order`, fetchOpts);
     if (!res.ok) return [];
     const data = await res.json().catch(() => ({}));
     const list = Array.isArray(data) ? data : data?.data ?? data?.list ?? data?.items ?? data?.orders ?? [];
@@ -527,7 +527,7 @@ export async function requestWalletPaymentLink(params: {
     cardNumber: card.slice(-16),
     Name: nameTrim,
   });
-  const res = await fetch(`${PROXY}?${qs.toString()}`, { ...fetchOpts, method: "GET" });
+  const res = await fetch(`${getApiBase()}?${qs.toString()}`, { ...fetchOpts, method: "GET" });
   const contentType = res.headers.get("content-type") ?? "";
   const text = await res.text();
 
@@ -675,7 +675,7 @@ export async function payFromWallet(amount: number): Promise<PayFromWalletResult
     return { success: false, error: "مبلغ معتبر نیست." };
   }
   try {
-    const res = await fetch(`${PROXY}?action=payFromWallet`, {
+    const res = await fetch(`${getApiBase()}?action=payFromWallet`, {
       ...fetchOpts,
       method: "POST",
       headers: { "Content-Type": "application/json" },

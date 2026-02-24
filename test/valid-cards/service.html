@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <base href="../">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>سرویس | کارت‌های اعتباری — ريتكس</title>
+  <link rel="icon" href="Images/Logo/Raitx%20international%20payments%20logo%20design%20(1).png">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/valid-cards.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+</head>
+<body>
+  <div id="site-header"></div>
+  <main class="site-main vc-detail-page">
+    <div class="container" style="padding-top: 1.5rem; padding-bottom: 3rem;">
+      <div id="service-loading" style="text-align:center;padding:2rem;color:#6b7280;">در حال بارگذاری…</div>
+      <div id="service-content" style="display:none;"></div>
+      <div id="service-error" style="display:none;text-align:center;padding:2rem;color:#dc2626;">سرویس یافت نشد.</div>
+    </div>
+  </main>
+  <div id="site-footer"></div>
+  <script src="js/layout.js"></script>
+  <script>layout.init();</script>
+  <script src="js/data/valid-cards-platform.js"></script>
+  <script src="js/data/valid-cards-service-detail.js"></script>
+  <script>
+    (function () {
+      var API = (typeof window.API_BASE !== 'undefined' && window.API_BASE()) ? window.API_BASE() : 'https://mrpremiumhub.org/api.ashx';
+      var loading = document.getElementById('service-loading');
+      var content = document.getElementById('service-content');
+      var err = document.getElementById('service-error');
+
+      function hideAll() {
+        loading.style.display = 'none';
+        content.style.display = 'none';
+        err.style.display = 'none';
+      }
+      function showError(msg) {
+        hideAll();
+        err.innerHTML = (msg || 'سرویس یافت نشد.') + ' <a href="valid-cards.html">بازگشت به کارت‌های اعتباری</a>';
+        err.style.display = 'block';
+      }
+      function esc(s) { return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+      function nl2br(s) { return esc(s).replace(/\n/g, '<br>'); }
+
+      function getHeaderIconClass(iconKey) {
+        var fa = { playstation: 'fa-brands fa-playstation', xbox: 'fa-brands fa-xbox', steam: 'fa-brands fa-steam', battlenet: 'fa-brands fa-battle-net', visa: 'fa-brands fa-cc-visa', mastercard: 'fa-brands fa-cc-mastercard', amazon: 'fa-brands fa-amazon', apple: 'fa-brands fa-apple', spotify: 'fa-brands fa-spotify', netflix: 'fa-brands fa-netflix', gift: 'fa-solid fa-gift', cardgift: 'fa-solid fa-gift', globe: 'fa-solid fa-globe', creditcard: 'fa-solid fa-credit-card', desktop: 'fa-solid fa-gamepad' };
+        return fa[iconKey] || 'fa-solid fa-credit-card';
+      }
+
+      function renderPlatformService(service) {
+        var detail = window.getValidCardsDetail ? window.getValidCardsDetail(service.id) : { features: [], steps: [], description: '' };
+        var faqs = window.getValidCardsFAQ ? window.getValidCardsFAQ(service.id) : [];
+        var amountsConfig = window.getValidCardsAmounts ? window.getValidCardsAmounts(service.id) : null;
+        var related = [];
+        if (window.getValidCardsRelatedServices && window.validCardsPlatform && window.validCardsPlatform.servicesFlat) {
+          related = window.getValidCardsRelatedServices(service, window.validCardsPlatform.servicesFlat);
+        }
+
+        var featuresHtml = (detail.features || []).map(function (f) {
+          return '<li class="vc-detail-feature"><span class="vc-detail-check">✓</span> ' + esc(f) + '</li>';
+        }).join('');
+        var stepsHtml = (detail.steps || []).map(function (s, i) {
+          return '<li class="vc-detail-step"><span class="vc-detail-step-num">' + (i + 1) + '</span> ' + esc(s) + '</li>';
+        }).join('');
+        var noteHtml = (detail.note) ? '<div class="vc-detail-note"><strong>نکته:</strong> ' + esc(detail.note) + '</div>' : '';
+
+        var faqHtml = '';
+        if (faqs.length) {
+          faqHtml = '<div class="vc-detail-block"><h2 class="vc-detail-h2">سوالات متداول درباره ' + esc(service.label) + '</h2><div class="vc-faq-list vc-faq-accordion">' + faqs.map(function (item, idx) {
+            return '<div class="vc-faq-item" data-faq-index="' + idx + '"><button type="button" class="vc-faq-q">' + esc(item.q) + '<i class="fa fa-plus vc-faq-toggle" aria-hidden="true"></i></button><div class="vc-faq-a">' + nl2br(item.a) + '</div></div>';
+          }).join('') + '</div></div>';
+        }
+
+        var amountsHtml = '';
+        if (amountsConfig) {
+          if (amountsConfig.uae && amountsConfig.usa) {
+            var uaeList = (amountsConfig.uae || []).map(function (n) { return '<li class="vc-amount-item">' + (Number(n).toLocaleString ? Number(n).toLocaleString('fa-IR') : n) + ' دلار</li>'; }).join('');
+            var usaList = (amountsConfig.usa || []).map(function (n) { return '<li class="vc-amount-item">' + (Number(n).toLocaleString ? Number(n).toLocaleString('fa-IR') : n) + ' دلار</li>'; }).join('');
+            amountsHtml = '<div class="vc-detail-block"><h2 class="vc-detail-h2">' + esc(amountsConfig.title) + '</h2><div class="vc-detail-two-col"><div><h3 class="vc-amount-subtitle">گیفت کارت پلی استیشن امارات (UAE)</h3><ul class="vc-amount-list">' + uaeList + '</ul></div><div><h3 class="vc-amount-subtitle">گیفت کارت پلی استیشن آمریکا (USA)</h3><ul class="vc-amount-list">' + usaList + '</ul></div></div><p class="vc-amount-note">' + esc(amountsConfig.note || '') + '</p><p class="vc-amount-upgrade">' + esc(amountsConfig.upgradeMessage || '') + '</p></div>';
+          } else if (amountsConfig.amounts && amountsConfig.amounts.length) {
+            var listHtml = amountsConfig.amounts.map(function (n) { return '<li class="vc-amount-item">' + (Number(n).toLocaleString ? Number(n).toLocaleString('fa-IR') : n) + ' دلار</li>'; }).join('');
+            amountsHtml = '<div class="vc-detail-block"><h2 class="vc-detail-h2">' + esc(amountsConfig.title) + '</h2><ul class="vc-amount-list">' + listHtml + '</ul><p class="vc-amount-note">' + esc(amountsConfig.note || '') + '</p><p class="vc-amount-upgrade">' + esc(amountsConfig.upgradeMessage || '') + '</p></div>';
+          }
+        }
+
+        var mastercardPrimeHtml = '';
+        if (service.id === 'mastercard-prime' && window.validCardsMastercardPrimeTerms) {
+          var t = window.validCardsMastercardPrimeTerms;
+          var atmList = (t.atm && t.atm.items || []).map(function (x) { return '<li><span class="vc-detail-check">✓</span> ' + esc(x) + '</li>'; }).join('');
+          var onlineList = (t.online && t.online.items || []).map(function (x) { return '<li><span class="vc-detail-check">✓</span> ' + esc(x) + '</li>'; }).join('');
+          var transferList = (t.transfer && t.transfer.items || []).map(function (x) { return '<li><span class="vc-detail-check">✓</span> ' + esc(x) + '</li>'; }).join('');
+          mastercardPrimeHtml = '<div class="vc-detail-block vc-mastercard-terms"><h2 class="vc-detail-h2">' + esc(t.title) + '</h2><div class="vc-detail-three-col"><div class="vc-terms-box"><h3 class="vc-amount-subtitle">' + esc(t.atm ? t.atm.title : '') + '</h3><ul class="vc-detail-list">' + atmList + '</ul></div><div class="vc-terms-box"><h3 class="vc-amount-subtitle">' + esc(t.online ? t.online.title : '') + '</h3><ul class="vc-detail-list">' + onlineList + '</ul></div><div class="vc-terms-box"><h3 class="vc-amount-subtitle">' + esc(t.transfer ? t.transfer.title : '') + '</h3><ul class="vc-detail-list">' + transferList + '</ul></div></div></div>';
+        }
+
+        var statsHtml = '<div class="vc-detail-block vc-detail-stats"><h2 class="vc-detail-h2">آمار و ارقام ' + esc(service.label) + '</h2><div class="vc-stats-grid"><div class="vc-stat"><div class="vc-stat-icon"><i class="fa fa-users" aria-hidden="true"></i></div><div class="vc-stat-value">۵,۰۰۰+</div><div class="vc-stat-label">مشتری راضی</div></div><div class="vc-stat"><div class="vc-stat-icon vc-stat-icon-light"><i class="fa fa-check-circle" aria-hidden="true"></i></div><div class="vc-stat-value">۹۸٪</div><div class="vc-stat-label">رضایت مشتری</div></div><div class="vc-stat"><div class="vc-stat-icon"><i class="fa fa-star" aria-hidden="true"></i></div><div class="vc-stat-value">۴.۹</div><div class="vc-stat-label">امتیاز کاربران</div></div></div></div>';
+
+        var relatedHtml = '';
+        if (related.length) {
+          relatedHtml = '<div class="vc-detail-block"><h2 class="vc-detail-h2">خدمات مرتبط</h2><div class="vc-related-grid">' + related.map(function (r) {
+            var iconClass = getHeaderIconClass(r.iconKey || '');
+            var iconBoxClass = 'vc-related-card-icon vc-detail-header-icon-' + (r.iconKey || '');
+            return '<a href="' + esc(r.href) + '" class="vc-related-card"><span class="' + iconBoxClass + '"><i class="fa ' + iconClass + '" aria-hidden="true"></i></span><span class="vc-related-card-body"><span class="vc-related-card-title">' + esc(r.label) + '</span>' + (r.description ? '<p class="vc-related-card-desc">' + esc(r.description) + '</p>' : '') + '</span></a>';
+          }).join('') + '</div></div>';
+        }
+
+        var benefitsHtml = '';
+        var benefits = window.getValidCardsBenefits ? window.getValidCardsBenefits(service.id) : null;
+        if (benefits && benefits.items && benefits.items.length) {
+          var benefitCards = benefits.items.map(function (b) {
+            var faIcon = b.faIcon || 'fa-solid fa-check-circle';
+            return '<div class="vc-benefit-card"><div class="vc-benefit-icon"><i class="fa ' + faIcon + '" aria-hidden="true"></i></div><h3>' + esc(b.title) + '</h3><p>' + esc(b.description) + '</p></div>';
+          }).join('');
+          benefitsHtml = '<div class="vc-detail-block vc-benefits-block"><h2 class="vc-detail-h2">' + esc(benefits.title) + '</h2>' + (benefits.subtitle ? '<p class="vc-benefits-subtitle">' + esc(benefits.subtitle) + '</p>' : '') + '<div class="vc-benefits-grid">' + benefitCards + '</div></div>';
+        }
+
+        var headerIconClass = getHeaderIconClass(service.iconKey || '');
+        var headerIconHtml = '<div class="vc-detail-header-icon vc-detail-header-icon-' + esc(service.iconKey || '') + '"><i class="fa ' + headerIconClass + '" aria-hidden="true"></i></div>';
+
+        return '<nav class="vc-breadcrumb"><a href="index.html">صفحه اصلی</a> <span>/</span> <a href="valid-cards.html">کارت‌های اعتباری</a> <span>/</span> <span>' + esc(service.label) + '</span></nav>' +
+          '<div class="vc-detail-header">' + headerIconHtml + '<div class="vc-detail-header-text"><h1 class="vc-detail-title">' + esc(service.label) + (service.labelEn ? ' <span class="vc-detail-title-en">(' + esc(service.labelEn) + ')</span>' : '') + '</h1><p class="vc-detail-desc">' + esc(service.description) + '</p></div></div>' +
+          '<div class="vc-detail-layout">' +
+            '<div class="vc-detail-main">' +
+              '<div class="vc-detail-block"><h2 class="vc-detail-h2">درباره ' + esc(service.label) + '</h2><p class="vc-detail-p">' + nl2br(detail.description) + '</p></div>' +
+              '<div class="vc-detail-block"><div class="vc-detail-two-col"><div><h2 class="vc-detail-h2">ویژگی‌های ' + esc(service.label) + '</h2><ul class="vc-detail-list">' + featuresHtml + '</ul></div><div><h2 class="vc-detail-h2">مراحل انجام کار</h2><ol class="vc-detail-steps">' + stepsHtml + '</ol></div></div>' + noteHtml + '</div>' +
+              amountsHtml +
+              mastercardPrimeHtml +
+              benefitsHtml +
+              statsHtml +
+              faqHtml +
+              relatedHtml +
+            '</div>' +
+            '<aside class="vc-detail-sidebar"><div class="vc-sidebar-box"><h2 class="vc-sidebar-title">' + esc(service.label) + '</h2><p class="vc-sidebar-text">برای مشاهده قیمت و ثبت سفارش وارد حساب کاربری شوید.</p><a href="auth.html?next=' + encodeURIComponent('valid-cards/service.html?slug=' + service.id) + '" class="vc-sidebar-btn">ورود / ثبت‌نام</a><p class="vc-sidebar-back"><a href="valid-cards.html">← بازگشت به کارت‌های اعتباری</a></p></div></aside>' +
+          '</div>';
+      }
+
+      var idMatch = /[?&]id=([^&]+)/.exec(window.location.search);
+      var slugMatch = /[?&]slug=([^&]+)/.exec(window.location.search);
+      var idParam = idMatch ? decodeURIComponent(idMatch[1].replace(/\+/g, ' ')) : '';
+      var slugParam = slugMatch ? decodeURIComponent(slugMatch[1].replace(/\+/g, ' ')) : '';
+
+      if (idParam) {
+        fetch(API + '?action=shop&_t=' + Date.now())
+          .then(function (r) { return r.json(); })
+          .then(function (data) {
+            var products = window.parseShopResponse ? window.parseShopResponse(data) : [];
+            var productId = parseInt(idParam, 10);
+            var p = products.filter(function (x) { return x.id === productId; })[0];
+            if (!p) { showError('محصول یافت نشد.'); return; }
+            document.title = (p.name || 'سرویس') + ' | کارت‌های اعتباری — ريتكس';
+            var iconSvg = window.getValidCardIconSvg ? window.getValidCardIconSvg(p.mainCategoryId) : '';
+            var html = '<div class="service-detail-card">' +
+              '<div class="valid-card-icon-wrap" style="width:5rem;height:5rem;margin:0 auto 1rem;border-radius:9999px;background:#fef3f2;display:inline-flex;align-items:center;justify-content:center;color:var(--brand);">' + iconSvg + '</div>' +
+              '<h1 class="section-title">' + esc(p.name) + '</h1>' +
+              '<p class="section-desc">' + nl2br(p.description) + '</p>' +
+              '<p><a href="valid-cards.html">← بازگشت به کارت‌های اعتباری</a></p></div>';
+            hideAll(); content.innerHTML = html; content.style.display = 'block';
+          })
+          .catch(function () { showError('خطا در بارگذاری از API.'); });
+        return;
+      }
+
+      if (slugParam) {
+        var platform = window.validCardsPlatform;
+        var list = platform ? platform.servicesFlat : [];
+        var service = list.filter(function (s) { return s.id === slugParam; })[0];
+        if (!service) {
+          showError('سرویس یافت نشد.');
+          return;
+        }
+        document.title = service.label + ' | کارت‌های اعتباری — ريتكس';
+        var html = renderPlatformService(service);
+        hideAll(); content.innerHTML = html; content.style.display = 'block';
+        (function initFaqAccordion() {
+          var list = content.querySelector('.vc-faq-accordion');
+          if (!list) return;
+          list.addEventListener('click', function (e) {
+            var btn = e.target.closest('.vc-faq-q');
+            if (!btn) return;
+            var item = btn.closest('.vc-faq-item');
+            var isOpen = item.classList.contains('vc-faq-open');
+            list.querySelectorAll('.vc-faq-item').forEach(function (el) { el.classList.remove('vc-faq-open'); });
+            if (!isOpen) item.classList.add('vc-faq-open');
+          });
+          var first = list.querySelector('.vc-faq-item');
+          if (first) first.classList.add('vc-faq-open');
+        })();
+        return;
+      }
+
+      showError();
+    })();
+  </script>
+  <script src="js/app.js"></script>
+</body>
+</html>

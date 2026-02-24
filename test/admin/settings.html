@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>تنظیمات | پنل مدیریت ريتكس</title>
+  <link rel="icon" href="../Images/Logo/Raitx%20international%20payments%20logo%20design%20(1).png">
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body>
+  <div class="admin-wrap">
+    <aside class="admin-sidebar" id="admin-sidebar"></aside>
+    <main class="admin-main">
+      <h1 class="admin-page-title">تنظیمات</h1>
+      <p class="admin-page-desc">تنظیمات پنل و سایت. مطابق raitx-platform admin/settings.</p>
+      <div class="admin-card">
+        <div class="admin-card-header"><h3>اطلاعات تماس</h3></div>
+        <div style="padding:1.5rem;">
+          <p style="margin:0 0 0.5rem;"><strong>ایمیل پشتیبانی:</strong> support@mrpremiumhub.org</p>
+          <p style="margin:0;"><strong>تلفن:</strong> ۰۲۱-۹۱۳۲۰۷۰۰</p>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script src="../js/api.js"></script>
+  <script src="../js/admin-layout.js"></script>
+  <script>
+    if (!adminLayout.isLoggedIn()) { window.location.href = 'login.html?next=settings.html'; }
+    adminLayout.renderSidebar('admin-sidebar');
+  </script>
+</body>
+</html>

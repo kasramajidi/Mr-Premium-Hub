@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>مقالات | پنل مدیریت ريتكس</title>
+  <link rel="icon" href="../Images/Logo/Raitx%20international%20payments%20logo%20design%20(1).png">
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body>
+  <div class="admin-wrap">
+    <aside class="admin-sidebar" id="admin-sidebar"></aside>
+    <main class="admin-main">
+      <h1 class="admin-page-title">مقالات</h1>
+      <p class="admin-page-desc">مدیریت مقالات و اخبار. افزودن، مشاهده و حذف از طریق API (action=Article).</p>
+      <button type="button" class="admin-add-btn" id="btn-add-article">➕ افزودن مقاله</button>
+      <div id="admin-articles-list" class="admin-card"></div>
+    </main>
+  </div>
+
+  <div id="article-modal-overlay" class="admin-modal-overlay" style="display:none;" aria-hidden="true">
+    <div class="admin-modal" role="dialog" aria-labelledby="article-modal-title">
+      <div class="admin-modal-header">
+        <h2 id="article-modal-title">افزودن مقاله</h2>
+        <button type="button" class="admin-modal-close" id="article-modal-close" aria-label="بستن">×</button>
+      </div>
+      <div class="admin-modal-body">
+        <div id="article-form-msg" class="msg" style="display:none;"></div>
+        <form id="article-form" class="admin-form">
+          <div class="field">
+            <label for="art-title">عنوان</label>
+            <input type="text" id="art-title" name="title" required placeholder="عنوان مقاله">
+          </div>
+          <div class="field">
+            <label for="art-slug">slug (انگلیسی، یکتا)</label>
+            <input type="text" id="art-slug" name="slug" required placeholder="my-article-slug">
+          </div>
+          <div class="field">
+            <label for="art-category">دسته‌بندی</label>
+            <input type="text" id="art-category" name="category" placeholder="اخبار">
+          </div>
+          <div class="field">
+            <label for="art-image">آدرس تصویر</label>
+            <input type="text" id="art-image" name="image" placeholder="/Images/Shop/product-pic1.jpg">
+          </div>
+          <div class="field">
+            <label for="art-content">محتوا (هر پاراگراف در یک خط)</label>
+            <textarea id="art-content" name="content" rows="6" placeholder="پاراگراف اول&#10;پاراگراف دوم"></textarea>
+          </div>
+          <div class="field">
+            <label for="art-headings">عناوین فرعی (هر عنوان در یک خط)</label>
+            <textarea id="art-headings" name="headings" rows="3" placeholder="عنوان ۱&#10;عنوان ۲"></textarea>
+          </div>
+          <div class="btn-row">
+            <button type="button" class="btn btn-secondary" id="article-form-cancel">انصراف</button>
+            <button type="submit" class="btn btn-primary" id="article-form-submit">ثبت مقاله</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/api.js"></script>
+  <script src="../js/admin-layout.js"></script>
+  <script>
+    (function() {
+      if (!adminLayout.isLoggedIn()) { window.location.href = 'login.html?next=articles.html'; return; }
+      adminLayout.renderSidebar('admin-sidebar');
+
+      var API = (typeof API_BASE !== 'undefined' && API_BASE()) ? API_BASE() : 'https://mrpremiumhub.org/api.ashx';
+      var listEl = document.getElementById('admin-articles-list');
+      var overlay = document.getElementById('article-modal-overlay');
+      var form = document.getElementById('article-form');
+      var formMsg = document.getElementById('article-form-msg');
+      var btnClose = document.getElementById('article-modal-close');
+      var btnCancel = document.getElementById('article-form-cancel');
+
+      function showFormMsg(text, isError) {
+        formMsg.textContent = text || '';
+        formMsg.className = 'msg ' + (isError ? 'error' : 'success');
+        formMsg.style.display = text ? 'block' : 'none';
+      }
+
+      function openModal() {
+        overlay.style.display = 'flex';
+        overlay.setAttribute('aria-hidden', 'false');
+        document.getElementById('article-modal-title').textContent = 'افزودن مقاله';
+        form.reset();
+        showFormMsg('', false);
+      }
+
+      function closeModal() {
+        overlay.style.display = 'none';
+        overlay.setAttribute('aria-hidden', 'true');
+      }
+
+      document.getElementById('btn-add-article').addEventListener('click', openModal);
+      btnClose.addEventListener('click', closeModal);
+      btnCancel.addEventListener('click', closeModal);
+      overlay.addEventListener('click', function(e) {
+        if (e.target === overlay) closeModal();
+      });
+
+      function loadList() {
+        fetch(API + '?action=Article&_t=' + Date.now())
+          .then(function(r) { return r.json(); })
+          .then(function(data) {
+            var list = Array.isArray(data) ? data : (data && (data.data || data.items || data.Articles || data.list)) || [];
+            if (list.length === 0) {
+              listEl.innerHTML = '<div class="admin-card-header"><h3>لیست مقالات</h3></div><div style="padding:2rem;text-align:center;color:#6b7280;">مقاله‌ای یافت نشد.</div>';
+              return;
+            }
+            var rows = list.map(function(a) {
+              var id = a.id || a.ID || '';
+              var title = (a.title || a.Title || '').toString().substring(0, 40);
+              var slug = (a.slug || a.Slug || '').toString().substring(0, 25);
+              var date = a.date || a.Date || '';
+              return '<tr><td>' + id + '</td><td>' + title + '</td><td>' + slug + '</td><td>' + date + '</td><td><button type="button" class="btn-sm btn-delete" data-id="' + id + '" data-action="delete">حذف</button></td></tr>';
+            }).join('');
+            listEl.innerHTML = '<div class="admin-card-header"><h3>لیست مقالات</h3></div><div class="overflow-x-auto"><table class="admin-table"><thead><tr><th>شناسه</th><th>عنوان</th><th>slug</th><th>تاریخ</th><th>عملیات</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
+
+            listEl.querySelectorAll('.btn-delete').forEach(function(btn) {
+              btn.addEventListener('click', function() {
+                var id = btn.getAttribute('data-id');
+                if (!id || !confirm('آیا از حذف این مقاله اطمینان دارید؟')) return;
+                fetch(API + '?action=Article&id=' + encodeURIComponent(id), { method: 'DELETE', headers: { 'Content-Type': 'application/json' } })
+                  .then(function(r) { return r.json().catch(function() { return {}; }); })
+                  .then(function() { loadList(); })
+                  .catch(function() { loadList(); });
+              });
+            });
+          })
+          .catch(function() {
+            listEl.innerHTML = '<div class="admin-card-header"><h3>لیست مقالات</h3></div><div style="padding:2rem;text-align:center;color:#6b7280;">خطا در بارگذاری از API.</div>';
+          });
+      }
+
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        var title = document.getElementById('art-title').value.trim();
+        var slug = document.getElementById('art-slug').value.trim();
+        var category = document.getElementById('art-category').value.trim();
+        var image = document.getElementById('art-image').value.trim() || '/Images/Shop/product-pic1.jpg';
+        var contentText = document.getElementById('art-content').value.trim();
+        var headingsText = document.getElementById('art-headings').value.trim();
+        var content = contentText ? contentText.split(/\n/).map(function(s) { return s.trim(); }).filter(Boolean) : [];
+        var headings = headingsText ? headingsText.split(/\n/).map(function(s) { return s.trim(); }).filter(Boolean) : [];
+        if (!title || !slug) { showFormMsg('عنوان و slug الزامی است.', true); return; }
+
+        var body = {
+          title: title,
+          slug: slug,
+          Category: category,
+          category: category,
+          image: image,
+          date: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' }),
+          comments: 0,
+          content: content,
+          headings: headings
+        };
+
+        var submitBtn = document.getElementById('article-form-submit');
+        submitBtn.disabled = true;
+        showFormMsg('', false);
+        fetch(API + '?action=Article', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        })
+          .then(function(r) { return r.json(); })
+          .then(function(data) {
+            if (data && (data.id !== undefined || data.ID !== undefined || data.title)) {
+              showFormMsg('مقاله با موفقیت ثبت شد.', false);
+              loadList();
+              setTimeout(closeModal, 1500);
+            } else {
+              showFormMsg((data && data.error) || (data && data.message) || 'ثبت ناموفق بود.', true);
+            }
+          })
+          .catch(function(err) {
+            showFormMsg('خطا در ارتباط با سرور. ' + (err && err.message ? err.message : ''), true);
+          })
+          .finally(function() { submitBtn.disabled = false; });
+      });
+
+      loadList();
+    })();
+  </script>
+</body>
+</html>

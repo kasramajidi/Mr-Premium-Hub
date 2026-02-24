@@ -311,8 +311,11 @@ export const services: Service[] = [
 export const serviceCategories = [
   { id: "all", label: "همه خدمات", value: "all" },
   { id: "payment", label: "پرداخت", value: "payment" },
-  { id: "travel", label: "مسافرتی", value: "travel" },
   { id: "education", label: "دانشگاهی", value: "education" },
+  { id: "vps", label: "VPS", value: "vps" },
+  { id: "premium", label: "اکانت پریمیوم", value: "premium" },
+  { id: "international", label: "بین المللی", value: "international" },
+  { id: "travel", label: "مسافرتی", value: "travel" },
   { id: "crypto", label: "ارز دیجیتال", value: "crypto" },
   { id: "other", label: "سایر", value: "other" },
 ];

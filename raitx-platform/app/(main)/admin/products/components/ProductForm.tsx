@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { getApiBase } from "@/lib/api-base";
 
 export interface ShopApiPayload {
   id?: number | string;
@@ -47,8 +48,8 @@ interface ProductFormProps {
   onSave: (data: ShopApiPayload) => void;
 }
 
-const API_URL = "https://mrpremiumhub.org/api.ashx?action=shop";
-const EXCHANGE_RATE_API = "https://mrpremiumhub.org/api.ashx?action=change";
+const getShopApiUrl = () => `${getApiBase()}?action=shop`;
+const getExchangeRateApiUrl = () => `${getApiBase()}?action=change`;
 
 const readFileAsDataUrl = (file: File): Promise<string> =>
   new Promise((resolve, reject) => {
@@ -106,7 +107,7 @@ export default function ProductForm({
   useEffect(() => {
     const fetchExchangeRate = async () => {
       try {
-        const res = await fetch(EXCHANGE_RATE_API);
+        const res = await fetch(getExchangeRateApiUrl());
         const data = await res.json();
         if (data.buy) {
           setExchangeRate(Number(data.buy));
@@ -200,7 +201,7 @@ export default function ProductForm({
     const payload = buildPayload();
 
     const isEdit = product?.id != null;
-    const url = isEdit ? `${API_URL}&id=${product.id}` : API_URL;
+    const url = isEdit ? `${getShopApiUrl()}&id=${product.id}` : getShopApiUrl();
     const method = isEdit ? "PATCH" : "POST";
 
     try {

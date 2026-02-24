@@ -59,7 +59,7 @@ export default function ServicesDropdown() {
         <HiChevronDown className="text-base transition-transform duration-200 shrink-0 [.services-dropdown-details[open]_&]:rotate-180" />
       </summary>
       {services.length > 0 && (
-        <div role="menu" className="absolute top-full left-0 rtl:left-auto rtl:right-0 mt-2 w-56 min-w-[12rem] bg-white rounded-lg shadow-xl border border-gray-200 py-2 z-[100]">
+        <div role="menu" className="absolute top-full left-0 rtl:left-auto rtl:right-0 mt-2 w-56 min-w-48 bg-white rounded-lg shadow-xl border border-gray-200 py-2 z-100">
           {services.map((service) => {
             const isServiceActive =
               pathname === service.href ||

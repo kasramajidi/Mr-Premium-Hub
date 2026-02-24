@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>محصولات | پنل مدیریت ريتكس</title>
+  <link rel="icon" href="../Images/Logo/Raitx%20international%20payments%20logo%20design%20(1).png">
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body>
+  <div class="admin-wrap">
+    <aside class="admin-sidebar" id="admin-sidebar"></aside>
+    <main class="admin-main">
+      <h1 class="admin-page-title">محصولات</h1>
+      <p class="admin-page-desc">مدیریت محصولات فروشگاه. افزودن و ویرایش از طریق API (action=shop).</p>
+      <button type="button" class="admin-add-btn" id="btn-add-product">➕ افزودن محصول</button>
+      <div id="admin-products-list" class="admin-card"></div>
+    </main>
+  </div>
+
+  <div id="product-modal-overlay" class="admin-modal-overlay" style="display:none;" aria-hidden="true">
+    <div class="admin-modal" role="dialog" aria-labelledby="product-modal-title">
+      <div class="admin-modal-header">
+        <h2 id="product-modal-title">افزودن محصول</h2>
+        <button type="button" class="admin-modal-close" id="product-modal-close" aria-label="بستن">×</button>
+      </div>
+      <div class="admin-modal-body">
+        <div id="product-form-msg" class="msg" style="display:none;"></div>
+        <form id="product-form" class="admin-form">
+          <input type="hidden" id="prod-id" name="id" value="">
+          <div class="field">
+            <label for="prod-title">عنوان محصول</label>
+            <input type="text" id="prod-title" name="title" required placeholder="مثال: گیفت کارت گوگل پلی">
+          </div>
+          <div class="field">
+            <label for="prod-groups">دسته‌بندی</label>
+            <input type="text" id="prod-groups" name="groups" placeholder="گیفت کارت">
+          </div>
+          <div class="field">
+            <label for="prod-price">قیمت (تومان)</label>
+            <input type="number" id="prod-price" name="price" min="0" step="1" placeholder="0">
+          </div>
+          <div class="field">
+            <label for="prod-img">آدرس تصویر</label>
+            <input type="text" id="prod-img" name="img" placeholder="URL یا مسیر تصویر">
+          </div>
+          <div class="field">
+            <label for="prod-text">توضیحات محصول</label>
+            <textarea id="prod-text" name="text" rows="4" placeholder="توضیح کامل محصول"></textarea>
+          </div>
+          <div class="btn-row">
+            <button type="button" class="btn btn-secondary" id="product-form-cancel">انصراف</button>
+            <button type="submit" class="btn btn-primary" id="product-form-submit">ثبت محصول</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/api.js"></script>
+  <script src="../js/admin-layout.js"></script>
+  <script>
+    (function() {
+      if (!adminLayout.isLoggedIn()) { window.location.href = 'login.html?next=products.html'; return; }
+      adminLayout.renderSidebar('admin-sidebar');
+
+      var API = (typeof API_BASE !== 'undefined' && API_BASE()) ? API_BASE() : 'https://mrpremiumhub.org/api.ashx';
+      var listEl = document.getElementById('admin-products-list');
+      var overlay = document.getElementById('product-modal-overlay');
+      var form = document.getElementById('product-form');
+      var formMsg = document.getElementById('product-form-msg');
+      var titleEl = document.getElementById('product-modal-title');
+      var idInput = document.getElementById('prod-id');
+
+      function showFormMsg(text, isError) {
+        formMsg.textContent = text || '';
+        formMsg.className = 'msg ' + (isError ? 'error' : 'success');
+        formMsg.style.display = text ? 'block' : 'none';
+      }
+
+      function openModal(product) {
+        overlay.style.display = 'flex';
+        overlay.setAttribute('aria-hidden', 'false');
+        if (product) {
+          titleEl.textContent = 'ویرایش محصول';
+          idInput.value = product.id || product.ID || '';
+          document.getElementById('prod-title').value = product.title || product.Title || product.name || '';
+          document.getElementById('prod-groups').value = product.groups || '';
+          document.getElementById('prod-price').value = product.price || product.Price || '';
+          document.getElementById('prod-img').value = product.img || product.image || '';
+          document.getElementById('prod-text').value = product.text || product.description || product.Description || '';
+        } else {
+          titleEl.textContent = 'افزودن محصول';
+          idInput.value = '';
+          form.reset();
+          idInput.value = '';
+        }
+        showFormMsg('', false);
+      }
+
+      function closeModal() {
+        overlay.style.display = 'none';
+        overlay.setAttribute('aria-hidden', 'true');
+      }
+
+      document.getElementById('btn-add-product').addEventListener('click', function() { openModal(null); });
+      document.getElementById('product-modal-close').addEventListener('click', closeModal);
+      document.getElementById('product-form-cancel').addEventListener('click', closeModal);
+      overlay.addEventListener('click', function(e) {
+        if (e.target === overlay) closeModal();
+      });
+
+      var productsCache = [];
+
+      function loadList() {
+        fetch(API + '?action=shop')
+          .then(function(r) { return r.json(); })
+          .then(function(data) {
+            var list = Array.isArray(data) ? data : (data && (data.data || data.items || data.products || data.list)) || [];
+            productsCache = list;
+            if (list.length === 0) {
+              listEl.innerHTML = '<div class="admin-card-header"><h3>لیست محصولات</h3></div><div style="padding:2rem;text-align:center;color:#6b7280;">محصولی یافت نشد.</div>';
+              return;
+            }
+            var rows = list.map(function(p) {
+              var id = p.id || p.ID || '';
+              var title = (p.title || p.Title || p.name || '').toString().substring(0, 35);
+              var price = p.price || p.Price || '';
+              return '<tr><td>' + id + '</td><td>' + title + '</td><td>' + price + '</td><td><button type="button" class="btn-sm btn-edit" data-id="' + id + '">ویرایش</button></td></tr>';
+            }).join('');
+            listEl.innerHTML = '<div class="admin-card-header"><h3>لیست محصولات</h3></div><div class="overflow-x-auto"><table class="admin-table"><thead><tr><th>شناسه</th><th>عنوان</th><th>قیمت</th><th>عملیات</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
+
+            listEl.querySelectorAll('.btn-edit').forEach(function(btn) {
+              btn.addEventListener('click', function() {
+                var id = btn.getAttribute('data-id');
+                var product = productsCache.filter(function(p) { return String(p.id || p.ID) === String(id); })[0];
+                if (product) openModal(product);
+              });
+            });
+          })
+          .catch(function() {
+            listEl.innerHTML = '<div class="admin-card-header"><h3>لیست محصولات</h3></div><div style="padding:2rem;text-align:center;color:#6b7280;">خطا در بارگذاری از API.</div>';
+          });
+      }
+
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        var id = idInput.value.trim();
+        var title = document.getElementById('prod-title').value.trim();
+        var groups = document.getElementById('prod-groups').value.trim();
+        var price = document.getElementById('prod-price').value.trim();
+        var img = document.getElementById('prod-img').value.trim();
+        var text = document.getElementById('prod-text').value.trim();
+        if (!title) { showFormMsg('عنوان محصول الزامی است.', true); return; }
+
+        var payload = {
+          title: title,
+          groups: groups,
+          price: price ? Math.max(0, parseInt(price, 10)) : 0,
+          img: img || undefined,
+          text: text || undefined
+        };
+
+        var isEdit = !!id;
+        var url = isEdit ? (API + '?action=shop&id=' + encodeURIComponent(id)) : (API + '?action=shop');
+        var method = isEdit ? 'PATCH' : 'POST';
+
+        var submitBtn = document.getElementById('product-form-submit');
+        submitBtn.disabled = true;
+        showFormMsg('', false);
+        fetch(url, {
+          method: method,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        })
+          .then(function(r) { return r.json().catch(function() { return {}; }); })
+          .then(function(data) {
+            var failed = data && (data.statu === 0 || data.status === 0);
+            if (failed || (data && data.error)) {
+              showFormMsg((data && data.error) || (data && data.message) || 'ثبت ناموفق بود.', true);
+              return;
+            }
+            showFormMsg(isEdit ? 'محصول با موفقیت ویرایش شد.' : 'محصول با موفقیت ثبت شد.', false);
+            loadList();
+            setTimeout(closeModal, 1500);
+          })
+          .catch(function(err) {
+            showFormMsg('خطا در ارتباط با سرور. ' + (err && err.message ? err.message : ''), true);
+          })
+          .finally(function() { submitBtn.disabled = false; });
+      });
+
+      loadList();
+    })();
+  </script>
+</body>
+</html>

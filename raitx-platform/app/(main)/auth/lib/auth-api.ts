@@ -4,11 +4,11 @@
  * - GET  action=smspass&phone=98...  → دریافت رمز یکبار مصرف (اس‌ام‌اس)
  * - GET  action=login&phone=98...&pass=...  → ورود، برگرداندن cookie
  * - GET  action=LoginCookie&Cookie=...  → ورود با کوکی ذخیره‌شده
- * در مرورگر از پروکسی /api/auth-proxy استفاده می‌شود تا CORS رفع شود.
+ * در مرورگر از پروکسی یا آدرس مستقیم (در بیلد استاتیک) استفاده می‌شود.
  */
+import { getApiBase } from "@/lib/api-base";
 
-const API_BASE =
-  typeof window !== "undefined" ? "/api/auth-proxy" : "https://mrpremiumhub.org/api.ashx";
+const API_BASE = () => getApiBase();
 
 /** تبدیل شماره به فرمت API: 09... یا ۰۹... → 989... (۱۱ رقم) */
 export function normalizePhoneForApi(phone: string): string {
@@ -32,7 +32,7 @@ export function normalizePhoneForApi(phone: string): string {
 }
 
 async function postData<T = unknown>(action: string, data: object): Promise<T> {
-  const res = await fetch(`${API_BASE}?action=${encodeURIComponent(action)}`, {
+  const res = await fetch(`${API_BASE()}?action=${encodeURIComponent(action)}`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
@@ -44,7 +44,7 @@ async function postData<T = unknown>(action: string, data: object): Promise<T> {
 /** GET مطابق GetData در تست: ?action=smspass&phone=98... یا ?action=login&phone=...&pass=... */
 async function getData<T = unknown>(queryString: string): Promise<T> {
   const q = queryString.startsWith("action=") ? queryString : `action=${queryString}`;
-  const res = await fetch(`${API_BASE}?${q}`, {
+  const res = await fetch(`${API_BASE()}?${q}`, {
     method: "GET",
     headers: { "Content-Type": "application/json" },
   });

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>حساب من | ريتكس</title>
+  <link rel="icon" href="Images/Logo/Raitx%20international%20payments%20logo%20design%20(1).png">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div id="site-header"></div>
+  <main class="site-main">
+    <div class="container" style="padding-top: 2rem; padding-bottom: 3rem;">
+      <h1 class="section-title">حساب من</h1>
+      <div id="my-account-content">
+        <p class="section-desc">در حال بررسی ورود…</p>
+      </div>
+    </div>
+  </main>
+
+  <div id="site-footer"></div>
+  <script src="js/layout.js"></script>
+  <script>layout.init();</script>
+  <script src="js/app.js"></script>
+  <script>
+    (function() {
+      function getAuthCookie() {
+        var name = 'loginval=';
+        var decoded = decodeURIComponent(document.cookie);
+        var parts = decoded.split(';');
+        for (var i = 0; i < parts.length; i++) {
+          var c = parts[i].replace(/^\s+/, '');
+          if (c.indexOf(name) === 0) return decodeURIComponent(c.substring(name.length));
+        }
+        return '';
+      }
+      var cookie = getAuthCookie() || (typeof localStorage !== 'undefined' && localStorage.getItem('loginval')) || '';
+      var phone = (typeof localStorage !== 'undefined' && localStorage.getItem('loginPhone')) || '';
+      var el = document.getElementById('my-account-content');
+      if (cookie) {
+        el.innerHTML = '<p class="section-desc">شما با شماره <strong>' + (phone || '—') + '</strong> وارد شده‌اید. توکن (کوکی loginval) ذخیره است.</p>';
+      } else {
+        el.innerHTML = '<p class="section-desc">برای مشاهده حساب کاربری <a href="auth.html">وارد شوید</a>.</p>';
+      }
+    })();
+  </script>
+</body>
+</html>

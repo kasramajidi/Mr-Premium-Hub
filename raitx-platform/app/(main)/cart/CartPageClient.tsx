@@ -36,11 +36,7 @@ export default function CartPageClient() {
   }, [authChecked, isAuth, router]);
 
   if (!authChecked) {
-    return (
-      <div className="bg-gray-50 py-8 min-h-screen flex items-center justify-center">
-        <p className="text-gray-500 text-sm">در حال بارگذاری…</p>
-      </div>
-    );
+    return <div className="bg-gray-50 py-8 min-h-screen" />;
   }
 
   if (!isAuth) {

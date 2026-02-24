@@ -164,11 +164,7 @@ export default function DashboardMain() {
               </thead>
               <tbody>
                 {loadingSupport ? (
-                  <tr>
-                    <td colSpan={4} className="px-4 py-10 text-center text-sm text-gray-500">
-                      در حال بارگذاری…
-                    </td>
-                  </tr>
+                  <tr><td colSpan={4} className="px-4 py-6" /></tr>
                 ) : supportTickets.length === 0 ? (
                   <tr>
                     <td colSpan={4} className="px-4 py-10 text-center text-sm text-gray-500">
@@ -214,11 +210,7 @@ export default function DashboardMain() {
               </thead>
               <tbody>
                 {loadingOrders ? (
-                  <tr>
-                    <td colSpan={4} className="px-4 py-10 text-center text-sm text-gray-500">
-                      در حال بارگذاری…
-                    </td>
-                  </tr>
+                  <tr><td colSpan={4} className="px-4 py-6" /></tr>
                 ) : invoices.length === 0 ? (
                   <tr>
                     <td colSpan={4} className="px-4 py-10 text-center text-sm text-gray-500">

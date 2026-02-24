@@ -6,9 +6,10 @@ import AdminStatsCards from "../components/AdminStatsCards";
 import ProductsTable from "./components/ProductsTable";
 import ProductForm, { ShopApiPayload } from "./components/ProductForm";
 import { useCart } from "../../context/CartContext";
+import { getApiBase } from "@/lib/api-base";
 
-const API_URL = "https://mrpremiumhub.org/api.ashx?action=shop";
-const EXCHANGE_RATE_API = "https://mrpremiumhub.org/api.ashx?action=change";
+const getShopApiUrl = () => `${getApiBase()}?action=shop`;
+const getExchangeRateApiUrl = () => `${getApiBase()}?action=change`;
 const PAGE_SIZE = 11;
 
 interface Product {
@@ -70,7 +71,7 @@ export default function ProductsPage() {
     setLoading(true);
     setFetchError(null);
     try {
-      const res = await fetch(API_URL, { method: "GET" });
+      const res = await fetch(getShopApiUrl(), { method: "GET" });
       let data: unknown;
       try {
         data = await res.json();
@@ -118,7 +119,7 @@ export default function ProductsPage() {
     setEditError(null);
     setEditLoading(true);
     try {
-      const res = await fetch(`${API_URL}&id=${product.id}`, { method: "GET" });
+      const res = await fetch(`${getShopApiUrl()}&id=${product.id}`, { method: "GET" });
       let data: unknown;
       try {
         data = await res.json();
@@ -177,7 +178,7 @@ export default function ProductsPage() {
     setDeleteError(null);
     setDeletingId(id);
     try {
-      const res = await fetch(`${API_URL}&id=${id}`, { method: "DELETE" });
+      const res = await fetch(`${getShopApiUrl()}&id=${id}`, { method: "DELETE" });
       let data: Record<string, unknown> = {};
       try {
         data = await res.json();
@@ -214,7 +215,7 @@ export default function ProductsPage() {
     setBulkPriceProgress(null);
     setShowBulkPriceModal(true);
     try {
-      const res = await fetch(EXCHANGE_RATE_API);
+      const res = await fetch(getExchangeRateApiUrl());
       const data = await res.json();
       if (data?.buy != null) setExchangeRate(Number(data.buy));
       else setExchangeRate(0);
@@ -248,7 +249,7 @@ export default function ProductsPage() {
         const id = products[i].id;
         let getRes: Response;
         try {
-          getRes = await fetch(`${API_URL}&id=${id}`, { method: "GET" });
+          getRes = await fetch(`${getShopApiUrl()}&id=${id}`, { method: "GET" });
         } catch {
           failed++;
           continue;
@@ -278,7 +279,7 @@ export default function ProductsPage() {
         if (raw.text != null && raw.text !== "") payload.text = String(raw.text);
         if (raw.search != null && raw.search !== "") payload.search = String(raw.search);
         if (raw.RelatedProducts != null && raw.RelatedProducts !== "") payload.RelatedProducts = String(raw.RelatedProducts);
-        const patchRes = await fetch(`${API_URL}&id=${id}`, {
+        const patchRes = await fetch(`${getShopApiUrl()}&id=${id}`, {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),

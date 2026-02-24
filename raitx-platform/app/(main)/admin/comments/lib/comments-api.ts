@@ -2,8 +2,7 @@
  * API مدیریت نظرات / درخواست‌ها — مطابق ExamRegister
  * GET لیست از action=ExamRegister و DELETE با id
  */
-
-const PROXY = "/api/auth-proxy";
+import { getApiBase } from "@/lib/api-base";
 const ACTION = "ExamRegister";
 
 export interface CommentItem {
@@ -81,7 +80,7 @@ function normalizeItem(raw: Record<string, unknown>): CommentItem {
 
 /** دریافت لیست درخواست‌ها از API (ExamRegister) */
 export async function getComments(): Promise<CommentItem[]> {
-  const res = await fetch(`${PROXY}?action=${ACTION}`, {
+  const res = await fetch(`${getApiBase()}?action=${ACTION}`, {
     method: "GET",
     headers: { "Content-Type": "application/json" },
     cache: "no-store",
@@ -99,7 +98,7 @@ export async function getComments(): Promise<CommentItem[]> {
 /** حذف درخواست با id */
 export async function deleteComment(id: string): Promise<void> {
   const res = await fetch(
-    `${PROXY}?action=${ACTION}&id=${encodeURIComponent(id)}`,
+    `${getApiBase()}?action=${ACTION}&id=${encodeURIComponent(id)}`,
     { method: "DELETE", headers: { "Content-Type": "application/json" } }
   );
   const data = await res.json().catch(() => ({}));

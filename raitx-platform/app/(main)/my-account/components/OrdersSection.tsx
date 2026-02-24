@@ -86,12 +86,7 @@ export default function OrdersSection() {
   const pageItems = invoices.slice(start, start + ITEMS_PER_PAGE);
 
   if (loading) {
-    return (
-      <div className="flex flex-col items-center justify-center py-16 text-gray-500">
-        <div className="w-10 h-10 border-2 border-[#ff5538]/30 border-t-[#ff5538] rounded-full animate-spin" />
-        <p className="mt-3 text-sm">در حال بارگذاری سفارش‌ها…</p>
-      </div>
-    );
+    return <div className="py-16 min-h-[200px]" />;
   }
 
   if (invoices.length === 0) {

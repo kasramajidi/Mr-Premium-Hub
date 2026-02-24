@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>پنل مدیریت | ريتكس</title>
+  <link rel="icon" href="../Images/Logo/Raitx%20international%20payments%20logo%20design%20(1).png">
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body>
+  <div class="admin-wrap">
+    <aside class="admin-sidebar" id="admin-sidebar"></aside>
+    <main class="admin-main">
+      <h1 class="admin-page-title">داشبورد</h1>
+      <p class="admin-page-desc">خوش آمدید به پنل مدیریت ريتكس</p>
+      <div id="admin-stats" class="admin-stats-grid"></div>
+      <div class="admin-quick-actions">
+        <h3>دسترسی سریع</h3>
+        <a href="articles.html">➕ افزودن مقاله</a>
+        <a href="products.html">➕ افزودن محصول</a>
+        <a href="users.html">👥 مدیریت کاربران</a>
+        <a href="settings.html">⚙️ تنظیمات</a>
+      </div>
+      <div id="admin-recent-orders" class="admin-card"></div>
+    </main>
+  </div>
+  <script src="../js/api.js"></script>
+  <script src="../js/admin-layout.js"></script>
+  <script>
+    if (!adminLayout.isLoggedIn()) { window.location.href = 'login.html?next=index.html'; }
+    adminLayout.renderSidebar('admin-sidebar');
+
+    var API = window.API_BASE ? API_BASE() : 'https://mrpremiumhub.org/api.ashx';
+
+    function formatNum(n) { return new Intl.NumberFormat('fa-IR').format(n); }
+
+    var statConfig = {
+      articles: { title: 'مقالات', icon: '📝', color: 'bg-amber-50 text-amber-600' },
+      products: { title: 'محصولات', icon: '🛍️', color: 'bg-emerald-50 text-emerald-600' },
+      comments: { title: 'انتقادات و پیشنهادات', icon: '💬', color: 'bg-violet-50 text-violet-600' },
+      orders: { title: 'سفارشات', icon: '📦', color: 'bg-brand-muted text-brand' }
+    };
+
+    function fetchCount(action) {
+      return fetch(API + '?action=' + encodeURIComponent(action), { method: 'GET', headers: { 'Content-Type': 'application/json' } })
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+          var list = Array.isArray(data) ? data : (data && (data.data || data.list || data.items || data.products || data.Articles)) || [];
+          return Array.isArray(list) ? list.length : 0;
+        })
+        .catch(function () { return 0; });
+    }
+
+    Promise.all([
+      fetchCount('Article'),
+      fetchCount('shop'),
+      fetchCount('ExamRegister'),
+      fetch(API + '?action=Order').then(function (r) { return r.json(); }).then(function (data) {
+        var list = Array.isArray(data) ? data : (data && (data.data || data.orders || data.list)) || [];
+        return Array.isArray(list) ? list.length : 0;
+      }).catch(function () { return 0; })
+    ]).then(function (arr) {
+      var stats = { articles: arr[0], products: arr[1], comments: arr[2], orders: arr[3] };
+      var statsEl = document.getElementById('admin-stats');
+      var entries = [];
+      if (stats.articles > 0) entries.push({ key: 'articles', value: stats.articles });
+      if (stats.products > 0) entries.push({ key: 'products', value: stats.products });
+      if (stats.comments > 0) entries.push({ key: 'comments', value: stats.comments });
+      if (stats.orders > 0) entries.push({ key: 'orders', value: stats.orders });
+      if (entries.length === 0) {
+        statsEl.innerHTML = '<div class="admin-stat-card" style="grid-column:1/-1;text-align:center;color:#6b7280;font-size:0.875rem;">آماری از API دریافت نشد.</div>';
+        return;
+      }
+      statsEl.innerHTML = entries.slice(0, 3).map(function (e) {
+        var c = statConfig[e.key];
+        return '<div class="admin-stat-card"><div class="icon-wrap ' + c.color + '">' + c.icon + '</div><p class="label">' + c.title + '</p><p class="value">' + formatNum(e.value) + '</p></div>';
+      }).join('');
+    });
+
+    fetch(API + '?action=Order')
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        var list = Array.isArray(data) ? data : (data && (data.data || data.orders || data.list)) || [];
+        if (!Array.isArray(list) || list.length === 0) return;
+        var orders = list.slice(0, 10).map(function (o) {
+          return {
+            id: o.id || o.ID || o.orderId || '',
+            customer: o.customer || o.Customer || o.name || '',
+            product: o.product || o.Product || o.title || '',
+            amount: o.amount || o.Amount || o.price || '',
+            status: o.status || o.Status || '—',
+            date: o.date || o.Date || o.createdAt || ''
+          };
+        });
+        var el = document.getElementById('admin-recent-orders');
+        el.innerHTML = '<div class="admin-card-header"><h3>سفارشات اخیر</h3><a href="orders.html">مشاهده همه</a></div>' +
+          '<div class="overflow-x-auto"><table class="admin-table"><thead><tr><th>شماره</th><th>مشتری</th><th>محصول</th><th>مبلغ</th><th>وضعیت</th><th>تاریخ</th></tr></thead><tbody>' +
+          orders.map(function (o) {
+            return '<tr><td>' + o.id + '</td><td>' + o.customer + '</td><td>' + o.product + '</td><td>' + o.amount + '</td><td><span class="badge">' + o.status + '</span></td><td>' + o.date + '</td></tr>';
+          }).join('') + '</tbody></table></div>';
+      })
+      .catch(function () {
+        document.getElementById('admin-recent-orders').innerHTML = '';
+      });
+  </script>
+</body>
+</html>

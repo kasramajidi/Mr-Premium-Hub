@@ -310,7 +310,14 @@ function GiftCardContent({
   );
 }
 
-export default function CreditCardsTabs({ initialProducts = [] }: { initialProducts?: ShopProduct[] }) {
+export default function CreditCardsTabs({
+  initialProducts = [],
+  skipHeading = false,
+}: {
+  initialProducts?: ShopProduct[];
+  /** وقتی true، بلوک عنوان و توضیح رندر نمی‌شود (برای جلوگیری از تکرار در ValidCardsPageClient) */
+  skipHeading?: boolean;
+}) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { addToCart } = useCart();
@@ -420,25 +427,32 @@ export default function CreditCardsTabs({ initialProducts = [] }: { initialProdu
 
   return (
     <div className="w-full">
-      <div className="mb-8 sm:mb-10 md:mb-12 text-center">
-        <div className="flex items-center justify-center gap-2 sm:gap-3 mb-4 sm:mb-5">
-          <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-full bg-[#ff5538]/10 flex items-center justify-center">
-            <HiSparkles className="text-[#ff5538] text-xl sm:text-2xl md:text-3xl" />
+      {!skipHeading && (
+        <div className="mb-8 sm:mb-10 md:mb-12 text-center">
+          <div className="flex items-center justify-center gap-2 sm:gap-3 mb-4 sm:mb-5">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-full bg-[#ff5538]/10 flex items-center justify-center">
+              <HiSparkles className="text-[#ff5538] text-xl sm:text-2xl md:text-3xl" />
+            </div>
+            <div>
+              <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold leading-tight">
+                <span style={{ color: "#ff5538" }}>کارت‌های</span>{" "}
+                <span className="text-[#1a3760]">اعتباری</span>
+              </h1>
+            </div>
           </div>
-          <div>
-            <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold leading-tight">
-              <span style={{ color: "#ff5538" }}>کارت‌های</span>{" "}
-              <span className="text-[#1a3760]">اعتباری</span>
-            </h1>
-          </div>
+          <p className="text-gray-600 text-xs sm:text-sm md:text-base leading-6 sm:leading-7 max-w-2xl mx-auto">
+            ريتكس ارائه‌دهنده انواع کارت‌های اعتباری بین‌المللی، گیفت
+            کارت‌های بازی، مسترکارت و ویزا کارت است. ما با سال‌ها تجربه در زمینه
+            کارت‌های اعتباری و پرداخت‌های بین‌المللی، آماده خدمت‌رسانی به شما
+            هستیم.
+          </p>
+          {initialProducts.length === 0 && (
+            <p className="mt-3 text-amber-700 text-xs sm:text-sm bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 max-w-2xl mx-auto">
+              در حال حاضر لیست قیمت‌ها از سرور بارگذاری نشد. لطفاً صفحه را رفرش کنید یا کمی بعد تلاش کنید.
+            </p>
+          )}
         </div>
-        <p className="text-gray-600 text-xs sm:text-sm md:text-base leading-6 sm:leading-7 max-w-2xl mx-auto">
-          ريتكس ارائه‌دهنده انواع کارت‌های اعتباری بین‌المللی، گیفت
-          کارت‌های بازی، مسترکارت و ویزا کارت است. ما با سال‌ها تجربه در زمینه
-          کارت‌های اعتباری و پرداخت‌های بین‌المللی، آماده خدمت‌رسانی به شما
-          هستیم.
-        </p>
-      </div>
+      )}
 
       <div className="w-full">
         <div className="mb-8 sm:mb-10 md:mb-12 flex flex-wrap gap-2 sm:gap-2.5 justify-center items-center">

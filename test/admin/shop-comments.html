@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>کامنت فروشگاه | پنل مدیریت ريتكس</title>
+  <link rel="icon" href="../Images/Logo/Raitx%20international%20payments%20logo%20design%20(1).png">
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body>
+  <div class="admin-wrap">
+    <aside class="admin-sidebar" id="admin-sidebar"></aside>
+    <main class="admin-main">
+      <h1 class="admin-page-title">کامنت فروشگاه</h1>
+      <p class="admin-page-desc">مدیریت نظرات محصولات. داده از API (action=shopcomments) مطابق raitx-platform.</p>
+      <div id="admin-shop-comments-list" class="admin-card">
+        <div class="admin-card-header"><h3>لیست کامنت فروشگاه</h3></div>
+        <div style="padding:2rem;text-align:center;color:#6b7280;">در حال بارگذاری…</div>
+      </div>
+    </main>
+  </div>
+  <script src="../js/api.js"></script>
+  <script src="../js/admin-layout.js"></script>
+  <script>
+    (function () {
+      if (!adminLayout.isLoggedIn()) { window.location.href = 'login.html?next=shop-comments.html'; return; }
+      adminLayout.renderSidebar('admin-sidebar');
+      var API = (typeof API_BASE !== 'undefined' && API_BASE()) ? API_BASE() : 'https://mrpremiumhub.org/api.ashx';
+      var el = document.getElementById('admin-shop-comments-list');
+      function load() {
+        fetch(API + '?action=shopcomments')
+          .then(function (r) { return r.json(); })
+          .then(function (data) {
+            var list = Array.isArray(data) ? data : (data && (data.data || data.list || data.items || data.comments)) || [];
+            if (list.length === 0) {
+              el.innerHTML = '<div class="admin-card-header"><h3>لیست کامنت فروشگاه</h3></div><div style="padding:2rem;text-align:center;color:#6b7280;">کامنتی یافت نشد.</div>';
+              return;
+            }
+            var rows = list.map(function (c) {
+              var id = c.id || c.ID || '';
+              var idshop = c.idshop || c.idShop || c.IDShop || '—';
+              var userName = (c.userName || c.UserName || c.author || '').toString().substring(0, 20);
+              var userEmail = (c.userEmail || c.UserEmail || c.email || '').toString().substring(0, 25);
+              var commentText = (c.commentText || c.comment || c.content || '').toString().substring(0, 40);
+              var rating = c.rating || c.Rating || '—';
+              var status = c.status || c.Status || '—';
+              var date = c.date || c.Date || '—';
+              return '<tr><td>' + id + '</td><td>' + idshop + '</td><td>' + userName + '</td><td>' + userEmail + '</td><td>' + commentText + '</td><td>' + rating + '</td><td><span class="badge">' + status + '</span></td><td>' + date + '</td><td><button type="button" class="btn-sm btn-delete" data-id="' + id + '" data-idshop="' + idshop + '">حذف</button></td></tr>';
+            }).join('');
+            el.innerHTML = '<div class="admin-card-header"><h3>لیست کامنت فروشگاه</h3></div><div class="overflow-x-auto"><table class="admin-table"><thead><tr><th>شناسه</th><th>محصول</th><th>نام</th><th>ایمیل</th><th>متن</th><th>امتیاز</th><th>وضعیت</th><th>تاریخ</th><th>عملیات</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
+            el.querySelectorAll('.btn-delete').forEach(function (btn) {
+              btn.addEventListener('click', function () {
+                var id = btn.getAttribute('data-id');
+                var idshop = btn.getAttribute('data-idshop');
+                if (!id || !confirm('آیا از حذف این کامنت اطمینان دارید؟')) return;
+                var url = API + '?action=shopcomments&idshop=' + encodeURIComponent(String(idshop)) + '&id=' + encodeURIComponent(id);
+                fetch(url, { method: 'DELETE', headers: { 'Content-Type': 'application/json' } })
+                  .then(function () { load(); })
+                  .catch(function () { load(); });
+              });
+            });
+          })
+          .catch(function () {
+            el.innerHTML = '<div class="admin-card-header"><h3>لیست کامنت فروشگاه</h3></div><div style="padding:2rem;text-align:center;color:#6b7280;">خطا در بارگذاری از API.</div>';
+          });
+      }
+      load();
+    })();
+  </script>
+</body>
+</html>

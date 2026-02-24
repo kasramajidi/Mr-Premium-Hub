@@ -12,6 +12,9 @@ import type { ShopProduct } from "@/app/(main)/shop/lib/shop-api";
 type ContextValue = {
   selectedProduct: ShopProduct | null;
   setSelectedProduct: (p: ShopProduct | null) => void;
+  /** وقتی محصولی در فروشگاه با کارت مطابقت نداشته باشد، عنوان کارت انتخاب‌شده برای نمایش در باکس (مثلاً شماره مجازی) */
+  selectedCardLabel: string | null;
+  setSelectedCardLabel: (label: string | null) => void;
 };
 
 const InternationalSimSelectionContext = createContext<ContextValue | null>(
@@ -26,10 +29,15 @@ export function InternationalSimSelectionProvider({
   const [selectedProduct, setSelectedProduct] = useState<ShopProduct | null>(
     null
   );
+  const [selectedCardLabel, setSelectedCardLabel] = useState<string | null>(null);
   const value: ContextValue = {
     selectedProduct,
     setSelectedProduct: useCallback((p: ShopProduct | null) => {
       setSelectedProduct(p);
+    }, []),
+    selectedCardLabel,
+    setSelectedCardLabel: useCallback((label: string | null) => {
+      setSelectedCardLabel(label);
     }, []),
   };
   return (

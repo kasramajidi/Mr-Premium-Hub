@@ -107,6 +107,8 @@ export default function VirtualNumberTypes({
   const selection = useInternationalSimSelection();
   const selectedProduct = selection?.selectedProduct ?? null;
   const setSelectedProduct = selection?.setSelectedProduct;
+  const selectedCardLabel = selection?.selectedCardLabel ?? null;
+  const setSelectedCardLabel = selection?.setSelectedCardLabel;
 
   return (
     <div className="bg-white rounded-lg sm:rounded-xl shadow-sm p-4 sm:p-5 md:p-6 mb-6">
@@ -124,31 +126,39 @@ export default function VirtualNumberTypes({
           const matched =
             findProductForCard(virtualNumber.title, initialProducts) ||
             findProductForCard(virtualNumber.titleEn, initialProducts);
-          const isSelected = matched && selectedProduct?.id === matched.id;
-          if (matched && setSelectedProduct) {
-            return (
-              <button
-                key={virtualNumber.id}
-                type="button"
-                onClick={() => {
-                  setSelectedProduct(isSelected ? null : matched);
-                  if (typeof window !== "undefined" && window.innerWidth < 768 && matched) {
-                    setTimeout(
-                      () =>
-                        document.getElementById("order-box")?.scrollIntoView({
-                          behavior: "smooth",
-                          block: "start",
-                        }),
-                      150
-                    );
-                  }
-                }}
-                className={`bg-white rounded-lg sm:rounded-xl p-4 sm:p-5 md:p-6 shadow-sm hover:shadow-lg transition-all duration-300 border-2 text-right flex flex-col w-full group ${
-                  isSelected
-                    ? "border-[#ff5538] ring-2 ring-[#ff5538]/30"
-                    : "border-gray-100 hover:border-blue-400"
-                }`}
-              >
+          const isSelected =
+            (matched && selectedProduct?.id === matched.id) ||
+            (!matched && selectedCardLabel === virtualNumber.title);
+          const handleClick = () => {
+            if (matched && setSelectedProduct) {
+              setSelectedProduct(isSelected ? null : matched);
+              setSelectedCardLabel?.(null);
+            } else if (setSelectedCardLabel) {
+              setSelectedCardLabel(isSelected ? null : virtualNumber.title);
+              setSelectedProduct?.(null);
+            }
+            if (typeof window !== "undefined" && window.innerWidth < 768) {
+              setTimeout(
+                () =>
+                  document.getElementById("order-box")?.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start",
+                  }),
+                150
+              );
+            }
+          };
+          return (
+            <button
+              key={virtualNumber.id}
+              type="button"
+              onClick={handleClick}
+              className={`bg-white rounded-lg sm:rounded-xl p-4 sm:p-5 md:p-6 shadow-sm hover:shadow-lg transition-all duration-300 border-2 text-right flex flex-col w-full group ${
+                isSelected
+                  ? "border-[#ff5538] ring-2 ring-[#ff5538]/30"
+                  : "border-gray-100 hover:border-blue-400"
+              }`}
+            >
                 <div className="flex flex-col items-center text-center">
                   <div className="mb-4 sm:mb-5">
                     {virtualNumber.id === "usa-virtual-number" ? (
@@ -172,36 +182,6 @@ export default function VirtualNumberTypes({
                   </p>
                 </div>
               </button>
-            );
-          }
-          return (
-            <div
-              key={virtualNumber.id}
-              className="bg-white rounded-lg sm:rounded-xl p-4 sm:p-5 md:p-6 shadow-sm border border-gray-100 opacity-90"
-            >
-              <div className="flex flex-col items-center text-center">
-                <div className="mb-4 sm:mb-5">
-                  {virtualNumber.id === "usa-virtual-number" ? (
-                    <div className={`w-20 h-20 sm:w-24 sm:h-24 rounded-xl ${virtualNumber.iconColor} flex items-center justify-center overflow-hidden shadow-md`}>
-                      {virtualNumber.icon}
-                    </div>
-                  ) : (
-                    <div className={`w-20 h-20 sm:w-24 sm:h-24 rounded-xl ${virtualNumber.iconColor} flex items-center justify-center shadow-md`}>
-                      {virtualNumber.icon}
-                    </div>
-                  )}
-                </div>
-                <h3 className="text-sm sm:text-base font-bold text-gray-900 mb-2 sm:mb-3 min-h-10 flex items-center justify-center">
-                  {virtualNumber.title}
-                </h3>
-                <p className="text-xs sm:text-sm text-gray-600 leading-5 sm:leading-6 mb-2 sm:mb-3 min-h-10">
-                  {virtualNumber.subtitle}
-                </p>
-                <p className="text-[10px] sm:text-xs text-gray-400">
-                  {virtualNumber.titleEn}
-                </p>
-              </div>
-            </div>
           );
         })}
       </div>

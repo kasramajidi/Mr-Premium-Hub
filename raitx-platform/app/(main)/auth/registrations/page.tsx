@@ -34,9 +34,7 @@ export default function RegistrationsPage() {
   if (loading) {
     return (
       <main className="min-h-screen bg-white pt-8 pb-8 px-4">
-        <div className="container mx-auto max-w-2xl">
-          <p className="text-gray-500">در حال بارگذاری…</p>
-        </div>
+        <div className="container mx-auto max-w-2xl min-h-[40vh]" />
       </main>
     );
   }

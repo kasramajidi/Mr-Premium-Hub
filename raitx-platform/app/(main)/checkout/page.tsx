@@ -204,11 +204,7 @@ export default function CheckoutPage() {
   );
 
   if (!mounted) {
-    return (
-      <div className="bg-surface min-h-screen py-12 flex items-center justify-center">
-        <p className="text-muted-foreground text-sm">در حال بارگذاری…</p>
-      </div>
-    );
+    return <div className="bg-surface min-h-screen py-12" />;
   }
 
   if (items.length === 0 && !submitSuccess) {

@@ -1,10 +1,7 @@
-/** منبع رسمی: https://mrpremiumhub.org/api.ashx?action=Article — در کلاینت از پروکسی استفاده می‌شود تا CORS نشود */
-const API_BASE_EXTERNAL = "https://mrpremiumhub.org/api.ashx";
-
-function getArticlesApiBase(): string {
-  if (typeof window !== "undefined") return "/api/auth-proxy";
-  return API_BASE_EXTERNAL;
-}
+/**
+ * همهٔ درخواست‌ها از نقطهٔ ورود واحد API (lib/api-base) با action=Article زده می‌شود.
+ */
+import { fetchFromApi } from "@/lib/api-base";
 
 /** آیتم نظر مقاله — سازگار با ArticleCommentDisplayItem در article-comments-api */
 export interface ArticleCommentItem {
@@ -98,24 +95,74 @@ function normalizeApiArticle(raw: Record<string, unknown>): ApiArticle {
   };
 }
 
-export async function getArticlesFromApi(): Promise<ApiArticle[]> {
+const isStaticBuild = process.env.BUILD_STATIC === "1";
+
+/** در بیلد استاتیک نتیجهٔ اولین فراخوانی موفق را نگه می‌داریم تا بقیهٔ صفحات همان را استفاده کنند (کمتر به API فشار بیاید و بیلد پایدارتر شود) */
+let staticBuildArticlesCache: ApiArticle[] | null = null;
+
+function parseArticlesResponse(data: unknown): ApiArticle[] {
+  const rawArray = Array.isArray(data)
+    ? data
+    : (data && typeof data === "object"
+        ? (data as Record<string, unknown>).data ??
+          (data as Record<string, unknown>).items ??
+          (data as Record<string, unknown>).list ??
+          (data as Record<string, unknown>).Articles ??
+          []
+        : []);
+  if (!Array.isArray(rawArray)) return [];
+  return rawArray.map((item: unknown) =>
+    normalizeApiArticle(typeof item === "object" && item != null ? (item as Record<string, unknown>) : {})
+  );
+}
+
+async function fetchArticlesOnce(): Promise<ApiArticle[]> {
   try {
-    const res = await fetch(`${getArticlesApiBase()}?action=Article`, {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-      next: { revalidate: 120 },
-    });
-    const data = await res.json();
-    const rawArray = Array.isArray(data)
-      ? data
-      : (data?.data ?? data?.items ?? data?.list ?? []);
-    if (Array.isArray(rawArray)) {
-      return rawArray.map((item: unknown) =>
-        normalizeApiArticle(typeof item === "object" && item != null ? (item as Record<string, unknown>) : {})
-      );
-    }
+    const timeoutMs = isStaticBuild ? 60000 : 30000;
+    const data = await fetchFromApi("Article", undefined, { timeoutMs });
+    if (data == null) return [];
+    return parseArticlesResponse(data);
   } catch {
-    // در صورت خطای شبکه یا API
+    throw new Error("Articles fetch failed");
+  }
+}
+
+/** همیشه با fetch و آدرس کامل مستقیم — بدون فایل کش. در بیلد استاتیک یک بار نتیجه را کش می‌کنیم. */
+export async function getArticlesFromApi(): Promise<ApiArticle[]> {
+  if (isStaticBuild && staticBuildArticlesCache !== null) {
+    return staticBuildArticlesCache;
+  }
+  const maxAttempts = isStaticBuild ? 3 : 2;
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    try {
+      if (isStaticBuild) {
+        console.log("[build:static] Articles API — attempt", attempt, "of", maxAttempts);
+      }
+      const list = await fetchArticlesOnce();
+      if (isStaticBuild) {
+        console.log("[build:static] Articles API — got", list.length, "articles");
+        if (list.length > 0) {
+          staticBuildArticlesCache = list;
+          list.slice(0, 5).forEach((a, i) => console.log("[build:static]   ", i + 1, a.title));
+          if (list.length > 5) console.log("[build:static]   ... and", list.length - 5, "more");
+        }
+      }
+      if (list.length > 0 || attempt === maxAttempts) return list;
+      if (isStaticBuild && attempt < maxAttempts) {
+        await new Promise((r) => setTimeout(r, 3000));
+      }
+    } catch (e) {
+      if (isStaticBuild) {
+        console.warn("[build:static] Articles API attempt", attempt, "failed:", e);
+        if (attempt < maxAttempts) await new Promise((r) => setTimeout(r, 3000));
+      }
+      if (attempt === maxAttempts) {
+        if (isStaticBuild) {
+          console.warn("[build:static] Articles API fetch failed after " + maxAttempts + " attempts. Pages may be empty.");
+        }
+        return [];
+      }
+    }
   }
   return [];
 }
@@ -180,10 +227,7 @@ export function getUniqueCategoriesFromArticles(articles: ApiArticle[]): string[
  */
 export async function incrementArticleView(articleId: number): Promise<void> {
   try {
-    await fetch(
-      `${getArticlesApiBase()}?action=Article&id=${articleId}&incrementView=1`,
-      { method: "GET", cache: "no-store" }
-    );
+    await fetchFromApi("Article", { id: articleId, incrementView: 1 });
   } catch {
     // در صورت خطا ساکت می‌مانیم تا صفحه خراب نشود
   }

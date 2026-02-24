@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import { getApiBase } from "@/lib/api-base";
 
-const API_URL = "/api/auth-proxy?action=ExamRegister";
+const getContactFormApiUrl = () => `${getApiBase()}?action=ExamRegister`;
 
 export default function ContactForm() {
   const [formData, setFormData] = useState({
@@ -22,7 +23,7 @@ export default function ContactForm() {
     setStatus("idle");
     setErrorMessage("");
     try {
-      const res = await fetch(API_URL, {
+      const res = await fetch(getContactFormApiUrl(), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

@@ -70,9 +70,7 @@ export default function ShopMainContent() {
         </div>
       )}
       {loading ? (
-        <div className="flex items-center justify-center py-16">
-          <div className="w-10 h-10 border-2 border-[#ff5538]/30 border-t-[#ff5538] rounded-full animate-spin" aria-hidden />
-        </div>
+        <div className="py-16 min-h-[200px]" />
       ) : !error ? (
         <ProductGrid products={products} appliedFilters={appliedFilters} />
       ) : null}

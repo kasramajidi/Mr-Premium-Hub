@@ -20,6 +20,9 @@ package-lock.json
 /.next/
 /out/
 
+# static build cache (API data fetched by export-static.js)
+.build-cache/
+
 # production
 /build
 

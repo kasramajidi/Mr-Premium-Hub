@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>کاربران | پنل مدیریت ريتكس</title>
+  <link rel="icon" href="../Images/Logo/Raitx%20international%20payments%20logo%20design%20(1).png">
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body>
+  <div class="admin-wrap">
+    <aside class="admin-sidebar" id="admin-sidebar"></aside>
+    <main class="admin-main">
+      <h1 class="admin-page-title">کاربران</h1>
+      <p class="admin-page-desc">مدیریت کاربران. داده از API (action=users) مطابق raitx-platform.</p>
+      <div id="admin-users-list" class="admin-card">
+        <div class="admin-card-header"><h3>لیست کاربران</h3></div>
+        <div style="padding:2rem;text-align:center;color:#6b7280;">در حال بارگذاری…</div>
+      </div>
+    </main>
+  </div>
+  <script src="../js/api.js"></script>
+  <script src="../js/admin-layout.js"></script>
+  <script>
+    (function () {
+      if (!adminLayout.isLoggedIn()) { window.location.href = 'login.html?next=users.html'; return; }
+      adminLayout.renderSidebar('admin-sidebar');
+      var API = (typeof API_BASE !== 'undefined' && API_BASE()) ? API_BASE() : 'https://mrpremiumhub.org/api.ashx';
+      var el = document.getElementById('admin-users-list');
+      fetch(API + '?action=users')
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+          var list = Array.isArray(data) ? data : (data && (data.data || data.list || data.items || data.users)) || [];
+          if (list.length === 0) {
+            el.innerHTML = '<div class="admin-card-header"><h3>لیست کاربران</h3></div><div style="padding:2rem;text-align:center;color:#6b7280;">کاربری یافت نشد.</div>';
+            return;
+          }
+          var rows = list.map(function (u) {
+            var id = u.id || u.ID || u.Id || '';
+            var name = (u.name || u.Name || u.username || u.userName || '').toString().substring(0, 25);
+            var email = (u.email || u.Email || '').toString().substring(0, 30);
+            var phone = (u.phone || u.Phone || u.mobile || '').toString().substring(0, 15);
+            return '<tr><td>' + id + '</td><td>' + name + '</td><td>' + email + '</td><td>' + phone + '</td></tr>';
+          }).join('');
+          el.innerHTML = '<div class="admin-card-header"><h3>لیست کاربران</h3></div><div class="overflow-x-auto"><table class="admin-table"><thead><tr><th>شناسه</th><th>نام</th><th>ایمیل</th><th>تلفن</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
+        })
+        .catch(function () {
+          el.innerHTML = '<div class="admin-card-header"><h3>لیست کاربران</h3></div><div style="padding:2rem;text-align:center;color:#6b7280;">خطا در بارگذاری از API.</div>';
+        });
+    })();
+  </script>
+</body>
+</html>

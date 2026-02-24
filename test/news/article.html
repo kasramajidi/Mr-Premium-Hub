@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <base href="../">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>مقاله | ريتكس</title>
+  <link rel="icon" href="Images/Logo/Raitx%20international%20payments%20logo%20design%20(1).png">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div id="site-header"></div>
+  <main class="site-main page-article">
+    <div class="article-page-inner">
+      <div id="article-loading" class="article-loading">در حال بارگذاری…</div>
+      <div id="article-error" class="article-error" style="display:none;"></div>
+      <div id="article-content" class="article-content-wrap" style="display:none;"></div>
+    </div>
+  </main>
+  <div id="site-footer"></div>
+  <script src="js/layout.js"></script>
+  <script>layout.init();</script>
+  <script src="js/api.js"></script>
+  <script src="js/data/news.js"></script>
+  <script>
+    (function () {
+      var slug = '';
+      var q = window.location.search;
+      var m = /[?&]slug=([^&]+)/.exec(q);
+      if (m) slug = decodeURIComponent(m[1].replace(/\+/g, ' '));
+      var loadingEl = document.getElementById('article-loading');
+      var errorEl = document.getElementById('article-error');
+      var contentEl = document.getElementById('article-content');
+      var apiBase = (typeof window.API_BASE !== 'undefined' && window.API_BASE()) ? window.API_BASE() : 'https://mrpremiumhub.org/api.ashx';
+
+      function isLoggedIn() {
+        try {
+          var name = 'loginval=';
+          var decoded = decodeURIComponent(document.cookie || '');
+          var parts = decoded.split(';');
+          for (var i = 0; i < parts.length; i++) {
+            var c = parts[i].replace(/^\s+/, '');
+            if (c.indexOf(name) === 0 && c.length > name.length) return true;
+          }
+          if (typeof localStorage !== 'undefined' && localStorage.getItem('loginval')) return true;
+        } catch (e) {}
+        return false;
+      }
+
+      function esc(s) {
+        if (s == null) return '';
+        return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+      }
+
+      function sanitizeHtml(str) {
+        if (!str || typeof str !== 'string') return '';
+        var s = str.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, '');
+        s = s.replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, '');
+        s = s.replace(/\s+on\w+\s*=\s*["'][^"']*["']/gi, '');
+        s = s.replace(/\s+on\w+\s*=\s*[^\s>]+/gi, '');
+        return s;
+      }
+
+      function isImageUrl(str) {
+        if (!str || typeof str !== 'string') return false;
+        var t = str.trim();
+        if (/^https?:\/\/\S+/i.test(t)) return true;
+        if (/^data:image\//i.test(t)) return true;
+        if (/\.(jpe?g|png|gif|webp)(\?|$)/i.test(t)) return true;
+        return false;
+      }
+
+      function renderContentBlocks(content) {
+        if (!content) return '';
+        var list = Array.isArray(content) ? content : [content];
+        var html = '';
+        list.forEach(function (block) {
+          var raw = block != null ? String(block).trim() : '';
+          if (!raw) return;
+          if (isImageUrl(raw)) {
+            html += '<figure class="article-figure"><img src="' + esc(raw) + '" alt="تصویر مقاله" class="article-inline-img" loading="lazy" onerror="this.style.display=\'none\'"></figure>';
+            return;
+          }
+          if (raw.indexOf('<') !== -1) {
+            html += '<div class="article-body-block article-html">' + sanitizeHtml(raw) + '</div>';
+            return;
+          }
+          html += '<p>' + esc(raw) + '</p>';
+        });
+        return html;
+      }
+
+      function renderArticle(article) {
+        document.title = (article.title || '') + ' | ريتكس';
+        var imgSrc = (article.image && article.image.indexOf('http') === 0) ? article.image : (article.image || 'Images/Shop/product-pic1.jpg');
+
+        var html = '<article class="article-single">' +
+          '<header class="article-header">' +
+          '<div class="article-hero"><img src="' + esc(imgSrc) + '" alt="" class="article-hero-img" onerror="this.src=\'Images/Shop/product-pic1.jpg\'; this.onerror=null;"></div>' +
+          '<div class="article-header-inner">' +
+          '<span class="article-category">' + esc(article.category || '—') + '</span>' +
+          '<h1 class="article-title">' + esc(article.title || '') + '</h1>' +
+          '<div class="article-meta">' +
+          '<span class="article-date">' + esc(article.date || '') + '</span>' +
+          '<span class="article-sep">·</span>' +
+          '<span class="article-comments-count">' + (article.comments || 0) + ' دیدگاه</span>' +
+          '</div></div></header>' +
+          '<div class="article-body">' + renderContentBlocks(article.content) + '</div>';
+        if (article.headings && article.headings.length) {
+          html += '<div class="article-headings">';
+          article.headings.forEach(function (h) {
+            html += '<h3 class="article-heading">' + esc(h || '') + '</h3>';
+          });
+          html += '</div>';
+        }
+        var authNext = 'news/article.html' + (slug ? '?slug=' + encodeURIComponent(slug) : '');
+        var authLink = 'auth.html?next=' + encodeURIComponent(authNext);
+        html += '<section class="article-comments-section">' +
+          '<div class="article-comment-form-card">' +
+          '<h3 class="article-comment-form-title">دیدگاه خود را بنویسید</h3>' +
+          '<div id="article-comment-login-required" class="article-comment-login-required" style="display:none;">' +
+          '<p class="article-comment-login-text">برای ثبت دیدگاه باید وارد حساب کاربری شوید یا ثبت‌نام کنید.</p>' +
+          '<a href="' + esc(authLink) + '" class="article-comment-login-btn">ورود / ثبت‌نام</a>' +
+          '</div>' +
+          '<div id="article-comment-msg" class="article-comment-msg" style="display:none;"></div>' +
+          '<form id="article-comment-form" class="article-comment-form" style="display:none;">' +
+          '<div class="article-comment-form-row">' +
+          '<label class="article-comment-label">نام شما <input type="text" name="userName" required placeholder="نام خود را وارد کنید"></label>' +
+          '<label class="article-comment-label">ایمیل شما <input type="email" name="userEmail" required placeholder="ایمیل خود را وارد کنید"></label>' +
+          '</div>' +
+          '<label class="article-comment-label">دیدگاه شما <textarea name="commentText" required rows="5" placeholder="دیدگاه خود را بنویسید..."></textarea></label>' +
+          '<p class="article-comment-rules">با ارسال دیدگاه، قوانین و مقررات سایت را می‌پذیرید.</p>' +
+          '<button type="submit" class="article-comment-submit">ارسال دیدگاه</button>' +
+          '</form></div>' +
+          '<div class="article-comments-list-card">' +
+          '<h3 class="article-comments-title">دیدگاه‌ها</h3>' +
+          '<div id="article-comments-loading" class="article-comments-loading">در حال بارگذاری نظرات…</div>' +
+          '<div id="article-comments-list" class="article-comments-list" style="display:none;"></div>' +
+          '<div id="article-comments-empty" class="article-comments-empty" style="display:none;">هنوز دیدگاهی ثبت نشده است.</div>' +
+          '</div></section>' +
+          '<p class="article-back"><a href="news.html">← بازگشت به لیست مقالات</a></p>' +
+          '</article>';
+        contentEl.innerHTML = html;
+        contentEl.style.display = 'block';
+
+        var articleId = article.id != null && article.id !== 0 ? article.id : null;
+        if (article.userComments && article.userComments.length) {
+          showComments(article.userComments);
+        }
+        if (articleId) {
+          loadComments(articleId);
+        } else {
+          hideCommentsLoading();
+        }
+
+        var loginRequiredEl = document.getElementById('article-comment-login-required');
+        var formEl = document.getElementById('article-comment-form');
+        if (isLoggedIn() && articleId) {
+          if (loginRequiredEl) loginRequiredEl.style.display = 'none';
+          if (formEl) { formEl.style.display = 'block'; bindCommentForm(articleId); }
+        } else {
+          if (loginRequiredEl) loginRequiredEl.style.display = 'block';
+          if (formEl) formEl.style.display = 'none';
+        }
+      }
+
+      function showCommentMsg(text, isError) {
+        var el = document.getElementById('article-comment-msg');
+        if (!el) return;
+        el.style.display = 'block';
+        el.textContent = text;
+        el.className = 'article-comment-msg' + (isError ? ' is-error' : ' is-success');
+      }
+
+      function bindCommentForm(articleId) {
+        var form = document.getElementById('article-comment-form');
+        if (!form) return;
+        form.style.display = 'block';
+        form.addEventListener('submit', function (e) {
+          e.preventDefault();
+          var userName = (form.userName && form.userName.value || '').trim();
+          var userEmail = (form.userEmail && form.userEmail.value || '').trim();
+          var commentText = (form.commentText && form.commentText.value || '').trim();
+          if (!userName || !userEmail || !commentText) {
+            showCommentMsg('نام، ایمیل و متن نظر را پر کنید.', true);
+            return;
+          }
+          showCommentMsg('در حال ارسال…', false);
+          fetch(apiBase + '?action=articlecomments', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              idarticle: articleId,
+              userName: userName,
+              userEmail: userEmail,
+              commentText: commentText,
+              rating: 1,
+              status: 'pending'
+            })
+          })
+            .then(function (r) { return r.json().catch(function () { return {}; }); })
+            .then(function (data) {
+              if (data && (data.success === false || data.error)) {
+                showCommentMsg(data.message || data.error || 'ثبت نظر انجام نشد.', true);
+                return;
+              }
+              showCommentMsg('دیدگاه شما با موفقیت ثبت شد و پس از تایید نمایش داده می‌شود.', false);
+              form.reset();
+              loadComments(articleId);
+            })
+            .catch(function () {
+              showCommentMsg('خطا در اتصال به سرور.', true);
+            });
+        });
+      }
+
+      function isCommentApproved(status) {
+        if (status == null) return false;
+        var s = String(status).toLowerCase().trim();
+        if (s === 'approved' || s === 'published' || s === '1' || s === 'تایید شده') return true;
+        if (Number(status) === 1) return true;
+        return false;
+      }
+
+      function normalizeComment(c) {
+        var dateRaw = c.date || c.Date || c.createdAt || c.CreatedAt;
+        var dateStr = '';
+        if (dateRaw != null) {
+          if (typeof dateRaw === 'number') {
+            dateStr = dateRaw < 1e10 ? new Date(dateRaw * 1000).toLocaleDateString('fa-IR') : new Date(dateRaw).toLocaleDateString('fa-IR');
+          } else {
+            dateStr = String(dateRaw);
+          }
+        }
+        return {
+          author: String(c.userName || c.UserName || c.author || ''),
+          content: String(c.commentText || c.CommentText || c.comment || c.content || ''),
+          date: dateStr
+        };
+      }
+
+      function showComments(comments) {
+        var listEl = document.getElementById('article-comments-list');
+        var emptyEl = document.getElementById('article-comments-empty');
+        var loadingEl = document.getElementById('article-comments-loading');
+        if (loadingEl) loadingEl.style.display = 'none';
+        if (!listEl) return;
+        var approved = (comments || []).filter(function (c) { return isCommentApproved(c.status || c.Status); });
+        var list = approved.map(normalizeComment).filter(function (c) { return (c.content && c.content.trim()) || (c.author && c.author.trim()); });
+        listEl.style.display = 'block';
+        if (emptyEl) emptyEl.style.display = list.length ? 'none' : 'block';
+        if (list.length) {
+          listEl.innerHTML = list.map(function (c) {
+            return '<div class="article-comment-card">' +
+              '<div class="article-comment-header"><strong>' + esc(c.author || 'کاربر') + '</strong><span class="article-comment-date">' + esc(c.date) + '</span></div>' +
+              '<div class="article-comment-body">' + esc(c.content).replace(/\n/g, '<br>') + '</div></div>';
+          }).join('');
+        }
+      }
+
+      function hideCommentsLoading() {
+        var el = document.getElementById('article-comments-loading');
+        if (el) el.style.display = 'none';
+        var list = document.getElementById('article-comments-list');
+        var empty = document.getElementById('article-comments-empty');
+        if (list) list.style.display = 'block';
+        if (empty) empty.style.display = 'block';
+      }
+
+      function loadComments(articleId) {
+        var loadingEl = document.getElementById('article-comments-loading');
+        if (loadingEl) loadingEl.style.display = 'block';
+        fetch(apiBase + '?action=articlecomments&idarticle=' + encodeURIComponent(String(articleId)))
+          .then(function (r) { return r.json(); })
+          .then(function (data) {
+            var raw = Array.isArray(data) ? data : (data && (data.data || data.items || data.list || data.comments)) || [];
+            if (!Array.isArray(raw)) raw = [];
+            showComments(raw);
+          })
+          .catch(function () {
+            var emptyEl = document.getElementById('article-comments-empty');
+            if (loadingEl) loadingEl.style.display = 'none';
+            if (emptyEl) emptyEl.style.display = 'block';
+          });
+      }
+
+      function showError() {
+        loadingEl.style.display = 'none';
+        errorEl.style.display = 'block';
+        errorEl.innerHTML = 'مقاله یافت نشد. <a href="news.html">بازگشت به اخبار</a>';
+      }
+
+      if (!slug) { showError(); loadingEl.style.display = 'none'; return; }
+
+      fetch(apiBase + '?action=Article')
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+          var list = Array.isArray(data) ? data : (data && (data.data || data.items || data.list || data.Articles)) || [];
+          var found = null;
+          for (var i = 0; i < list.length; i++) {
+            var a = list[i];
+            var s = (a.slug || a.Slug || '').toString();
+            if (s === slug || s === decodeURIComponent(slug)) {
+              var userComments = Array.isArray(a.UserComments) ? a.UserComments : (Array.isArray(a.userComments) ? a.userComments : []);
+              found = {
+                id: Number(a.id ?? a.ID ?? 0),
+                title: a.title || a.Title || '',
+                slug: s,
+                category: a.category || a.Category || '—',
+                comments: Number(a.comments || a.Comments || 0),
+                date: String(a.date || a.Date || ''),
+                image: String(a.image || a.Image || '').trim() || 'Images/Shop/product-pic1.jpg',
+                content: Array.isArray(a.content) ? a.content : (a.content != null ? [a.content] : []),
+                headings: Array.isArray(a.headings) ? a.headings : [],
+                userComments: userComments
+              };
+              break;
+            }
+          }
+          loadingEl.style.display = 'none';
+          if (found) renderArticle(found);
+          else if (typeof window.newsArticleDetail === 'function') {
+            var fromData = window.newsArticleDetail(slug);
+            if (fromData) { fromData.id = fromData.id || 0; renderArticle(fromData); } else showError();
+          } else showError();
+        })
+        .catch(function () {
+          loadingEl.style.display = 'none';
+          if (typeof window.newsArticleDetail === 'function') {
+            var fromData = window.newsArticleDetail(slug);
+            if (fromData) { fromData.id = fromData.id || 0; renderArticle(fromData); } else showError();
+          } else showError();
+        });
+    })();
+  </script>
+  <script src="js/app.js"></script>
+</body>
+</html>

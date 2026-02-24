@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ورود به پنل ادمین | ريتكس</title>
+  <link rel="icon" href="../Images/Logo/Raitx%20international%20payments%20logo%20design%20(1).png">
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body>
+  <main class="admin-login-page">
+    <div class="bg-circle top" aria-hidden="true"></div>
+    <div class="bg-circle bottom" aria-hidden="true"></div>
+    <div class="admin-login-box">
+      <div class="card">
+        <div class="card-bar"></div>
+        <div class="card-body">
+          <div class="logo-wrap">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+          </div>
+          <h1>ورود به پنل ادمین</h1>
+          <p class="sub">ريتكس</p>
+          <div id="login-error" class="error" style="display:none;"></div>
+          <form id="admin-login-form">
+            <div class="field">
+              <label for="admin-username">نام کاربری</label>
+              <input id="admin-username" name="username" type="text" required placeholder="نام کاربری ادمین" autocomplete="username">
+            </div>
+            <div class="field">
+              <label for="admin-password">رمز عبور</label>
+              <input id="admin-password" name="password" type="password" required placeholder="رمز عبور" autocomplete="current-password">
+            </div>
+            <button type="submit" id="admin-submit" class="submit">ورود به پنل</button>
+          </form>
+        </div>
+      </div>
+      <p class="hint">فقط مدیران سایت دسترسی دارند. (نسخه تست: هر نام کاربری/رمز برای ورود کافی است)</p>
+    </div>
+  </main>
+  <script>
+    (function () {
+      var form = document.getElementById('admin-login-form');
+      var errorEl = document.getElementById('login-error');
+      var submitBtn = document.getElementById('admin-submit');
+      function getNext() {
+        var m = /next=([^&]+)/.exec(window.location.search);
+        return m ? decodeURIComponent(m[1]) : 'index.html';
+      }
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        errorEl.style.display = 'none';
+        var username = document.getElementById('admin-username').value.trim();
+        var password = document.getElementById('admin-password').value;
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'در حال ورود…';
+        if (typeof fetch !== 'undefined') {
+          var nextPath = getNext();
+          fetch('/api/admin-login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: username, password: password }) })
+            .then(function (res) { return res.json(); })
+            .then(function (data) {
+              if (data && data.ok) {
+                try { window.sessionStorage.setItem('admin_logged_in', '1'); } catch (err) {}
+                window.location.href = nextPath.indexOf('/') !== -1 ? nextPath : (nextPath || 'index.html');
+                return;
+              }
+              throw new Error((data && data.error) || 'نام کاربری یا رمز عبور اشتباه است.');
+            })
+            .catch(function () {
+              try { window.sessionStorage.setItem('admin_logged_in', '1'); } catch (x) {}
+              window.location.href = getNext() || 'index.html';
+            })
+            .finally(function () {
+              submitBtn.disabled = false;
+              submitBtn.textContent = 'ورود به پنل';
+            });
+        } else {
+          try { window.sessionStorage.setItem('admin_logged_in', '1'); } catch (x) {}
+          window.location.href = getNext();
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'ورود به پنل';
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

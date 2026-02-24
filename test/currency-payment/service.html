@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <base href="../">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>سرویس | پرداخت ارزی — ريتكس</title>
+  <link rel="icon" href="Images/Logo/Raitx%20international%20payments%20logo%20design%20(1).png">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/currency-payment.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+</head>
+<body>
+  <div id="site-header"></div>
+  <main class="site-main cp-detail-page">
+    <div class="container" style="padding-top: 1.5rem; padding-bottom: 3rem;">
+      <div id="service-loading" style="text-align:center;padding:2rem;color:#6b7280;">در حال بارگذاری…</div>
+      <div id="service-content" style="display:none;"></div>
+      <div id="service-error" style="display:none;text-align:center;padding:2rem;color:#dc2626;">سرویس یافت نشد.</div>
+    </div>
+  </main>
+  <div id="site-footer"></div>
+  <script src="js/layout.js"></script>
+  <script>layout.init();</script>
+  <script src="js/data/currency-payment-platform.js"></script>
+  <script src="js/data/currency-payment-service-detail.js"></script>
+  <script>
+    (function () {
+      var loading = document.getElementById('service-loading');
+      var content = document.getElementById('service-content');
+      var err = document.getElementById('service-error');
+
+      function hideAll() {
+        loading.style.display = 'none';
+        content.style.display = 'none';
+        err.style.display = 'none';
+      }
+      function showError(msg) {
+        hideAll();
+        err.innerHTML = (msg || 'سرویس یافت نشد.') + ' <a href="currency-payment.html">بازگشت به پرداخت ارزی</a>';
+        err.style.display = 'block';
+      }
+      function esc(s) { return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+      function nl2br(s) { return esc(s).replace(/\n/g, '<br>'); }
+
+      function getHeaderIconClass(iconKey) {
+        var fa = { paypal: 'fa-brands fa-paypal', mastercard: 'fa-brands fa-cc-mastercard', creditcard: 'fa-solid fa-credit-card', bitcoin: 'fa-brands fa-bitcoin', transfer: 'fa-solid fa-money-bill-transfer', academic: 'fa-solid fa-graduation-cap', plane: 'fa-solid fa-plane', home: 'fa-solid fa-hotel', globe: 'fa-solid fa-globe', template: 'fa-solid fa-palette', digitalocean: 'fa-brands fa-digital-ocean', dots: 'fa-solid fa-ellipsis-h', server: 'fa-solid fa-server', brain: 'fa-solid fa-brain', search: 'fa-solid fa-magnifying-glass', gamepad: 'fa-solid fa-gamepad', code: 'fa-solid fa-code', sim: 'fa-solid fa-sim-card', phone: 'fa-solid fa-phone', domain: 'fa-solid fa-globe', cloud: 'fa-solid fa-cloud' };
+        return fa[iconKey] || 'fa-solid fa-wallet';
+      }
+
+      function renderService(service) {
+        var detail = window.getCurrencyPaymentDetail ? window.getCurrencyPaymentDetail(service.id) : { features: [], steps: [], description: '' };
+        var faqs = window.getCurrencyPaymentFAQ ? window.getCurrencyPaymentFAQ(service.id) : [];
+        var related = [];
+        if (window.getCurrencyPaymentRelatedServices && window.currencyPaymentPlatform && window.currencyPaymentPlatform.servicesFlat) {
+          related = window.getCurrencyPaymentRelatedServices(service, window.currencyPaymentPlatform.servicesFlat);
+        }
+
+        var featuresHtml = (detail.features || []).map(function (f) {
+          return '<li class="cp-detail-feature"><span class="cp-detail-check">✓</span> ' + esc(f) + '</li>';
+        }).join('');
+
+        var stepsHtml = '';
+        if (detail.stepsDetail && detail.stepsDetail.length) {
+          stepsHtml = detail.stepsDetail.map(function (s, i) {
+            return '<li class="cp-detail-step"><span class="cp-detail-step-num">' + (i + 1) + '</span> <span class="cp-detail-step-detail"><span class="cp-detail-step-detail-title">' + esc(s.title) + '</span><span class="cp-detail-step-detail-desc">' + esc(s.description) + '</span></span></li>';
+          }).join('');
+        } else {
+          stepsHtml = (detail.steps || []).map(function (s, i) {
+            return '<li class="cp-detail-step"><span class="cp-detail-step-num">' + (i + 1) + '</span> ' + esc(s) + '</li>';
+          }).join('');
+        }
+
+        var noteHtml = (detail.note) ? '<div class="cp-detail-note"><strong>نکته:</strong> ' + esc(detail.note) + '</div>' : '';
+
+        var benefits = window.getCurrencyPaymentBenefits ? window.getCurrencyPaymentBenefits(service) : null;
+        var benefitsHtml = '';
+        if (benefits && benefits.items && benefits.items.length) {
+          benefitsHtml = '<div class="cp-detail-block cp-benefits-block"><h2 class="cp-detail-h2">' + esc(benefits.title) + '</h2><div class="cp-benefits-grid">' + benefits.items.map(function (b, i) {
+            var iconCls = (i === 0 || i === 2) ? 'cp-benefit-icon-wrap cp-benefit-icon-brand' : 'cp-benefit-icon-wrap cp-benefit-icon-dark';
+            return '<div class="cp-benefit-card"><div class="' + iconCls + '"><i class="fa-solid ' + (b.faIcon || 'fa-check') + '" aria-hidden="true"></i></div><div><h3>' + esc(b.title) + '</h3><p>' + esc(b.description) + '</p></div></div>';
+          }).join('') + '</div></div>';
+        }
+
+        var extraSectionsHtml = '';
+        (function () {
+          var sid = service.id;
+          if (sid === 'domain') {
+            var dex = window.getCurrencyPaymentDomainExtraBenefits ? window.getCurrencyPaymentDomainExtraBenefits() : null;
+            if (dex) {
+              extraSectionsHtml += '<div class="cp-detail-block cp-domain-extra"><div class="cp-domain-extra-head"><h2 class="cp-detail-h2">' + esc(dex.title) + '</h2><p class="cp-domain-extra-sub">' + esc(dex.subtitle) + '</p></div><div class="cp-benefits-grid">' + (dex.benefits || []).map(function (b) { return '<div class="cp-benefit-card"><div class="cp-benefit-icon-wrap cp-benefit-icon-dark"><i class="fa-solid fa-check" aria-hidden="true"></i></div><div><h3>' + esc(b.title) + '</h3><p>' + esc(b.description) + '</p></div></div>'; }).join('') + '</div></div>';
+            }
+            var tips = window.getCurrencyPaymentDomainTips ? window.getCurrencyPaymentDomainTips() : [];
+            if (tips.length) extraSectionsHtml += '<div class="cp-detail-block cp-tips-block"><h2 class="cp-detail-h2">نکاتی برای انتخاب دامنه</h2><ul class="cp-tips-list">' + tips.map(function (t) { return '<li class="cp-detail-feature"><span class="cp-detail-check">✓</span> ' + esc(t) + '</li>'; }).join('') + '</ul></div>';
+            var prov = window.getCurrencyPaymentDomainProviders ? window.getCurrencyPaymentDomainProviders() : [];
+            if (prov.length) extraSectionsHtml += '<div class="cp-detail-block cp-providers-block"><h2 class="cp-detail-h2" style="text-align:center">ارائه دهندگان دامنه</h2><p class="cp-providers-sub">از معتبرترین سایت‌های دنیا دامنه خریداری کنید</p><div class="cp-providers-grid">' + prov.map(function (p) { return '<div class="cp-provider-card"><h3>' + esc(p.name) + '</h3><ul class="cp-detail-list">' + (p.features || []).map(function (f) { return '<li class="cp-detail-feature"><span class="cp-detail-check">✓</span> ' + esc(f) + '</li>'; }).join('') + '</ul></div>'; }).join('') + '</div></div>';
+          }
+          if (sid === 'host') {
+            var htips = window.getCurrencyPaymentHostTips ? window.getCurrencyPaymentHostTips() : [];
+            if (htips.length) extraSectionsHtml += '<div class="cp-detail-block cp-tips-block"><h2 class="cp-detail-h2">مهمترین نکات انتخاب هاست</h2><div class="cp-host-tips-grid">' + htips.map(function (t) { return '<div class="cp-tip-card"><span class="cp-tip-dot" aria-hidden="true"></span> ' + esc(t) + '</div>'; }).join('') + '</div></div>';
+          }
+          if (sid === 'international-sim') {
+            var simEx = window.getCurrencyPaymentInternationalSimExtra ? window.getCurrencyPaymentInternationalSimExtra() : null;
+            if (simEx) {
+              extraSectionsHtml += '<div class="cp-detail-block cp-sim-extra"><h2 class="cp-sim-extra-title">' + esc(simEx.title) + '</h2><p class="cp-detail-p">' + esc(simEx.intro1) + '</p><p class="cp-detail-p">' + esc(simEx.intro2) + '</p><div class="cp-sim-benefits-grid">' + (simEx.benefits || []).map(function (b) { return '<div class="cp-sim-benefit-card"><h3>' + esc(b.title) + '</h3><p>' + esc(b.description) + '</p></div>'; }).join('') + '</div></div>';
+            }
+          }
+          if (sid === 'virtual-number') {
+            var vnb = window.getCurrencyPaymentVirtualNumberBenefits ? window.getCurrencyPaymentVirtualNumberBenefits() : [];
+            if (vnb.length) extraSectionsHtml += '<div class="cp-detail-block"><h2 class="cp-detail-h2">مزایای شماره مجازی</h2><div class="cp-benefits-grid">' + vnb.map(function (b) { return '<div class="cp-benefit-card"><div class="cp-benefit-icon-wrap cp-benefit-icon-brand"><i class="fa-solid fa-phone" aria-hidden="true"></i></div><div><h3>' + esc(b.title) + '</h3><p>' + esc(b.description) + '</p></div></div>'; }).join('') + '</div></div>';
+          }
+          var vpsB = window.getCurrencyPaymentVPSBenefits ? window.getCurrencyPaymentVPSBenefits(sid) : null;
+          if (vpsB) {
+            extraSectionsHtml += '<div class="cp-detail-block cp-vps-benefits-block"><h2 class="cp-detail-h2" style="text-align:center">' + esc(vpsB.title) + '</h2>' + (vpsB.subtitle ? '<p class="cp-vps-benefits-sub">' + esc(vpsB.subtitle) + '</p>' : '') + '<div class="cp-vps-benefits-grid">' + (vpsB.items || []).map(function (b) { return '<div class="cp-vps-benefit-card"><h3>' + esc(b.title) + '</h3><p>' + esc(b.description) + '</p></div>'; }).join('') + '</div></div>';
+          }
+          if (sid === 'vps-trading') {
+            var vpsPlans = window.getCurrencyPaymentVPSTradingPlans ? window.getCurrencyPaymentVPSTradingPlans() : null;
+            if (vpsPlans && vpsPlans.plans && vpsPlans.plans.length) {
+              extraSectionsHtml += '<div class="cp-detail-block cp-vps-plans-block"><h2 class="cp-detail-h2" style="text-align:center">' + esc(vpsPlans.title) + '</h2>' + (vpsPlans.subtitle ? '<p class="cp-vps-plans-sub">' + esc(vpsPlans.subtitle) + '</p>' : '') + '<div class="cp-vps-plans-grid">' + vpsPlans.plans.map(function (p) {
+                var cardCls = 'cp-vps-plan-card' + (p.highlight ? ' cp-vps-plan-card-highlight' : '');
+                return '<div class="' + cardCls + ' cp-vps-plan-card-selectable" role="button" tabindex="0" id="' + esc(p.id) + '" data-service-id="' + esc(sid) + '" data-plan-id="' + esc(p.id) + '" data-plan-title="' + esc(p.title) + '" data-plan-price="' + esc(p.price) + '"><h3 class="cp-vps-plan-title">' + esc(p.title) + '</h3><p class="cp-vps-plan-suitable">' + esc(p.suitable) + '</p><p class="cp-vps-plan-duration">' + esc(p.duration) + '</p><p class="cp-vps-plan-price">' + esc(p.price) + '</p><ul class="cp-detail-list">' + (p.specs || []).map(function (s) { return '<li class="cp-detail-feature"><span class="cp-detail-check">✓</span> ' + esc(s) + '</li>'; }).join('') + '</ul>' + (p.discount ? '<p class="cp-vps-plan-discount">' + esc(p.discount) + '</p>' : '') + '</div>';
+              }).join('') + '</div></div>';
+            }
+          }
+          if (sid === 'vps-usa') {
+            var vpsUsaPlans = window.getCurrencyPaymentVPSUsaPlans ? window.getCurrencyPaymentVPSUsaPlans() : null;
+            if (vpsUsaPlans && vpsUsaPlans.plans && vpsUsaPlans.plans.length) {
+              extraSectionsHtml += '<div class="cp-detail-block cp-vps-plans-block"><h2 class="cp-detail-h2" style="text-align:center">' + esc(vpsUsaPlans.title) + '</h2>' + (vpsUsaPlans.subtitle ? '<p class="cp-vps-plans-sub">' + esc(vpsUsaPlans.subtitle) + '</p>' : '') + (vpsUsaPlans.instruction ? '<p class="cp-vps-plans-instruction">' + esc(vpsUsaPlans.instruction) + '</p>' : '') + '<div class="cp-vps-plans-grid">' + vpsUsaPlans.plans.map(function (p) {
+                var cardCls = 'cp-vps-plan-card' + (p.highlight ? ' cp-vps-plan-card-highlight' : '');
+                return '<div class="' + cardCls + ' cp-vps-plan-card-selectable" role="button" tabindex="0" id="' + esc(p.id) + '" data-service-id="' + esc(sid) + '" data-plan-id="' + esc(p.id) + '" data-plan-title="' + esc(p.title) + '" data-plan-price="' + esc(p.price) + '"><h3 class="cp-vps-plan-title">' + esc(p.title) + '</h3><p class="cp-vps-plan-suitable">' + esc(p.suitable) + '</p><p class="cp-vps-plan-duration">' + esc(p.duration) + '</p><p class="cp-vps-plan-price">' + esc(p.price) + '</p><ul class="cp-detail-list">' + (p.specs || []).map(function (s) { return '<li class="cp-detail-feature"><span class="cp-detail-check">✓</span> ' + esc(s) + '</li>'; }).join('') + '</ul>' + (p.discount ? '<p class="cp-vps-plan-discount">' + esc(p.discount) + '</p>' : '') + '</div>';
+              }).join('') + '</div></div>';
+            }
+          }
+          if (sid === 'vps-netherlands') {
+            var vpsNlPlans = window.getCurrencyPaymentVPSNetherlandsPlans ? window.getCurrencyPaymentVPSNetherlandsPlans() : null;
+            if (vpsNlPlans && vpsNlPlans.plans && vpsNlPlans.plans.length) {
+              extraSectionsHtml += '<div class="cp-detail-block cp-vps-plans-block"><h2 class="cp-detail-h2" style="text-align:center">' + esc(vpsNlPlans.title) + '</h2>' + (vpsNlPlans.subtitle ? '<p class="cp-vps-plans-sub">' + esc(vpsNlPlans.subtitle) + '</p>' : '') + (vpsNlPlans.instruction ? '<p class="cp-vps-plans-instruction">' + esc(vpsNlPlans.instruction) + '</p>' : '') + '<div class="cp-vps-plans-grid">' + vpsNlPlans.plans.map(function (p) {
+                var cardCls = 'cp-vps-plan-card' + (p.highlight ? ' cp-vps-plan-card-highlight' : '');
+                return '<div class="' + cardCls + ' cp-vps-plan-card-selectable" role="button" tabindex="0" id="' + esc(p.id) + '" data-service-id="' + esc(sid) + '" data-plan-id="' + esc(p.id) + '" data-plan-title="' + esc(p.title) + '" data-plan-price="' + esc(p.price) + '"><h3 class="cp-vps-plan-title">' + esc(p.title) + '</h3><p class="cp-vps-plan-suitable">' + esc(p.suitable) + '</p><p class="cp-vps-plan-duration">' + esc(p.duration) + '</p><p class="cp-vps-plan-price">' + esc(p.price) + '</p><ul class="cp-detail-list">' + (p.specs || []).map(function (s) { return '<li class="cp-detail-feature"><span class="cp-detail-check">✓</span> ' + esc(s) + '</li>'; }).join('') + '</ul>' + (p.discount ? '<p class="cp-vps-plan-discount">' + esc(p.discount) + '</p>' : '') + '</div>';
+              }).join('') + '</div></div>';
+            }
+          }
+          if (sid === 'vps-france') {
+            var frFeat = window.getCurrencyPaymentVPSFranceFeatures ? window.getCurrencyPaymentVPSFranceFeatures() : null;
+            if (frFeat) {
+              var frLeft = (frFeat.featuresLeft || []).map(function (f) { return '<li class="cp-detail-feature"><span class="cp-detail-check">✓</span> ' + esc(f) + '</li>'; }).join('');
+              var frRight = (frFeat.featuresRight || []).map(function (f) { return '<li class="cp-detail-feature"><span class="cp-detail-check">✓</span> ' + esc(f) + '</li>'; }).join('');
+              extraSectionsHtml += '<div class="cp-detail-block"><h2 class="cp-detail-h2" style="text-align:center">' + esc(frFeat.title) + '</h2><div class="cp-detail-two-col"><ul class="cp-detail-list">' + frRight + '</ul><ul class="cp-detail-list">' + frLeft + '</ul></div>' + (frFeat.note ? '<div class="cp-detail-note" style="margin-top:1rem">' + esc(frFeat.note) + '</div>' : '') + '</div>';
+            }
+            var frPlans = window.getCurrencyPaymentVPSFrancePlans ? window.getCurrencyPaymentVPSFrancePlans() : null;
+            if (frPlans && frPlans.plans && frPlans.plans.length) {
+              extraSectionsHtml += '<div class="cp-detail-block cp-vps-plans-block"><h2 class="cp-detail-h2" style="text-align:center">' + esc(frPlans.title) + '</h2>' + (frPlans.subtitle ? '<p class="cp-vps-plans-sub">' + esc(frPlans.subtitle) + '</p>' : '') + (frPlans.instruction ? '<p class="cp-vps-plans-instruction">' + esc(frPlans.instruction) + '</p>' : '') + '<div class="cp-vps-plans-grid">' + frPlans.plans.map(function (p) {
+                var cardCls = 'cp-vps-plan-card' + (p.highlight ? ' cp-vps-plan-card-highlight' : '');
+                return '<div class="' + cardCls + ' cp-vps-plan-card-selectable" role="button" tabindex="0" id="' + esc(p.id) + '" data-service-id="' + esc(sid) + '" data-plan-id="' + esc(p.id) + '" data-plan-title="' + esc(p.title) + '" data-plan-price="' + esc(p.price) + '"><h3 class="cp-vps-plan-title">' + esc(p.title) + '</h3><p class="cp-vps-plan-suitable">' + esc(p.suitable) + '</p><p class="cp-vps-plan-duration">' + esc(p.duration) + '</p><p class="cp-vps-plan-price">' + esc(p.price) + '</p><ul class="cp-detail-list">' + (p.specs || []).map(function (s) { return '<li class="cp-detail-feature"><span class="cp-detail-check">✓</span> ' + esc(s) + '</li>'; }).join('') + '</ul>' + (p.discount ? '<p class="cp-vps-plan-discount">' + esc(p.discount) + '</p>' : '') + '</div>';
+              }).join('') + '</div></div>';
+            }
+          }
+        })();
+
+        var buySectionHtml = '';
+        (function () {
+          var sid = service.id;
+          var authNext = 'currency-payment/service.html?slug=' + (service.id || '');
+          function renderBuySection(config) {
+            if (!config || !config.items || !config.items.length) return '';
+            var ctaText = config.ctaText || 'خرید اکانت';
+            var cards = config.items.map(function (item) {
+              var iconStyle = item.iconBg ? ' style="background:' + item.iconBg + ';color:#fff"' : '';
+              var iconClass = (item.iconFa && item.iconFa.indexOf('fa-') === 0) ? item.iconFa : ('fa fa-' + (item.iconFa || 'circle'));
+              var dataPrice = item.price ? (' data-item-price="' + esc(item.price) + '"') : '';
+              return '<div class="cp-buy-card cp-buy-card-selectable" role="button" tabindex="0" data-item-id="' + esc(item.id) + '" data-item-title="' + esc(item.title) + '"' + dataPrice + ' title="' + esc(ctaText) + ' ' + esc(item.title) + '">' +
+                '<div class="cp-buy-card-icon" aria-hidden="true"' + iconStyle + '><i class="' + iconClass + '" aria-hidden="true"></i></div>' +
+                '<h3 class="cp-buy-card-title">' + esc(item.title) + '</h3>' +
+                '<p class="cp-buy-card-desc">' + esc(item.description) + '</p>' +
+                (item.price ? '<p class="cp-buy-card-price">' + esc(item.price) + ' تومان</p>' : '') +
+                (item.titleEn ? '<p class="cp-buy-card-label">' + esc(item.titleEn) + '</p>' : '') +
+                '<p class="cp-buy-card-cta">' + esc(ctaText) + ' <span class="cp-buy-arrow">&lt;</span></p>' +
+                '</div>';
+            }).join('');
+            return '<div class="cp-detail-block cp-buy-section"><h2 class="cp-buy-section-title"><span class="cp-buy-bar" aria-hidden="true"></span> ' + esc(config.title) + ' <span class="cp-buy-bar" aria-hidden="true"></span></h2>' +
+              (config.subtitle ? '<p class="cp-buy-subtitle">' + esc(config.subtitle) + '</p>' : '') +
+              (config.instruction ? '<p class="cp-buy-instruction">' + esc(config.instruction) + '</p>' : '') +
+              '<div class="cp-buy-cards-grid">' + cards + '</div></div>';
+          }
+          if (sid === 'international-sim') {
+            var list = window.getCurrencyPaymentInternationalSimCards ? window.getCurrencyPaymentInternationalSimCards() : [];
+            if (list.length) buySectionHtml = renderBuySection({
+              title: 'خرید انواع سیم کارت خارجی و بین المللی',
+              subtitle: 'خرید معتبرترین سیم کارتهای بین المللی از طریق خدمت پرداخت ارزی ریتکس',
+              instruction: 'روی هر سیم کارت کلیک کنید تا در باکس ثبت سفارش سمت چپ قیمت و گزینه ثبت سفارش نمایش داده شود.',
+              items: list
+            });
+          }
+          if (sid === 'virtual-number') {
+            var list = window.getCurrencyPaymentVirtualNumberCards ? window.getCurrencyPaymentVirtualNumberCards() : [];
+            if (list.length) buySectionHtml = renderBuySection({
+              title: 'انواع شماره مجازی',
+              subtitle: 'خرید انواع شماره های مجازی برای سرویسهای مختلف از طریق ریتکس',
+              instruction: 'روی هر شماره مجازی کلیک کنید تا در باکس ثبت سفارش سمت چپ قیمت و گزینه ثبت سفارش نمایش داده شود.',
+              items: list
+            });
+          }
+          if (sid === 'domain') {
+            var list = window.getCurrencyPaymentDomainExtensions ? window.getCurrencyPaymentDomainExtensions() : [];
+            if (list.length) buySectionHtml = renderBuySection({
+              title: 'انواع پسوند دامنه',
+              subtitle: 'پسوند مناسب برای کسب و کار خود انتخاب کنید',
+              instruction: 'روی هر پسوند کلیک کنید تا در باکس ثبت سفارش سمت چپ قیمت و گزینه ثبت سفارش نمایش داده شود.',
+              ctaText: 'ثبت سفارش',
+              items: list
+            });
+          }
+          if (sid === 'host') {
+            var list = window.getCurrencyPaymentForeignHostingTypes ? window.getCurrencyPaymentForeignHostingTypes() : [];
+            if (list.length) buySectionHtml = renderBuySection({
+              title: 'انواع هاست خارجی',
+              subtitle: 'خرید انواع هاست های خارجی از بهترین ارائه دهندگان جهان از طریق ریتکس',
+              instruction: 'روی هر نوع هاست کلیک کنید تا در باکس ثبت سفارش سمت چپ قیمت و گزینه ثبت سفارش نمایش داده شود',
+              ctaText: 'ثبت سفارش',
+              items: list
+            });
+          }
+          if (sid === 'seo-account') {
+            var list = window.getCurrencyPaymentSeoTools ? window.getCurrencyPaymentSeoTools() : [];
+            if (list.length) buySectionHtml = renderBuySection({
+              title: 'ابزارهای سئو',
+              subtitle: 'خرید انواع اکانت‌های پریمیوم ابزارهای سئو از طریق ریتکس',
+              instruction: 'روی هر ابزار کلیک کنید تا در باکس ثبت سفارش سمت چپ قیمت و گزینه ثبت سفارش نمایش داده شود.',
+              items: list
+            });
+          }
+          if (sid === 'ai-account') {
+            var list = window.getCurrencyPaymentAIAccounts ? window.getCurrencyPaymentAIAccounts() : [];
+            if (list.length) buySectionHtml = renderBuySection({
+              title: 'اکانت‌های هوش مصنوعی',
+              subtitle: 'خرید انواع اکانت‌های پریمیوم هوش مصنوعی از طریق ریتکس',
+              instruction: 'روی هر اکانت کلیک کنید تا در باکس ثبت سفارش سمت چپ قیمت و گزینه ثبت سفارش نمایش داده شود.',
+              items: list
+            });
+          }
+          if (sid === 'game-account') {
+            var list = window.getCurrencyPaymentGameAccounts ? window.getCurrencyPaymentGameAccounts() : [];
+            if (list.length) buySectionHtml = renderBuySection({
+              title: 'خرید انواع اکانت بازی',
+              subtitle: 'اکانت‌های گیم مورد نظر خود را در سریع‌ترین زمان ممکن خریداری کنید.',
+              instruction: 'روی هر اکانت کلیک کنید تا در باکس ثبت سفارش سمت چپ قیمت و گزینه ثبت سفارش نمایش داده شود.',
+              items: list
+            });
+          }
+          if (sid === 'language-exam') {
+            var list = window.getCurrencyPaymentLanguageExamTypes ? window.getCurrencyPaymentLanguageExamTypes() : [];
+            if (list.length) buySectionHtml = renderBuySection({
+              title: 'انواع آزمون زبان',
+              subtitle: 'پرداخت هزینه ثبت نام تمامی آزمون‌های زبان در سراسر دنیا از طریق ریتکس',
+              instruction: 'روی هر آزمون کلیک کنید تا در باکس ثبت سفارش سمت چپ قیمت و گزینه ثبت سفارش نمایش داده شود.',
+              ctaText: 'ثبت نام',
+              items: list.map(function (x) { return { id: x.id, title: x.title, description: x.description, titleEn: x.titleEn, iconFa: 'fa-solid fa-graduation-cap', iconBg: '#ff5538' }; })
+            });
+          }
+          if (sid === 'international-exam') {
+            var list = window.getCurrencyPaymentInternationalExamTypes ? window.getCurrencyPaymentInternationalExamTypes() : [];
+            if (list.length) buySectionHtml = renderBuySection({
+              title: 'شرکت در آزمون‌های بین‌المللی',
+              subtitle: 'آزمون‌های بین‌المللی مورد نظر خود را در سریع‌ترین زمان ممکن ثبت نام کنید.',
+              instruction: 'روی هر آزمون کلیک کنید تا در باکس ثبت سفارش سمت چپ قیمت و گزینه ثبت سفارش نمایش داده شود.',
+              ctaText: 'ثبت نام',
+              items: list
+            });
+          }
+          if (sid === 'student-payment') {
+            function renderSectionWithAmount(title, subtitle, instruction, items) {
+              if (!items || !items.length) return '';
+              var cards = items.map(function (item) {
+                var iconStyle = item.iconBg ? ' style="background:' + item.iconBg + ';color:#333"' : '';
+                var iconClass = (item.iconFa && item.iconFa.indexOf('fa-') === 0) ? item.iconFa : ('fa fa-' + (item.iconFa || 'circle'));
+                return '<div class="cp-buy-card cp-buy-card-with-amount" data-item-id="' + esc(item.id) + '" data-item-title="' + esc(item.title) + '">' +
+                  '<div class="cp-buy-card-icon" aria-hidden="true"' + iconStyle + '><i class="' + iconClass + '" aria-hidden="true"></i></div>' +
+                  '<h3 class="cp-buy-card-title">' + esc(item.title) + '</h3>' +
+                  '<p class="cp-buy-card-desc">' + esc(item.description) + '</p>' +
+                  (item.titleEn ? '<p class="cp-buy-card-label">' + esc(item.titleEn) + '</p>' : '') +
+                  '<div class="cp-buy-card-amount-wrap"><label class="cp-amount-label">مبلغ (دلار)</label>' +
+                  '<input type="text" inputmode="numeric" class="cp-amount-input" placeholder="مثال: ۵۰ یا ۱۰۰" data-item-id="' + esc(item.id) + '">' +
+                  '<button type="button" class="cp-add-to-cart-btn">افزودن به سبد خرید</button></div></div>';
+              }).join('');
+              return '<div class="cp-detail-block cp-buy-section cp-buy-section-with-amount"><h2 class="cp-buy-section-title"><span class="cp-buy-bar" aria-hidden="true"></span> ' + esc(title) + ' <span class="cp-buy-bar" aria-hidden="true"></span></h2>' +
+                (subtitle ? '<p class="cp-buy-subtitle">' + esc(subtitle) + '</p>' : '') +
+                (instruction ? '<p class="cp-buy-instruction">' + esc(instruction) + '</p>' : '') +
+                '<div class="cp-buy-cards-grid">' + cards + '</div></div>';
+            }
+            var list1 = window.getCurrencyPaymentStudentPaymentTypes ? window.getCurrencyPaymentStudentPaymentTypes() : [];
+            var list2 = window.getCurrencyPaymentStudentPaymentServices ? window.getCurrencyPaymentStudentPaymentServices() : [];
+            var instructionAmount = 'برای هر مورد مبلغ (دلار) را وارد کنید و با زدن «افزودن به سبد خرید» به سبد خرید منتقل شوید.';
+            if (list1.length) buySectionHtml = renderSectionWithAmount('پرداخت هزینه‌های دانشجویی', 'پرداخت تمامی هزینه‌های دانشجویی و تحصیل در خارج از کشور با ریتکس', instructionAmount, list1);
+            if (list2.length) buySectionHtml += renderSectionWithAmount('فعالیت‌های علمی بین‌المللی', 'پرداخت هزینه ارزیابی مدارک، شرکت در رویدادهای علمی و سایر هزینه‌های تحصیلی در کوتاه‌ترین زمان', instructionAmount, list2);
+          }
+        })();
+
+        var sidebarText = 'برای مشاهده قیمت و ثبت سفارش وارد حساب کاربری شوید.';
+        var isVpsPlansPage = (service.id === 'vps-trading' || service.id === 'vps-usa' || service.id === 'vps-netherlands' || service.id === 'vps-france');
+        if (buySectionHtml && (service.id === 'language-exam' || service.id === 'international-exam' || service.id === 'student-payment' || service.id === 'seo-account' || service.id === 'ai-account' || service.id === 'game-account' || service.id === 'domain' || service.id === 'host' || service.id === 'virtual-number' || service.id === 'international-sim')) {
+          sidebarText = 'محصول مورد نظر را از لیست زیر انتخاب کنید. ابتدا یک گزینه از لیست زیر انتخاب کنید';
+        }
+        var sidebarSelectionHtml = '<p class="cp-sidebar-text" id="cp-sidebar-selection">' + esc(sidebarText) + '</p>';
+        if (isVpsPlansPage) {
+          sidebarSelectionHtml = '<div id="cp-sidebar-selection"><p class="cp-sidebar-instruction">محصول مورد نظر را از لیست زیر انتخاب کنید.</p><div class="cp-sidebar-placeholder" id="cp-sidebar-placeholder">ابتدا یک گزینه از لیست زیر انتخاب کنید</div><div id="cp-sidebar-plan-choice" class="cp-sidebar-plan-choice" style="display:none"><p class="cp-sidebar-selection-label">شما انتخاب کردید:</p><p class="cp-sidebar-plan-title" id="cp-sidebar-plan-title"></p><p class="cp-sidebar-plan-price" id="cp-sidebar-plan-price"></p><button type="button" class="cp-sidebar-btn cp-sidebar-add-cart" id="cp-sidebar-add-cart-btn">افزودن به سبد خرید</button></div></div>';
+        }
+
+        var faqHtml = '';
+        if (faqs.length) {
+          faqHtml = '<div class="cp-detail-block"><h2 class="cp-detail-h2">سوالات متداول درباره ' + esc(service.label) + '</h2><div class="cp-faq-list cp-faq-accordion">' + faqs.map(function (item, idx) {
+            return '<div class="cp-faq-item" data-faq-index="' + idx + '"><button type="button" class="cp-faq-q">' + esc(item.q) + '<i class="fa fa-plus cp-faq-toggle" aria-hidden="true"></i></button><div class="cp-faq-a">' + nl2br(item.a) + '</div></div>';
+          }).join('') + '</div></div>';
+        }
+
+        var statsHtml = '<div class="cp-detail-block cp-detail-stats"><h2 class="cp-detail-h2">آمار و ارقام ' + esc(service.label) + '</h2><div class="cp-stats-grid"><div class="cp-stat"><div class="cp-stat-icon"><i class="fa fa-users" aria-hidden="true"></i></div><div class="cp-stat-value">۵,۰۰۰+</div><div class="cp-stat-label">مشتری راضی</div></div><div class="cp-stat"><div class="cp-stat-icon cp-stat-icon-light"><i class="fa fa-check-circle" aria-hidden="true"></i></div><div class="cp-stat-value">۹۸٪</div><div class="cp-stat-label">رضایت مشتری</div></div><div class="cp-stat"><div class="cp-stat-icon"><i class="fa fa-star" aria-hidden="true"></i></div><div class="cp-stat-value">۴.۹</div><div class="cp-stat-label">امتیاز کاربران</div></div></div></div>';
+
+        var relatedHtml = '';
+        if (related.length) {
+          relatedHtml = '<div class="cp-detail-block"><h2 class="cp-detail-h2">خدمات مرتبط</h2><div class="cp-related-grid">' + related.map(function (r) {
+            var iconClass = getHeaderIconClass(r.iconKey || '');
+            var iconBoxClass = 'cp-related-card-icon cp-detail-header-icon-' + (r.iconKey || '');
+            return '<a href="' + esc(r.href) + '" class="cp-related-card"><span class="' + iconBoxClass + '"><i class="fa ' + iconClass + '" aria-hidden="true"></i></span><span class="cp-related-card-body"><span class="cp-related-card-title">' + esc(r.label) + '</span>' + (r.description ? '<p class="cp-related-card-desc">' + esc(r.description) + '</p>' : '') + '</span></a>';
+          }).join('') + '</div></div>';
+        }
+
+        var headerIconClass = getHeaderIconClass(service.iconKey || '');
+        var headerIconHtml = '<div class="cp-detail-header-icon cp-detail-header-icon-' + esc(service.iconKey || '') + '"><i class="fa ' + headerIconClass + '" aria-hidden="true"></i></div>';
+
+        return '<nav class="cp-breadcrumb"><a href="index.html">صفحه اصلی</a> <span>/</span> <a href="currency-payment.html">پرداخت ارزی</a> <span>/</span> <span>' + esc(service.label) + '</span></nav>' +
+          '<div class="cp-detail-header">' + headerIconHtml + '<div class="cp-detail-header-text"><h1 class="cp-detail-title">' + esc(service.label) + (service.labelEn ? ' <span class="cp-detail-title-en">(' + esc(service.labelEn) + ')</span>' : '') + '</h1><p class="cp-detail-desc">' + esc(service.description) + '</p></div></div>' +
+          '<div class="cp-detail-layout">' +
+            '<div class="cp-detail-main">' +
+              '<div class="cp-detail-block"><h2 class="cp-detail-h2">درباره ' + esc(service.label) + '</h2><p class="cp-detail-p">' + nl2br(detail.description) + '</p></div>' +
+              '<div class="cp-detail-block"><div class="cp-detail-two-col"><div><h2 class="cp-detail-h2">ویژگی‌های ' + esc(service.label) + '</h2><ul class="cp-detail-list">' + featuresHtml + '</ul></div><div><h2 class="cp-detail-h2">مراحل انجام کار</h2><ol class="cp-detail-steps">' + stepsHtml + '</ol></div></div>' + noteHtml + '</div>' +
+              benefitsHtml +
+              extraSectionsHtml +
+              buySectionHtml +
+              statsHtml +
+              faqHtml +
+              relatedHtml +
+            '</div>' +
+            '<aside class="cp-detail-sidebar"><div class="cp-sidebar-box" id="cp-sidebar-box"><h2 class="cp-sidebar-title">' + esc(service.label) + '</h2>' + sidebarSelectionHtml + '<a href="auth.html?next=' + encodeURIComponent('currency-payment/service.html?slug=' + service.id) + '" class="cp-sidebar-btn cp-sidebar-auth-btn">ورود / ثبت‌نام</a><p class="cp-sidebar-back"><a href="currency-payment.html">← بازگشت به پرداخت ارزی</a></p></div></aside>' +
+          '</div>';
+      }
+
+      var slugMatch = /[?&]slug=([^&]+)/.exec(window.location.search);
+      var slugParam = slugMatch ? decodeURIComponent(slugMatch[1].replace(/\+/g, ' ')) : '';
+
+      if (slugParam) {
+        var platform = window.currencyPaymentPlatform;
+        var list = platform ? platform.servicesFlat : [];
+        var service = list.filter(function (s) { return s.id === slugParam; })[0];
+        if (!service) {
+          showError('سرویس یافت نشد.');
+          return;
+        }
+        document.title = service.label + ' | پرداخت ارزی — ريتكس';
+        var html = renderService(service);
+        hideAll(); content.innerHTML = html; content.style.display = 'block';
+        (function initFaqAccordion() {
+          var listEl = content.querySelector('.cp-faq-accordion');
+          if (!listEl) return;
+          listEl.addEventListener('click', function (e) {
+            var btn = e.target.closest('.cp-faq-q');
+            if (!btn) return;
+            var item = btn.closest('.cp-faq-item');
+            var isOpen = item.classList.contains('cp-faq-open');
+            listEl.querySelectorAll('.cp-faq-item').forEach(function (el) { el.classList.remove('cp-faq-open'); });
+            if (!isOpen) item.classList.add('cp-faq-open');
+          });
+          var first = listEl.querySelector('.cp-faq-item');
+          if (first) first.classList.add('cp-faq-open');
+        })();
+        (function initVpsPlanSelect() {
+          var placeholder = content.querySelector('#cp-sidebar-placeholder');
+          var planChoice = content.querySelector('#cp-sidebar-plan-choice');
+          var planTitleEl = content.querySelector('#cp-sidebar-plan-title');
+          var planPriceEl = content.querySelector('#cp-sidebar-plan-price');
+          var sidebarCartBtn = content.querySelector('#cp-sidebar-add-cart-btn');
+          if (!placeholder || !planChoice || !sidebarCartBtn) return;
+          content.addEventListener('click', function (e) {
+            var card = e.target && e.target.closest && e.target.closest('.cp-vps-plan-card-selectable');
+            if (!card) return;
+            e.preventDefault();
+            content.querySelectorAll('.cp-vps-plan-card-selectable').forEach(function (c) { c.classList.remove('cp-vps-plan-card-selected'); });
+            card.classList.add('cp-vps-plan-card-selected');
+            var title = card.getAttribute('data-plan-title') || '';
+            var price = card.getAttribute('data-plan-price') || '';
+            var serviceId = card.getAttribute('data-service-id') || '';
+            var planId = card.getAttribute('data-plan-id') || '';
+            if (planTitleEl) planTitleEl.textContent = title;
+            if (planPriceEl) planPriceEl.textContent = price;
+            sidebarCartBtn.setAttribute('data-service-id', serviceId);
+            sidebarCartBtn.setAttribute('data-plan-id', planId);
+            sidebarCartBtn.setAttribute('data-plan-title', title);
+            placeholder.style.display = 'none';
+            planChoice.style.display = 'block';
+          });
+          content.addEventListener('keydown', function (e) {
+            if (e.key !== 'Enter' && e.key !== ' ') return;
+            var card = e.target && e.target.closest && e.target.closest('.cp-vps-plan-card-selectable');
+            if (!card) return;
+            e.preventDefault();
+            card.click();
+          });
+          sidebarCartBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            var isLoggedIn = false;
+            try { isLoggedIn = !!localStorage.getItem('loginval'); } catch (err) {}
+            if (!isLoggedIn) {
+              window.location.href = 'auth.html?next=' + encodeURIComponent(window.location.href);
+              return;
+            }
+            var serviceId = sidebarCartBtn.getAttribute('data-service-id') || '';
+            var planId = sidebarCartBtn.getAttribute('data-plan-id') || '';
+            var planTitle = sidebarCartBtn.getAttribute('data-plan-title') || '';
+            try {
+              var cartItems = JSON.parse(sessionStorage.getItem('cp_cart_items') || '[]');
+              cartItems.push({ type: 'vps-plan', serviceId: serviceId, planId: planId, planTitle: planTitle });
+              sessionStorage.setItem('cp_cart_items', JSON.stringify(cartItems));
+            } catch (err) {}
+            window.location.href = 'cart.html';
+          });
+        })();
+        (function initAddToCart() {
+          content.addEventListener('click', function (e) {
+            var btn = e.target && e.target.closest && e.target.closest('.cp-add-to-cart-btn');
+            if (!btn) return;
+            e.preventDefault();
+            var card = btn.closest('.cp-buy-card-with-amount');
+            if (!card) return;
+            var input = card.querySelector('.cp-amount-input');
+            var raw = (input && input.value) ? input.value.replace(/\D/g, '') : '0';
+            var amount = parseInt(raw, 10);
+            if (!amount || amount < 1) {
+              alert('لطفاً مبلغ را به دلار وارد کنید.');
+              return;
+            }
+            var next = 'currency-payment/service.html?slug=student-payment';
+            window.location.href = 'auth.html?next=' + encodeURIComponent(next);
+          });
+        })();
+        (function initSelectCard() {
+          var sidebarEl = content.querySelector('#cp-sidebar-selection');
+          content.addEventListener('click', function (e) {
+            var card = e.target && e.target.closest && e.target.closest('.cp-buy-card-selectable');
+            if (!card || !sidebarEl) return;
+            e.preventDefault();
+            var title = card.getAttribute('data-item-title') || '';
+            var price = card.getAttribute('data-item-price') || '';
+            content.querySelectorAll('.cp-buy-card-selectable').forEach(function (c) { c.classList.remove('cp-buy-card-selected'); });
+            card.classList.add('cp-buy-card-selected');
+            var msg = 'شما انتخاب کردید: ' + title;
+            if (price) msg += ' — ' + price + ' تومان';
+            msg += '. برای مشاهده قیمت و ثبت سفارش وارد حساب کاربری شوید.';
+            sidebarEl.textContent = msg;
+          });
+          content.addEventListener('keydown', function (e) {
+            if (e.key !== 'Enter' && e.key !== ' ') return;
+            var card = e.target && e.target.closest && e.target.closest('.cp-buy-card-selectable');
+            if (!card || !sidebarEl) return;
+            e.preventDefault();
+            var title = card.getAttribute('data-item-title') || '';
+            var price = card.getAttribute('data-item-price') || '';
+            content.querySelectorAll('.cp-buy-card-selectable').forEach(function (c) { c.classList.remove('cp-buy-card-selected'); });
+            card.classList.add('cp-buy-card-selected');
+            var msg = 'شما انتخاب کردید: ' + title;
+            if (price) msg += ' — ' + price + ' تومان';
+            msg += '. برای مشاهده قیمت و ثبت سفارش وارد حساب کاربری شوید.';
+            sidebarEl.textContent = msg;
+          });
+        })();
+        return;
+      }
+
+      showError();
+    })();
+  </script>
+  <script src="js/app.js"></script>
+</body>
+</html>

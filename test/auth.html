@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ورود و ثبت نام | ريتكس</title>
+  <link rel="icon" href="Images/Logo/Raitx%20international%20payments%20logo%20design%20(1).png">
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    .auth-main { min-height: 80vh; padding: 2rem 1rem 3rem; display: flex; align-items: flex-start; justify-content: center; }
+    .auth-box { width: 100%; max-width: 28rem; margin: 0 auto; }
+    .auth-title { font-size: 1.5rem; font-weight: 600; text-align: center; margin-bottom: 2rem; color: #111; }
+    .auth-form .field { margin-bottom: 1.25rem; }
+    .auth-form label { display: block; text-align: right; font-size: 0.875rem; color: #374151; margin-bottom: 0.375rem; }
+    .auth-form input[type="tel"],
+    .auth-form input[type="password"],
+    .auth-form input[type="text"] { width: 100%; padding: 0.625rem 0; border: none; border-bottom: 1px solid #d1d5db; background: #fff; font-size: 1rem; }
+    .auth-form input:focus { outline: none; border-bottom-color: #ff5538; }
+    .auth-form .hint { font-size: 0.75rem; color: #6b7280; margin-top: 0.25rem; text-align: right; }
+    .auth-form .pass-row { display: flex; gap: 0.5rem; align-items: stretch; }
+    .auth-form .pass-row .pass-wrap { flex: 1; position: relative; }
+    .auth-form .pass-row .pass-wrap input { padding-left: 2.5rem; }
+    .auth-form .otp-btn { white-space: nowrap; padding: 0.625rem 0.75rem; border: 1px solid #ff5538; color: #ff5538; border-radius: 0.5rem; background: transparent; font-size: 0.875rem; cursor: pointer; }
+    .auth-form .otp-btn:hover { background: #ff5538; color: #fff; }
+    .auth-form .terms-row { display: flex; align-items: flex-start; gap: 0.75rem; padding-top: 0.5rem; }
+    .auth-form .terms-row input[type="checkbox"] { margin-top: 0.25rem; width: 1rem; height: 1rem; cursor: pointer; }
+    .auth-form .terms-row label { margin-bottom: 0; flex: 1; cursor: pointer; line-height: 1.5; }
+    .auth-form .terms-link { color: #ff5538; text-decoration: underline; cursor: pointer; font-weight: 500; }
+    .auth-form .submit-btn { width: 100%; padding: 0.75rem 1rem; background: #ff5538; color: #fff; border: none; border-radius: 0.75rem; font-size: 1rem; font-weight: 500; cursor: pointer; margin-top: 0.5rem; }
+    .auth-form .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+    .auth-form .switch-row { margin-top: 1.5rem; text-align: center; font-size: 0.875rem; color: #4b5563; }
+    .auth-form .switch-row a { color: #ff5538; font-weight: 500; text-decoration: none; }
+    .auth-form .switch-row a:hover { text-decoration: underline; }
+    .auth-msg { font-size: 0.875rem; padding: 0.5rem 0.75rem; margin-bottom: 1rem; border-radius: 0.5rem; }
+    .auth-msg-error { background: #fef2f2; color: #dc2626; }
+    .auth-msg-success { background: #f0fdf4; color: #16a34a; }
+  </style>
+</head>
+<body>
+  <div id="site-header"></div>
+  <main class="site-main">
+    <div class="auth-main">
+      <div class="auth-box container">
+        <div id="auth-login-wrap">
+          <h2 class="auth-title">ورود</h2>
+          <form id="auth-form" class="auth-form" novalidate>
+            <div id="auth-msg" class="auth-msg" aria-live="polite" style="display:none;"></div>
+            <div class="field">
+              <label for="login-phone">شماره تماس</label>
+              <input id="login-phone" name="phone" type="tel" placeholder="۰۹۱۲۳۴۵۶۷۸۹ یا ۰۹۹۱... یا ۹۸۹۱۲۳۴۵۶۷۸۹" value="">
+            <p class="hint">با ۰۹ یا ۹۸۹ شروع کنید. اعداد فارسی یا انگلیسی.</p>
+          </div>
+          <div class="field">
+            <label for="login-pass">رمز یکبار مصرف (اس‌ام‌اس)</label>
+              <div class="pass-row">
+                <div class="pass-wrap">
+                  <input id="login-pass" name="pass" type="password" placeholder="رمز ارسال‌شده را وارد کنید" value="">
+                </div>
+                <button type="button" id="otp-btn" class="otp-btn">دریافت رمز</button>
+              </div>
+            </div>
+            <div class="field terms-row">
+              <input id="login-terms" name="terms" type="checkbox" aria-describedby="login-terms-desc">
+              <label id="login-terms-desc" for="login-terms">
+                <button type="button" class="terms-link" id="terms-link">قوانین ريتكس</button>
+                را خوانده و آن را تایید می‌کنم.
+              </label>
+            </div>
+            <button type="submit" id="submit-btn" class="submit-btn" disabled>ورود</button>
+            <div class="switch-row">
+              حساب کاربری ندارید؟
+              <a href="auth.html?mode=register">عضویت</a>
+            </div>
+          </form>
+        </div>
+        <div id="auth-register-wrap" style="display:none;">
+          <h2 class="auth-title">عضویت</h2>
+          <form id="register-form" class="auth-form" novalidate>
+            <div id="register-msg" class="auth-msg" aria-live="polite" style="display:none;"></div>
+            <div class="field">
+              <label for="reg-name">نام و نام خانوادگی</label>
+              <input id="reg-name" name="name" type="text" placeholder="نام شما" value="">
+            </div>
+            <div class="field">
+              <label for="reg-email">ایمیل</label>
+              <input id="reg-email" name="email" type="text" placeholder="example@email.com" value="">
+            </div>
+            <div class="field">
+              <label for="reg-phone">شماره تماس</label>
+              <input id="reg-phone" name="phone" type="tel" placeholder="۰۹۱۲۳۴۵۶۷۸۹" value="">
+              <p class="hint">با ۰۹ شروع کنید (۱۱ رقم). اعداد فارسی یا انگلیسی قبول است.</p>
+            </div>
+            <button type="submit" id="register-submit" class="submit-btn">ثبت‌نام</button>
+            <div class="switch-row">
+              قبلاً ثبت‌نام کرده‌اید؟
+              <a href="auth.html">ورود</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div id="site-footer"></div>
+  <script src="js/layout.js"></script>
+  <script>layout.init();</script>
+  <script src="js/auth-api.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    (function() {
+      var AUTH_COOKIE_NAME = 'loginval';
+      var LOGIN_PHONE_KEY = 'loginPhone';
+      var SESSION_DAYS = 7;
+      var Api = window.AuthApi;
+      if (!Api) { console.error('auth-api.js لود نشده'); return; }
+
+      var form = document.getElementById('auth-form');
+      if (!form) { console.error('فرم ورود یافت نشد'); return; }
+      var phoneInput = form.phone || form.querySelector('input[name="phone"]');
+      var passInput = form.pass || form.querySelector('input[name="pass"]');
+      var termsCheck = form.terms || document.getElementById('login-terms');
+      var submitBtn = document.getElementById('submit-btn');
+      var otpBtn = document.getElementById('otp-btn');
+      var termsLink = document.getElementById('terms-link');
+      var authMsg = document.getElementById('auth-msg');
+      if (!phoneInput || !authMsg) { console.error('فیلد شماره یا پیام یافت نشد'); return; }
+
+      var isRegister = (window.location.search || '').indexOf('mode=register') !== -1;
+      document.getElementById('auth-login-wrap').style.display = isRegister ? 'none' : 'block';
+      document.getElementById('auth-register-wrap').style.display = isRegister ? 'block' : 'none';
+
+      function showAuthMsg(text, isError) {
+        authMsg.textContent = text || '';
+        authMsg.className = 'auth-msg ' + (isError ? 'auth-msg-error' : 'auth-msg-success');
+        authMsg.style.display = text ? 'block' : 'none';
+      }
+
+      function updateSubmitState() { submitBtn.disabled = !termsCheck.checked; }
+      if (termsCheck) termsCheck.addEventListener('change', updateSubmitState);
+
+      var otpCooldown = 0;
+      function setOtpCooldown(sec) {
+        otpCooldown = sec;
+        if (sec > 0) {
+          otpBtn.disabled = true;
+          otpBtn.textContent = 'ارسال مجدد پس از ' + (new Intl.NumberFormat('fa-IR').format(sec)) + ' ثانیه';
+          setTimeout(function() { setOtpCooldown(sec - 1); }, 1000);
+        } else {
+          otpBtn.disabled = false;
+          otpBtn.textContent = 'دریافت رمز';
+        }
+      }
+
+      otpBtn.addEventListener('click', function() {
+        var phone = (phoneInput.value || '').trim();
+        if (!phone) { showAuthMsg('شماره تماس را وارد کنید.', true); return; }
+        var normalized = Api.normalizePhone(phone);
+        if (!normalized || normalized.length < 10 || normalized.indexOf('98') !== 0) {
+          showAuthMsg('شماره معتبر نیست. با ۰۹ یا ۹۸۹ وارد کنید، مثل ۰۹۱۲۳۴۵۶۷۸۹', true);
+          return;
+        }
+        otpBtn.disabled = true;
+        otpBtn.textContent = 'در حال ارسال…';
+        showAuthMsg('', false);
+        var query = 'smspass&phone=' + encodeURIComponent(Api.phoneForApi(normalized));
+        Api.GetData(query)
+          .then(function(data) {
+            if (data && data.error) {
+              showAuthMsg(data.error, true);
+              otpBtn.disabled = false;
+              otpBtn.textContent = 'دریافت رمز';
+              return;
+            }
+            var code = (data && (
+              data.pass || data.Pass ||
+              data.code || data.Code ||
+              data.otp || data.Otp || data.OTP ||
+              data.password || data.Password ||
+              data.sms_code || data.smsCode
+            )) || null;
+            if (code && typeof code === 'object') code = code.value != null ? code.value : (code.code || code.otp);
+            if (typeof code !== 'string') code = code != null ? String(code) : null;
+            if (code) {
+              if (passInput) passInput.value = code;
+              showAuthMsg('رمز در پاسخ سرور بود؛ در فیلد رمز قرار گرفت. روی ورود بزنید.', false);
+            } else {
+              showAuthMsg('درخواست ارسال رمز به سرور فرستاده شد. در صورت دریافت پیامک، رمز را در کادر زیر وارد کنید.', false);
+            }
+            var waitSec = 30;
+            if (data && typeof data.timetosend === 'number' && data.timetosend > 0 && data.timetosend < 300)
+              waitSec = Math.ceil(data.timetosend);
+            setOtpCooldown(waitSec);
+          })
+          .catch(function() {
+            showAuthMsg('خطا در ارتباط با سرور.', true);
+            otpBtn.disabled = false;
+            otpBtn.textContent = 'دریافت رمز';
+          });
+      });
+
+      if (termsLink) termsLink.addEventListener('click', function(e) {
+        e.preventDefault();
+        alert('قوانین ريتكس — متن کامل در نسخه تست از همین طریق نمایش داده می‌شود.');
+      });
+
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        showAuthMsg('', false);
+        var phone = (phoneInput && phoneInput.value ? phoneInput.value : '').trim();
+        var pass = (passInput && passInput.value ? passInput.value : '').trim();
+        if (!phone || !pass) {
+          showAuthMsg('شماره تماس و رمز یکبار مصرف را وارد کنید.', true);
+          return;
+        }
+        if (!termsCheck.checked) {
+          showAuthMsg('قوانین ريتكس را بخوانید و تایید کنید.', true);
+          return;
+        }
+        var normalized = Api.normalizePhone(phone);
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'در حال ورود…';
+        Api.GetData('login&phone=' + encodeURIComponent(Api.phoneForApi(normalized)) + '&pass=' + encodeURIComponent(pass))
+          .then(function(data) {
+            var ok = data && (data.cookie || data.statu === 0);
+            if (ok) {
+              var cookieVal = data.cookie || '';
+              if (cookieVal) {
+                Api.setCookie(AUTH_COOKIE_NAME, cookieVal, SESSION_DAYS);
+                try { localStorage.setItem('loginval', cookieVal); } catch (ignore) {}
+              }
+              try {
+                var displayPhone = (normalized.indexOf('98') === 0 && normalized.length >= 12) ? '0' + normalized.slice(2) : phone;
+                localStorage.setItem(LOGIN_PHONE_KEY, displayPhone);
+              } catch (ignore) {}
+              showAuthMsg('ورود با موفقیت انجام شد. در حال انتقال…', false);
+              var next = (window.location.search || '').match(/[?&]next=([^&]+)/);
+              var nextUrl = next ? decodeURIComponent(next[1]) : 'my-account.html';
+              if (nextUrl.indexOf('http') !== 0 && nextUrl.indexOf('/') !== 0)
+                window.location.href = nextUrl;
+              else
+                window.location.href = 'my-account.html';
+            } else {
+              showAuthMsg((data && data.error) || 'ورود ناموفق بود.', true);
+              submitBtn.disabled = termsCheck ? !termsCheck.checked : true;
+              submitBtn.textContent = 'ورود';
+            }
+          })
+          .catch(function() {
+            showAuthMsg('خطا در ارتباط با سرور.', true);
+            submitBtn.disabled = termsCheck ? !termsCheck.checked : true;
+            submitBtn.textContent = 'ورود';
+          });
+      });
+
+      var regForm = document.getElementById('register-form');
+      var regMsg = document.getElementById('register-msg');
+      var regSubmit = document.getElementById('register-submit');
+      var regNameEl = regForm && (regForm.name || regForm.querySelector('input[name="name"]'));
+      var regEmailEl = regForm && (regForm.email || regForm.querySelector('input[name="email"]'));
+      var regPhoneEl = regForm && (regForm.phone || regForm.querySelector('input[name="phone"]'));
+      function showRegMsg(text, isError) {
+        if (regMsg) { regMsg.textContent = text || ''; regMsg.className = 'auth-msg ' + (isError ? 'auth-msg-error' : 'auth-msg-success'); regMsg.style.display = text ? 'block' : 'none'; }
+      }
+      if (regForm) regForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        var name = (regNameEl && regNameEl.value ? regNameEl.value : '').trim();
+        var email = (regEmailEl && regEmailEl.value ? regEmailEl.value : '').trim();
+        var phone = (regPhoneEl && regPhoneEl.value ? regPhoneEl.value : '').trim();
+        if (!name || !email || !phone) {
+          showRegMsg('نام، ایمیل و شماره تماس را وارد کنید.', true);
+          return;
+        }
+        var normalized = Api.normalizePhone(phone);
+        if (!normalized || normalized.length < 10 || normalized.indexOf('98') !== 0) {
+          showRegMsg('شماره معتبر نیست. با ۰۹ یا ۹۸۹ وارد کنید.', true);
+          return;
+        }
+        regSubmit.disabled = true;
+        showRegMsg('', false);
+        Api.PostData('signup', { name: name, email: email, phone: Api.phoneForApi(normalized) })
+          .then(function(data) {
+            if (data && data.error) {
+              showRegMsg(data.error, true);
+              regSubmit.disabled = false;
+              return;
+            }
+            showRegMsg('ثبت‌نام با موفقیت انجام شد. برای ورود از فرم ورود و دریافت رمز یکبار مصرف استفاده کنید.', false);
+            regForm.reset();
+            regSubmit.disabled = false;
+          })
+          .catch(function() {
+            showRegMsg('خطا در ارتباط با سرور.', true);
+            regSubmit.disabled = false;
+          });
+      });
+    })();
+  </script>
+</body>
+</html>

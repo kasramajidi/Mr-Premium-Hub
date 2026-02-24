@@ -1,4 +1,5 @@
-const PROXY = "/api/auth-proxy";
+import { getApiBase } from "@/lib/api-base";
+
 const ACTION = "articlecomments";
 
 export interface ArticleCommentItem {
@@ -52,7 +53,7 @@ export interface ArticleOption {
 }
 
 export async function getArticlesForFilter(): Promise<ArticleOption[]> {
-  const res = await fetch(`${PROXY}?action=Article`, {
+  const res = await fetch(`${getApiBase()}?action=Article`, {
     method: "GET",
     headers: { "Content-Type": "application/json" },
     cache: "no-store",
@@ -69,8 +70,8 @@ export async function getArticlesForFilter(): Promise<ArticleOption[]> {
 
 async function getArticleCommentsFromApi(idarticleFilter?: number | string): Promise<ArticleCommentItem[] | null> {
   const url = idarticleFilter != null
-    ? `${PROXY}?action=${ACTION}&idarticle=${encodeURIComponent(String(idarticleFilter))}`
-    : `${PROXY}?action=${ACTION}`;
+    ? `${getApiBase()}?action=${ACTION}&idarticle=${encodeURIComponent(String(idarticleFilter))}`
+    : `${getApiBase()}?action=${ACTION}`;
   const res = await fetch(url, {
     method: "GET",
     headers: { "Content-Type": "application/json" },
@@ -92,7 +93,7 @@ export async function getArticleComments(idarticleFilter?: number | string): Pro
   const fromApi = await getArticleCommentsFromApi(idarticleFilter);
   if (fromApi != null && fromApi.length > 0) return fromApi;
 
-  const res = await fetch(`${PROXY}?action=Article`, {
+  const res = await fetch(`${getApiBase()}?action=Article`, {
     method: "GET",
     headers: { "Content-Type": "application/json" },
     cache: "no-store",
@@ -113,7 +114,7 @@ export async function getArticleComments(idarticleFilter?: number | string): Pro
 
   const list: ArticleCommentItem[] = [];
   for (const idarticle of ids) {
-    const singleRes = await fetch(`${PROXY}?action=${ACTION}&idarticle=${encodeURIComponent(String(idarticle))}`, {
+    const singleRes = await fetch(`${getApiBase()}?action=${ACTION}&idarticle=${encodeURIComponent(String(idarticle))}`, {
       method: "GET",
       headers: { "Content-Type": "application/json" },
       cache: "no-store",
@@ -145,7 +146,7 @@ export async function getArticleComments(idarticleFilter?: number | string): Pro
 
 export async function deleteArticleComment(idarticle: number | string, id: number | string): Promise<void> {
   const res = await fetch(
-    `${PROXY}?action=${ACTION}&idarticle=${encodeURIComponent(String(idarticle))}&id=${encodeURIComponent(String(id))}`,
+    `${getApiBase()}?action=${ACTION}&idarticle=${encodeURIComponent(String(idarticle))}&id=${encodeURIComponent(String(id))}`,
     { method: "DELETE", headers: { "Content-Type": "application/json" } }
   );
   const data = await res.json().catch(() => ({}));

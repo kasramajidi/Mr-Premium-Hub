@@ -52,10 +52,7 @@ function CheckoutSuccessContent() {
   return (
     <div className="mt-8 rounded-2xl bg-emerald-50 border border-emerald-200 p-8 text-center max-w-lg mx-auto">
       {updating ? (
-        <div className="flex flex-col items-center gap-3">
-          <div className="w-10 h-10 border-2 border-emerald-300 border-t-emerald-600 rounded-full animate-spin" />
-          <p className="text-emerald-800 font-medium">در حال به‌روزرسانی وضعیت پرداخت…</p>
-        </div>
+        <div className="min-h-[120px]" />
       ) : (
         <>
           <CheckCircle className="w-14 h-14 text-emerald-600 mx-auto mb-4" aria-hidden />
@@ -96,14 +93,7 @@ function CheckoutSuccessContent() {
 }
 
 function SuccessFallback() {
-  return (
-    <div className="mt-8 rounded-2xl bg-emerald-50 border border-emerald-200 p-8 text-center max-w-lg mx-auto">
-      <div className="flex flex-col items-center gap-3">
-        <div className="w-10 h-10 border-2 border-emerald-300 border-t-emerald-600 rounded-full animate-spin" />
-        <p className="text-emerald-800 font-medium">در حال بارگذاری…</p>
-      </div>
-    </div>
-  );
+  return <div className="mt-8 rounded-2xl bg-emerald-50 border border-emerald-200 p-8 text-center max-w-lg mx-auto min-h-[200px]" />;
 }
 
 export default function CheckoutSuccessPage() {

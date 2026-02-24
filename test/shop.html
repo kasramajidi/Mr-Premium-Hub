@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>فروشگاه | ريتكس</title>
+  <link rel="icon" href="Images/Logo/Raitx%20international%20payments%20logo%20design%20(1).png">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div id="site-header"></div>
+  <main class="site-main page-services">
+    <div class="container" style="padding-top: 2rem; padding-bottom: 2rem;">
+      <h1 class="section-title">فروشگاه</h1>
+      <p class="section-desc">محصولات و خدمات — داده از API (action=shop) بارگذاری می‌شود.</p>
+      <div id="shop-grid" class="services-grid"></div>
+      <div id="shop-loading" style="text-align:center;padding:2rem;color:#6b7280;">در حال بارگذاری…</div>
+      <div id="shop-error" style="display:none;text-align:center;padding:2rem;color:#6b7280;">محصولی یافت نشد.</div>
+    </div>
+  </main>
+  <div id="site-footer"></div>
+  <script src="js/layout.js"></script>
+  <script>layout.init();</script>
+  <script src="js/api.js"></script>
+  <script>
+    (function () {
+      var apiBase = window.API_BASE ? API_BASE() : 'https://mrpremiumhub.org/api.ashx';
+      var grid = document.getElementById('shop-grid');
+      var loading = document.getElementById('shop-loading');
+      var err = document.getElementById('shop-error');
+      fetch(apiBase + '?action=shop')
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+          var list = Array.isArray(data) ? data : (data && (data.data || data.items || data.products || data.list)) || [];
+          loading.style.display = 'none';
+          if (list.length === 0) { err.style.display = 'block'; return; }
+          grid.innerHTML = list.map(function (p) {
+            var id = p.id || p.ID || ''; var title = p.title || p.Title || p.name || ''; var desc = (p.description || p.Description || '').toString().substring(0, 80); var price = p.price || p.Price || '';
+            return '<a href="shop/product.html?id=' + encodeURIComponent(id) + '" class="service-card"><div class="icon-wrap">🛍️</div><h3>' + (title || '') + '</h3><p>' + (desc || '') + '</p>' + (price ? '<p style="font-weight:600;margin-top:0.5rem;">' + price + '</p>' : '') + '</a>';
+          }).join('');
+        })
+        .catch(function () { loading.style.display = 'none'; err.style.display = 'block'; });
+    })();
+  </script>
+  <script src="js/app.js"></script>
+</body>
+</html>

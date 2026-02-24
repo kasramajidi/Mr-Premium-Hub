@@ -1,8 +1,7 @@
 /**
  * آمار داشبورد ادمین از API — فقط مواردی که داده دارند نمایش داده می‌شوند.
  */
-
-const PROXY = "/api/auth-proxy";
+import { getApiBase } from "@/lib/api-base";
 
 export interface DashboardStats {
   articles: number;
@@ -13,7 +12,7 @@ export interface DashboardStats {
 
 async function fetchCount(action: string): Promise<number> {
   try {
-    const res = await fetch(`${PROXY}?action=${encodeURIComponent(action)}`, {
+    const res = await fetch(`${getApiBase()}?action=${encodeURIComponent(action)}`, {
       method: "GET",
       headers: { "Content-Type": "application/json" },
       cache: "no-store",
@@ -62,7 +61,7 @@ function normalizeOrder(raw: Record<string, unknown>): OrderItem {
 /** دریافت سفارشات اخیر از API (در صورت وجود) */
 export async function getRecentOrders(): Promise<OrderItem[]> {
   try {
-    const res = await fetch(`${PROXY}?action=Order`, {
+    const res = await fetch(`${getApiBase()}?action=Order`, {
       method: "GET",
       headers: { "Content-Type": "application/json" },
       cache: "no-store",

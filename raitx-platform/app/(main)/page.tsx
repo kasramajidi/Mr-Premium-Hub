@@ -87,13 +87,13 @@ export default function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(servicesJsonLd) }}
       />
-      <main className="min-h-screen bg-gray-50">
+      <div className="min-h-screen">
         <Hero />
         <ServicesSection />
         <PaymentMethods />
         <ExamRegistration />
         <VisaPayments />
-      </main>
+      </div>
     </>
   );
 }

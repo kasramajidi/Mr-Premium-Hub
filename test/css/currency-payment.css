@@ -1,0 +1,325 @@
+/* صفحه پرداخت ارزی — عین استایل پلتفرم currency-payment */
+
+.cp-page {
+  min-height: 100vh;
+  background: var(--gray-50, #f9fafb);
+  padding-top: 2rem;
+  padding-bottom: 2.5rem;
+}
+@media (min-width: 640px) { .cp-page { padding-top: 2.5rem; padding-bottom: 3rem; } }
+@media (min-width: 768px) { .cp-page { padding-top: 3rem; padding-bottom: 3.5rem; } }
+
+.cp-filters-wrap { margin-bottom: 2rem; }
+@media (min-width: 640px) { .cp-filters-wrap { margin-bottom: 2.5rem; } }
+@media (min-width: 768px) { .cp-filters-wrap { margin-bottom: 3rem; } }
+
+.cp-filter-btn {
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  border: 1px solid var(--border, #e5e7eb);
+  background: var(--background, #fff);
+  color: var(--gray-700, #374151);
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+  margin: 0.25rem;
+}
+@media (min-width: 640px) { .cp-filter-btn { padding: 0.5rem 1.25rem; font-size: 0.875rem; } }
+.cp-filter-btn:hover { background: var(--surface, #f9fafb); border-color: rgba(255, 85, 56, 0.3); }
+.cp-filter-btn.cp-filter-active { background: #ff5538; color: #fff; border-color: #ff5538; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); }
+
+.cp-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+@media (min-width: 640px) { .cp-grid { grid-template-columns: repeat(2, 1fr); gap: 1.25rem; } }
+@media (min-width: 1024px) { .cp-grid { grid-template-columns: repeat(3, 1fr); gap: 1.5rem; } }
+@media (min-width: 1280px) { .cp-grid { grid-template-columns: repeat(4, 1fr); gap: 1.5rem; } }
+
+.cp-card {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border-radius: 0.875rem;
+  padding: 1.5rem 1.75rem;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.06);
+  border: 1px solid var(--border-light, #f3f4f6);
+  text-align: center;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.3s;
+}
+.cp-card:hover { box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1); border-color: rgba(255, 85, 56, 0.3); transform: translateY(-4px); }
+
+.cp-card-icon-wrap {
+  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 1.25rem;
+  border-radius: 0.875rem;
+  background: var(--gray-50, #f9fafb);
+  transition: all 0.3s;
+}
+.cp-card:hover .cp-card-icon-wrap { background: rgba(255, 85, 56, 0.05); transform: scale(1.1); }
+
+.cp-icon-wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 0.875rem;
+}
+@media (min-width: 640px) { .cp-icon-wrap { width: 4rem; height: 4rem; } }
+.cp-icon-wrap .cp-fa { font-size: 2rem; color: inherit; }
+@media (min-width: 640px) { .cp-icon-wrap .cp-fa { font-size: 2.25rem; } }
+
+.cp-icon-paypal { color: #0070BA; }
+.cp-icon-mastercard { color: #EB001B; }
+.cp-icon-creditcard,
+.cp-icon-globe,
+.cp-icon-transfer,
+.cp-icon-academic,
+.cp-icon-plane,
+.cp-icon-template,
+.cp-icon-dots { color: #ff5538; }
+.cp-icon-bitcoin { color: #F7931A; }
+.cp-icon-home { color: #81B441; }
+.cp-icon-server { color: #dc2626; }
+.cp-icon-brain,
+.cp-icon-search,
+.cp-icon-gamepad,
+.cp-icon-code { color: #16a34a; }
+.cp-icon-digitalocean { color: #0080FF; }
+.cp-icon-sim,
+.cp-icon-phone,
+.cp-icon-domain,
+.cp-icon-cloud { color: #2563eb; }
+
+.cp-card-title { font-size: 1rem; font-weight: 700; color: var(--gray-900, #111827); margin: 0 0 0.35rem; transition: color 0.2s; }
+@media (min-width: 640px) { .cp-card-title { font-size: 1.1rem; } }
+.cp-card:hover .cp-card-title { color: #ff5538; }
+.cp-card-label-en { font-size: 0.75rem; color: var(--gray-400, #9ca3af); margin: 0 0 0.5rem; }
+@media (min-width: 640px) { .cp-card-label-en { font-size: 0.85rem; } }
+.cp-card-desc { font-size: 0.8rem; color: var(--gray-600, #4b5563); line-height: 1.55; margin: 0; flex: 1; }
+@media (min-width: 640px) { .cp-card-desc { font-size: 0.9rem; } }
+.cp-empty { text-align: center; padding: 2rem; color: var(--gray-500); grid-column: 1 / -1; }
+
+.cp-pagination-wrap { margin-top: 2rem; display: flex; justify-content: center; }
+@media (min-width: 640px) { .cp-pagination-wrap { margin-top: 2.5rem; } }
+.cp-pagination-inner { display: flex; align-items: center; gap: 0.5rem; }
+.cp-pagination-pages { display: flex; gap: 0.25rem; }
+.cp-pagination-prev, .cp-pagination-next, .cp-pagination-num {
+  padding: 0.5rem 0.75rem; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 500;
+  border: 1px solid var(--border); background: #fff; color: var(--gray-700); cursor: pointer; transition: all 0.2s; font-family: inherit;
+}
+.cp-pagination-prev:hover:not(.cp-pagination-disabled), .cp-pagination-next:hover:not(.cp-pagination-disabled), .cp-pagination-num:hover {
+  background: var(--gray-50); border-color: rgba(255, 85, 56, 0.3);
+}
+.cp-pagination-num.cp-pagination-active { background: #ff5538; color: #fff; border-color: #ff5538; }
+.cp-pagination-prev.cp-pagination-disabled, .cp-pagination-next.cp-pagination-disabled { background: var(--gray-100); color: var(--gray-400); cursor: not-allowed; }
+
+/* صفحه جزئیات سرویس */
+.cp-detail-page .container { max-width: 80rem; margin: 0 auto; padding-left: 1rem; padding-right: 1rem; padding-top: 1.5rem; padding-bottom: 3rem; }
+@media (min-width: 1024px) { .cp-detail-page .container { padding-left: 2rem; padding-right: 2rem; } }
+
+.cp-breadcrumb { font-size: 0.9rem; color: var(--gray-600); margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+.cp-breadcrumb a { color: var(--gray-600); text-decoration: none; }
+.cp-breadcrumb a:hover { color: #ff5538; }
+.cp-breadcrumb span:last-child { color: var(--gray-800); }
+
+.cp-detail-header { display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 2rem; }
+.cp-detail-header-icon { width: 3.5rem; height: 3.5rem; border-radius: 0.75rem; background: var(--gray-50); display: flex; align-items: center; justify-content: center; font-size: 1.75rem; flex-shrink: 0; color: #ff5538; }
+@media (min-width: 640px) { .cp-detail-header-icon { width: 4rem; height: 4rem; font-size: 2rem; } }
+.cp-detail-header-icon-paypal { color: #0070BA; background: rgba(0, 112, 186, 0.08); }
+.cp-detail-header-icon-mastercard { color: #EB001B; background: rgba(235, 0, 27, 0.08); }
+.cp-detail-header-icon-creditcard, .cp-detail-header-icon-globe, .cp-detail-header-icon-transfer, .cp-detail-header-icon-academic, .cp-detail-header-icon-plane, .cp-detail-header-icon-template, .cp-detail-header-icon-dots { color: #ff5538; background: rgba(255, 85, 56, 0.08); }
+.cp-detail-header-icon-bitcoin { color: #F7931A; background: rgba(247, 147, 26, 0.08); }
+.cp-detail-header-icon-home { color: #81B441; background: rgba(129, 180, 65, 0.08); }
+.cp-detail-header-icon-server { color: #dc2626; background: rgba(220, 38, 38, 0.08); }
+.cp-detail-header-icon-brain, .cp-detail-header-icon-search, .cp-detail-header-icon-gamepad, .cp-detail-header-icon-code { color: #16a34a; background: rgba(22, 163, 74, 0.08); }
+.cp-detail-header-icon-digitalocean { color: #0080FF; background: rgba(0, 128, 255, 0.08); }
+.cp-detail-header-icon-sim, .cp-detail-header-icon-phone, .cp-detail-header-icon-domain, .cp-detail-header-icon-cloud { color: #2563eb; background: rgba(37, 99, 235, 0.08); }
+.cp-detail-header-text { flex: 1; min-width: 0; }
+.cp-detail-title { font-size: 1.25rem; font-weight: 700; color: #ff5538; margin: 0 0 0.35rem; }
+@media (min-width: 640px) { .cp-detail-title { font-size: 1.5rem; } }
+.cp-detail-title-en { font-size: 1rem; color: var(--gray-500); font-weight: 400; }
+.cp-detail-desc { font-size: 0.95rem; color: var(--gray-600); margin: 0; line-height: 1.6; }
+
+.cp-detail-layout { display: grid; grid-template-columns: 1fr; gap: 2rem; }
+@media (min-width: 1024px) { .cp-detail-layout { grid-template-columns: 1fr 22rem; gap: 2.5rem; } }
+.cp-detail-main { min-width: 0; }
+.cp-detail-block { background: #fff; border-radius: 0.875rem; box-shadow: 0 1px 3px rgb(0 0 0 / 0.06); border: 1px solid var(--border-light); padding: 1.25rem 1.5rem; margin-bottom: 1.75rem; }
+@media (min-width: 640px) { .cp-detail-block { padding: 1.5rem 2rem; } }
+.cp-detail-h2 { font-size: 1.1rem; font-weight: 700; color: var(--gray-900); margin: 0 0 1rem; display: flex; align-items: center; gap: 0.5rem; }
+.cp-detail-h2::before { content: ''; width: 5px; height: 1.5rem; background: #ff5538; border-radius: 2px; }
+.cp-detail-p { font-size: 0.95rem; color: var(--gray-700); line-height: 1.8; margin: 0; text-align: right; white-space: pre-line; }
+.cp-detail-two-col { display: grid; grid-template-columns: 1fr; gap: 1.75rem; }
+@media (min-width: 1024px) { .cp-detail-two-col { grid-template-columns: 1fr 1fr; } }
+.cp-detail-list { list-style: none; padding: 0; margin: 0; text-align: right; }
+.cp-detail-feature { font-size: 0.95rem; color: var(--gray-700); margin-bottom: 0.6rem; display: flex; align-items: flex-start; gap: 0.5rem; }
+.cp-detail-check { color: #ff5538; flex-shrink: 0; font-size: 1rem; }
+.cp-detail-steps { list-style: none; padding: 0; margin: 0; counter-reset: step; text-align: right; }
+.cp-detail-step { font-size: 0.95rem; color: var(--gray-700); margin-bottom: 0.6rem; display: flex; align-items: flex-start; gap: 0.5rem; counter-increment: step; }
+.cp-detail-step-num { width: 1.75rem; height: 1.75rem; border-radius: 9999px; background: rgba(255, 85, 56, 0.1); color: #ff5538; border: 2px solid rgba(255, 85, 56, 0.2); display: inline-flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; flex-shrink: 0; }
+.cp-detail-step-detail { margin-bottom: 0.75rem; }
+.cp-detail-step-detail-title { font-weight: 700; color: var(--gray-900); display: block; margin-bottom: 0.25rem; }
+.cp-detail-step-detail-desc { font-size: 0.9rem; color: var(--gray-600); }
+.cp-detail-note { margin-top: 1.25rem; padding: 1rem 1.25rem; background: rgba(255, 85, 56, 0.05); border-right: 4px solid #ff5538; border-radius: 0.35rem; font-size: 0.9rem; color: var(--gray-700); text-align: right; }
+
+.cp-faq-list { border: 1px solid var(--border); border-radius: 0.5rem; overflow: hidden; }
+.cp-faq-item { border-bottom: 1px solid var(--border); }
+.cp-faq-item:last-child { border-bottom: none; }
+.cp-faq-q { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; padding: 1rem 1.25rem; font-size: 0.95rem; font-weight: 500; color: var(--gray-900); text-align: right; background: none; border: none; cursor: pointer; font-family: inherit; }
+.cp-faq-q:hover { background: var(--gray-50); }
+.cp-faq-toggle { font-size: 0.85rem; color: var(--gray-500); transition: transform 0.2s; flex-shrink: 0; }
+.cp-faq-item.cp-faq-open .cp-faq-toggle { transform: rotate(45deg); }
+.cp-faq-a { font-size: 0.9rem; color: var(--gray-600); line-height: 1.6; padding: 0 1.25rem 1rem; display: none; }
+.cp-faq-item.cp-faq-open .cp-faq-a { display: block; }
+
+.cp-related-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+@media (min-width: 640px) { .cp-related-grid { grid-template-columns: repeat(3, 1fr); gap: 1.25rem; } }
+.cp-related-card { display: flex; align-items: flex-start; gap: 1rem; padding: 1rem 1.25rem; border: 1px solid var(--border); border-radius: 0.75rem; font-size: 0.95rem; font-weight: 500; color: var(--gray-700); text-decoration: none; transition: all 0.2s; text-align: right; }
+.cp-related-card:hover { border-color: #ff5538; color: #ff5538; }
+.cp-related-card-icon { width: 2.5rem; height: 2.5rem; border-radius: 0.5rem; background: var(--gray-50); display: flex; align-items: center; justify-content: center; font-size: 1.25rem; flex-shrink: 0; color: #ff5538; }
+.cp-related-card:hover .cp-related-card-icon { background: rgba(255, 85, 56, 0.1); }
+.cp-related-card-body { flex: 1; min-width: 0; }
+.cp-related-card-title { font-weight: 700; margin: 0 0 0.35rem; }
+.cp-related-card-desc { font-size: 0.8rem; font-weight: 400; color: var(--gray-600); line-height: 1.45; margin: 0; }
+.cp-related-card .cp-detail-header-icon-paypal { color: #0070BA; background: rgba(0, 112, 186, 0.1); }
+.cp-related-card .cp-detail-header-icon-mastercard { color: #EB001B; background: rgba(235, 0, 27, 0.1); }
+.cp-related-card .cp-detail-header-icon-creditcard, .cp-detail-header-icon-globe, .cp-detail-header-icon-transfer, .cp-detail-header-icon-academic, .cp-detail-header-icon-plane, .cp-detail-header-icon-template, .cp-detail-header-icon-dots { color: #ff5538; background: rgba(255, 85, 56, 0.1); }
+.cp-related-card .cp-detail-header-icon-bitcoin { color: #F7931A; background: rgba(247, 147, 26, 0.1); }
+.cp-related-card .cp-detail-header-icon-home { color: #81B441; background: rgba(129, 180, 65, 0.1); }
+.cp-related-card .cp-detail-header-icon-server { color: #dc2626; background: rgba(220, 38, 38, 0.1); }
+.cp-related-card .cp-detail-header-icon-brain, .cp-detail-header-icon-search, .cp-detail-header-icon-gamepad, .cp-detail-header-icon-code { color: #16a34a; background: rgba(22, 163, 74, 0.1); }
+.cp-related-card .cp-detail-header-icon-digitalocean { color: #0080FF; background: rgba(0, 128, 255, 0.1); }
+.cp-related-card .cp-detail-header-icon-sim, .cp-detail-header-icon-phone, .cp-detail-header-icon-domain, .cp-detail-header-icon-cloud { color: #2563eb; background: rgba(37, 99, 235, 0.1); }
+
+.cp-detail-sidebar { min-width: 0; }
+@media (min-width: 1024px) { .cp-detail-sidebar { position: sticky; top: 1rem; } }
+.cp-sidebar-box { background: #fff; border-radius: 0.875rem; box-shadow: 0 1px 3px rgb(0 0 0 / 0.06); border: 1px solid var(--border-light); padding: 1.5rem; }
+.cp-sidebar-title { font-size: 1.1rem; font-weight: 700; color: var(--gray-900); margin: 0 0 1rem; }
+.cp-sidebar-text { font-size: 0.95rem; color: var(--gray-600); margin: 0 0 1.25rem; line-height: 1.6; }
+.cp-sidebar-btn { display: block; text-align: center; padding: 0.75rem 1.25rem; background: #ff5538; color: #fff; border-radius: 0.5rem; font-size: 1rem; font-weight: 500; text-decoration: none; transition: background 0.2s; }
+.cp-sidebar-btn:hover { background: #e6452e; }
+.cp-sidebar-back { margin: 1.25rem 0 0; padding-top: 1.25rem; border-top: 1px solid var(--border); font-size: 0.9rem; }
+.cp-sidebar-back a { color: #ff5538; text-decoration: none; }
+.cp-sidebar-back a:hover { text-decoration: underline; }
+.cp-sidebar-instruction { font-size: 0.95rem; color: var(--gray-600); margin: 0 0 0.75rem; line-height: 1.5; }
+.cp-sidebar-placeholder { background: #f3f4f6; border-radius: 0.5rem; padding: 0.75rem 1rem; font-size: 0.9rem; color: var(--gray-500); text-align: center; margin: 0 0 1rem; }
+.cp-sidebar-plan-choice { margin: 0 0 1rem; }
+.cp-sidebar-plan-choice .cp-sidebar-selection-label { font-size: 0.9rem; color: var(--gray-600); margin: 0 0 0.5rem; }
+.cp-sidebar-plan-choice .cp-sidebar-plan-title { font-weight: 700; color: var(--gray-900); margin: 0 0 0.25rem; }
+.cp-sidebar-plan-choice .cp-sidebar-plan-price { font-size: 1.05rem; font-weight: 700; color: var(--brand-primary, #dc2626); margin: 0 0 0.75rem; }
+.cp-sidebar-plan-choice .cp-sidebar-add-cart { margin-top: 0.5rem; border: none; cursor: pointer; width: 100%; }
+.cp-sidebar-auth-btn { margin-top: 0.5rem; }
+
+.cp-detail-stats { background: linear-gradient(135deg, #1a3760 0%, #2a4a7a 100%); color: #fff; border: none; }
+.cp-detail-stats .cp-detail-h2 { color: #fff; font-size: 1.1rem; }
+.cp-detail-stats .cp-detail-h2::before { background: #ff5538; }
+.cp-stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
+.cp-stat { text-align: center; padding: 1rem; background: rgba(255,255,255,0.1); border-radius: 0.75rem; }
+.cp-stat-icon { width: 3rem; height: 3rem; margin: 0 auto 0.75rem; border-radius: 9999px; background: rgba(255, 85, 56, 0.2); color: #ff5538; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; }
+.cp-stat-icon-light { background: rgba(255,255,255,0.2); color: #fff; }
+.cp-stat-value { font-size: 1.5rem; font-weight: 700; margin-bottom: 0.35rem; }
+.cp-stat-label { font-size: 0.8rem; opacity: 0.9; }
+
+/* چرا از ما — عین ServiceBenefits پلتفرم */
+.cp-benefits-block { }
+.cp-benefits-block .cp-detail-h2 { margin-bottom: 1rem; }
+.cp-benefits-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; }
+@media (min-width: 640px) { .cp-benefits-grid { grid-template-columns: repeat(2, 1fr); gap: 1.25rem; } }
+.cp-benefit-card { display: flex; align-items: flex-start; gap: 0.75rem; padding: 1rem 1.25rem; border-radius: 0.5rem; border: 1px solid var(--border-light, #f3f4f6); transition: all 0.2s; text-align: right; }
+.cp-benefit-card:hover { border-color: rgba(255, 85, 56, 0.3); box-shadow: 0 4px 12px rgb(0 0 0 / 0.06); }
+.cp-benefit-icon-wrap { width: 2.5rem; height: 2.5rem; border-radius: 0.5rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.cp-benefit-icon-wrap.cp-benefit-icon-brand { background: rgba(255, 85, 56, 0.1); color: #ff5538; }
+.cp-benefit-icon-wrap.cp-benefit-icon-dark { background: rgba(26, 55, 96, 0.1); color: #1a3760; }
+.cp-benefit-card h3 { font-size: 0.875rem; font-weight: 700; color: var(--gray-900); margin: 0 0 0.25rem; }
+.cp-benefit-card p { font-size: 0.75rem; color: var(--gray-600); line-height: 1.5; margin: 0; }
+
+/* بلوک‌های اضافی — نکات دامنه، ارائه‌دهندگان، سیم‌کارت، VPS */
+.cp-domain-extra-head { text-align: center; margin-bottom: 1rem; }
+.cp-domain-extra-sub { font-size: 0.875rem; color: var(--gray-600); text-align: center; margin: 0 0 1rem; }
+.cp-tips-block .cp-detail-list { margin: 0; }
+.cp-providers-sub { font-size: 0.875rem; color: var(--gray-600); text-align: center; margin: 0 0 1.25rem; }
+.cp-providers-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; }
+@media (min-width: 640px) { .cp-providers-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1024px) { .cp-providers-grid { grid-template-columns: repeat(4, 1fr); } }
+.cp-provider-card { background: var(--gray-50, #f9fafb); border-radius: 0.75rem; padding: 1rem 1.25rem; border: 1px solid var(--border-light); }
+.cp-provider-card h3 { font-size: 0.95rem; font-weight: 700; margin: 0 0 0.75rem; text-align: center; }
+.cp-host-tips-grid { display: grid; grid-template-columns: 1fr; gap: 0.75rem; }
+@media (min-width: 640px) { .cp-host-tips-grid { grid-template-columns: repeat(2, 1fr); } }
+.cp-tip-card { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; background: #fff; border: 1px solid var(--border-light); border-radius: 0.5rem; text-align: right; font-size: 0.875rem; }
+.cp-tip-dot { width: 8px; height: 8px; min-width: 8px; border-radius: 50%; background: #dc2626; flex-shrink: 0; }
+.cp-sim-extra-title { font-size: 1.25rem; font-weight: 700; text-align: center; margin-bottom: 1rem; }
+@media (min-width: 768px) { .cp-sim-extra-title { font-size: 1.5rem; } }
+.cp-sim-benefits-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; margin-top: 1.5rem; }
+@media (min-width: 640px) { .cp-sim-benefits-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1024px) { .cp-sim-benefits-grid { grid-template-columns: repeat(4, 1fr); } }
+.cp-sim-benefit-card { background: #fff; border: 1px solid var(--border-light); border-radius: 0.75rem; padding: 1.25rem; text-align: right; }
+.cp-sim-benefit-card h3 { font-size: 1rem; font-weight: 700; margin: 0 0 0.5rem; }
+.cp-sim-benefit-card p { font-size: 0.875rem; color: var(--gray-600); line-height: 1.5; margin: 0; }
+.cp-vps-benefits-sub { font-size: 0.95rem; color: var(--gray-600); text-align: center; margin: 0 0 1rem; }
+.cp-vps-benefits-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; }
+@media (min-width: 768px) { .cp-vps-benefits-grid { grid-template-columns: repeat(3, 1fr); } }
+.cp-vps-benefit-card { background: #fff; border: 1px solid var(--border-light); border-radius: 0.75rem; padding: 1.25rem; text-align: center; }
+.cp-vps-benefit-card h3 { font-size: 1rem; font-weight: 700; margin: 0 0 0.5rem; }
+.cp-vps-benefit-card p { font-size: 0.875rem; color: var(--gray-600); line-height: 1.5; margin: 0; }
+
+/* پلن‌های سرور مجازی ترید (VPS تریدینگ) */
+.cp-vps-plans-block { margin-top: 2rem; }
+.cp-vps-plans-sub { font-size: 0.95rem; color: var(--gray-600); text-align: center; margin: 0 0 1.25rem; }
+.cp-vps-plans-instruction { font-size: 0.9rem; color: var(--gray-600); text-align: center; margin: 0 0 1rem; }
+.cp-vps-plans-grid { display: grid; grid-template-columns: 1fr; gap: 1.25rem; }
+@media (min-width: 768px) { .cp-vps-plans-grid { grid-template-columns: repeat(2, 1fr); } }
+.cp-vps-plan-card { background: #fff; border: 1px solid var(--border-light); border-radius: 0.75rem; padding: 1.5rem; }
+.cp-vps-plan-card-highlight { border-color: var(--brand-primary, #dc2626); box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.15); }
+.cp-vps-plan-title { font-size: 1.1rem; font-weight: 700; margin: 0 0 0.25rem; }
+.cp-vps-plan-suitable { font-size: 0.875rem; color: var(--gray-600); margin: 0 0 0.25rem; }
+.cp-vps-plan-duration { font-size: 0.85rem; color: var(--gray-500); margin: 0 0 0.5rem; }
+.cp-vps-plan-price { font-size: 1.1rem; font-weight: 700; color: var(--brand-primary, #dc2626); margin: 0 0 0.75rem; }
+.cp-vps-plan-card .cp-detail-list { margin: 0 0 0.5rem; }
+.cp-vps-plan-discount { font-size: 0.85rem; color: var(--gray-600); margin: 0.5rem 0 0; }
+.cp-vps-plan-card-selectable { cursor: pointer; transition: box-shadow 0.2s, border-color 0.2s; }
+.cp-vps-plan-card-selectable:hover { border-color: var(--gray-400); }
+.cp-vps-plan-card-selected { border-color: var(--brand-primary, #dc2626) !important; box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.2); }
+
+/* بخش خرید اکانت — ابزارهای سئو، اکانت AI، بازی، آزمون، پرداخت دانشجویی (مطابق طرح) */
+.cp-buy-section { background: #fff; border: 1px solid var(--border-light, #e5e7eb); border-radius: 0.875rem; box-shadow: 0 1px 3px rgb(0 0 0 / 0.06); }
+.cp-buy-section-title { display: flex; align-items: center; justify-content: center; gap: 0.5rem; font-size: 1.25rem; font-weight: 700; color: var(--gray-900, #111827); margin: 0 0 0.75rem; text-align: center; flex-wrap: wrap; }
+@media (min-width: 768px) { .cp-buy-section-title { font-size: 1.5rem; } }
+.cp-buy-bar { display: inline-block; width: 4px; height: 1.25em; background: #ff5538; border-radius: 2px; vertical-align: middle; flex-shrink: 0; }
+.cp-buy-subtitle { font-size: 0.95rem; color: var(--gray-700, #374151); text-align: center; margin: 0 0 0.5rem; line-height: 1.5; }
+.cp-buy-instruction { font-size: 0.85rem; color: var(--gray-600, #4b5563); text-align: center; margin: 0 0 1.5rem; line-height: 1.5; }
+.cp-buy-cards-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; }
+@media (min-width: 640px) { .cp-buy-cards-grid { grid-template-columns: repeat(2, 1fr); gap: 1.25rem; } }
+@media (min-width: 1024px) { .cp-buy-cards-grid { grid-template-columns: repeat(4, 1fr); gap: 1.5rem; } }
+.cp-buy-card { display: flex; flex-direction: column; align-items: center; text-align: center; background: #fff; border-radius: 0.875rem; padding: 1.5rem 1.25rem; border: 1px solid var(--border-light, #e5e7eb); text-decoration: none; color: inherit; transition: all 0.25s ease; box-shadow: 0 1px 3px rgb(0 0 0 / 0.06); }
+.cp-buy-card:hover { box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1); border: 2px dashed #ff5538; transform: translateY(-2px); }
+.cp-buy-card:hover .cp-buy-card-cta { color: #ff5538; }
+.cp-buy-card-icon { width: 4rem; height: 4rem; border-radius: 0.5rem; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem; font-size: 1.5rem; }
+.cp-buy-card-icon i { font-size: inherit; }
+.cp-buy-card-title { font-size: 1rem; font-weight: 700; color: var(--gray-900, #111827); margin: 0 0 0.5rem; }
+.cp-buy-card-desc { font-size: 0.8rem; color: var(--gray-600, #4b5563); line-height: 1.5; margin: 0 0 0.5rem; }
+.cp-buy-card-price { font-size: 0.95rem; font-weight: 600; color: var(--cp-primary, #ff5538); margin: 0 0 0.5rem; }
+.cp-buy-card-label { font-size: 0.75rem; color: var(--gray-500, #6b7280); margin: 0 0 0.75rem; }
+.cp-buy-card-cta { font-size: 0.9rem; font-weight: 600; color: var(--gray-700, #374151); margin: 0; display: flex; align-items: center; justify-content: center; gap: 0.25rem; transition: color 0.2s; }
+.cp-buy-card:hover .cp-buy-card-cta { color: #ff5538; text-decoration: none; }
+.cp-buy-arrow { font-weight: 700; }
+.cp-buy-card-selectable { cursor: pointer; }
+.cp-buy-card-selectable.cp-buy-card-selected { border: 2px dashed #ff5538; }
+
+/* بخش با مبلغ دلار و دکمه افزودن به سبد (پرداخت دانشجویی، فعالیت‌های علمی) */
+.cp-buy-section-with-amount .cp-buy-card-with-amount { cursor: default; }
+.cp-buy-section-with-amount .cp-buy-card-with-amount:hover { transform: none; }
+.cp-buy-card-amount-wrap { margin-top: auto; padding-top: 1rem; border-top: 1px solid var(--border-light, #e5e7eb); width: 100%; }
+.cp-amount-label { display: block; font-size: 0.75rem; font-weight: 600; color: var(--gray-700, #374151); margin-bottom: 0.35rem; text-align: right; }
+.cp-amount-input { width: 100%; padding: 0.5rem 0.75rem; font-size: 0.875rem; border: 1px solid var(--border, #e5e7eb); border-radius: 0.5rem; margin-bottom: 0.75rem; box-sizing: border-box; }
+.cp-amount-input:focus { outline: none; border-color: #ff5538; box-shadow: 0 0 0 2px rgba(255, 85, 56, 0.2); }
+.cp-add-to-cart-btn { display: block; width: 100%; padding: 0.6rem 1rem; font-size: 0.875rem; font-weight: 600; color: #fff; background: #ff5538; border: none; border-radius: 0.5rem; cursor: pointer; transition: background 0.2s; }
+.cp-add-to-cart-btn:hover { background: #e54d32; }

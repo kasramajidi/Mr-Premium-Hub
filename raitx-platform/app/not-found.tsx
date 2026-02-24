@@ -1,9 +1,13 @@
 import Link from "next/link";
 
+export const metadata = {
+  robots: { index: false, follow: false },
+};
+
 export default function NotFound() {
   return (
     <section
-      className="min-h-[70vh] flex flex-col items-center justify-center px-4 py-16 text-center bg-gradient-to-b from-gray-50/80 to-white overflow-hidden"
+      className="min-h-[70vh] flex flex-col items-center justify-center px-4 py-16 text-center bg-linear-to-b from-gray-50/80 to-white overflow-hidden"
       dir="rtl"
     >
       <div className="max-w-md w-full">

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>پشتیبانی | پنل مدیریت ريتكس</title>
+  <link rel="icon" href="../Images/Logo/Raitx%20international%20payments%20logo%20design%20(1).png">
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body>
+  <div class="admin-wrap">
+    <aside class="admin-sidebar" id="admin-sidebar"></aside>
+    <main class="admin-main">
+      <h1 class="admin-page-title">پشتیبانی</h1>
+      <p class="admin-page-desc">مدیریت مکالمات پشتیبانی. در raitx-platform از API داخلی (/api/support) استفاده می‌شود؛ در نسخه استاتیک (test) این API در دسترس نیست.</p>
+      <div class="admin-card">
+        <div class="admin-card-header"><h3>پشتیبانی</h3></div>
+        <div style="padding:2rem;text-align:center;color:#6b7280;">لیست مکالمات پشتیبانی فقط در نسخه raitx-platform (Next.js) با سرور فعال در دسترس است.</div>
+      </div>
+    </main>
+  </div>
+  <script src="../js/api.js"></script>
+  <script src="../js/admin-layout.js"></script>
+  <script>
+    if (!adminLayout.isLoggedIn()) { window.location.href = 'login.html?next=support.html'; }
+    adminLayout.renderSidebar('admin-sidebar');
+  </script>
+</body>
+</html>

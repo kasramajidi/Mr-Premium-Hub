@@ -3,8 +3,7 @@
  * - نمایش: از API محصولات (action=shop) فیلد UserComments هر محصول
  * - ویرایش/حذف: API shopcomments (PATCH, DELETE)
  */
-
-const PROXY = "/api/auth-proxy";
+import { getApiBase } from "@/lib/api-base";
 const ACTION = "shopcomments";
 
 export interface ShopCommentItem {
@@ -64,7 +63,7 @@ export interface ShopProductOption {
 
 /** دریافت لیست محصولات برای فیلتر (از API فروشگاه) */
 export async function getShopProductsForFilter(): Promise<ShopProductOption[]> {
-  const res = await fetch(`${PROXY}?action=shop`, {
+  const res = await fetch(`${getApiBase()}?action=shop`, {
     method: "GET",
     headers: { "Content-Type": "application/json" },
     cache: "no-store",
@@ -82,8 +81,8 @@ export async function getShopProductsForFilter(): Promise<ShopProductOption[]> {
 /** تلاش برای دریافت نظرات از API مستقیم shopcomments (GET) — در صورت پشتیبانی سرور */
 async function getShopCommentsFromApi(idshopFilter?: number | string): Promise<ShopCommentItem[] | null> {
   const url = idshopFilter != null
-    ? `${PROXY}?action=${ACTION}&idshop=${encodeURIComponent(String(idshopFilter))}`
-    : `${PROXY}?action=${ACTION}`;
+    ? `${getApiBase()}?action=${ACTION}&idshop=${encodeURIComponent(String(idshopFilter))}`
+    : `${getApiBase()}?action=${ACTION}`;
   const res = await fetch(url, {
     method: "GET",
     headers: { "Content-Type": "application/json" },
@@ -111,7 +110,7 @@ export async function getShopCommentsFromProducts(idshopFilter?: number | string
   const fromApi = await getShopCommentsFromApi(idshopFilter);
   if (fromApi != null && fromApi.length > 0) return fromApi;
 
-  const res = await fetch(`${PROXY}?action=shop`, {
+  const res = await fetch(`${getApiBase()}?action=shop`, {
     method: "GET",
     headers: { "Content-Type": "application/json" },
     cache: "no-store",
@@ -135,7 +134,7 @@ export async function getShopCommentsFromProducts(idshopFilter?: number | string
 
   const list: ShopCommentItem[] = [];
   for (const idshop of productIds) {
-    const singleRes = await fetch(`${PROXY}?action=shop&id=${encodeURIComponent(String(idshop))}`, {
+    const singleRes = await fetch(`${getApiBase()}?action=shop&id=${encodeURIComponent(String(idshop))}`, {
       method: "GET",
       headers: { "Content-Type": "application/json" },
       cache: "no-store",
@@ -178,7 +177,7 @@ export async function updateShopComment(payload: {
   status?: string;
   reply?: string;
 }): Promise<void> {
-  const res = await fetch(`${PROXY}?action=${ACTION}`, {
+  const res = await fetch(`${getApiBase()}?action=${ACTION}`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
@@ -192,7 +191,7 @@ export async function updateShopComment(payload: {
 /** حذف کامنت */
 export async function deleteShopComment(idshop: number | string, id: number | string): Promise<void> {
   const res = await fetch(
-    `${PROXY}?action=${ACTION}&idshop=${encodeURIComponent(String(idshop))}&id=${encodeURIComponent(String(id))}`,
+    `${getApiBase()}?action=${ACTION}&idshop=${encodeURIComponent(String(idshop))}&id=${encodeURIComponent(String(id))}`,
     { method: "DELETE", headers: { "Content-Type": "application/json" } }
   );
   const data = await res.json().catch(() => ({}));

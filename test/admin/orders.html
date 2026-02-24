@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>سفارشات | پنل مدیریت ريتكس</title>
+  <link rel="icon" href="../Images/Logo/Raitx%20international%20payments%20logo%20design%20(1).png">
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body>
+  <div class="admin-wrap">
+    <aside class="admin-sidebar" id="admin-sidebar"></aside>
+    <main class="admin-main">
+      <h1 class="admin-page-title">سفارشات</h1>
+      <p class="admin-page-desc">لیست سفارشات. داده از API (action=Order) بارگذاری می‌شود.</p>
+      <div id="admin-orders-list" class="admin-card"></div>
+    </main>
+  </div>
+  <script src="../js/api.js"></script>
+  <script src="../js/admin-layout.js"></script>
+  <script>
+    if (!adminLayout.isLoggedIn()) { window.location.href = 'login.html?next=orders.html'; }
+    adminLayout.renderSidebar('admin-sidebar');
+    var API = window.API_BASE ? API_BASE() : 'https://mrpremiumhub.org/api.ashx';
+    fetch(API + '?action=Order').then(function (r) { return r.json(); }).then(function (data) {
+      var list = Array.isArray(data) ? data : (data && (data.data || data.orders || data.list)) || [];
+      var el = document.getElementById('admin-orders-list');
+      if (list.length === 0) { el.innerHTML = '<div class="admin-card-header"><h3>سفارشات</h3></div><div style="padding:2rem;text-align:center;color:#6b7280;">سفارشی یافت نشد.</div>'; return; }
+      var rows = list.slice(0, 30).map(function (o) {
+        var id = o.id || o.ID || ''; var customer = o.customer || o.Customer || o.name || ''; var product = o.product || o.Product || o.title || ''; var amount = o.amount || o.Amount || o.price || ''; var status = o.status || o.Status || '—'; var date = o.date || o.Date || '';
+        return '<tr><td>' + id + '</td><td>' + customer + '</td><td>' + product + '</td><td>' + amount + '</td><td><span class="badge">' + status + '</span></td><td>' + date + '</td></tr>';
+      }).join('');
+      el.innerHTML = '<div class="admin-card-header"><h3>لیست سفارشات</h3></div><div class="overflow-x-auto"><table class="admin-table"><thead><tr><th>شماره</th><th>مشتری</th><th>محصول</th><th>مبلغ</th><th>وضعیت</th><th>تاریخ</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
+    }).catch(function () {
+      document.getElementById('admin-orders-list').innerHTML = '<div class="admin-card-header"><h3>سفارشات</h3></div><div style="padding:2rem;text-align:center;color:#6b7280;">خطا در بارگذاری از API.</div>';
+    });
+  </script>
+</body>
+</html>

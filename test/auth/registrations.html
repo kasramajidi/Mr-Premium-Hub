@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <base href="../">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>لیست ثبت‌نام‌ها | ريتكس</title>
+  <link rel="icon" href="Images/Logo/Raitx%20international%20payments%20logo%20design%20(1).png">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div id="site-header"></div>
+  <main class="site-main" style="padding: 2rem 0;">
+    <div class="container" style="max-width: 42rem; margin: 0 auto;">
+      <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem;">
+        <h1 class="section-title" style="margin: 0;">لیست ثبت‌نام‌ها</h1>
+        <a href="auth.html" style="font-size: 0.875rem; color: var(--brand);">بازگشت به ورود</a>
+      </div>
+      <div id="reg-content"></div>
+      <div id="reg-loading" style="text-align: center; padding: 2rem; color: #6b7280;">در حال بارگذاری…</div>
+      <div id="reg-error" style="display: none; color: #dc2626; margin-top: 1rem;"></div>
+    </div>
+  </main>
+  <div id="site-footer"></div>
+  <script src="js/layout.js"></script>
+  <script>layout.init();</script>
+  <script>
+    (function () {
+      var content = document.getElementById('reg-content');
+      var loading = document.getElementById('reg-loading');
+      var errEl = document.getElementById('reg-error');
+      fetch('/api/register-log').then(function (r) { return r.json(); }).then(function (json) {
+        loading.style.display = 'none';
+        if (json.error) { errEl.textContent = json.error; errEl.style.display = 'block'; return; }
+        var list = json.registrations || [];
+        var count = json.count || list.length;
+        content.innerHTML = '<p style="color:#4b5563;margin-bottom:1rem;">تعداد: <strong>' + count + '</strong> نفر</p>' +
+          (list.length === 0 ? '<p style="color:#6b7280;">هنوز کسی از این سایت ثبت‌نام نکرده.</p>' :
+            '<div style="overflow-x:auto;border:1px solid #e5e7eb;border-radius:0.5rem;"><table style="width:100%;text-align:right;font-size:0.875rem;border-collapse:collapse;">' +
+            '<thead style="background:#f9fafb;"><tr><th style="padding:0.75rem;border-bottom:1px solid #e5e7eb;">نام</th><th style="padding:0.75rem;border-bottom:1px solid #e5e7eb;">ایمیل</th><th style="padding:0.75rem;border-bottom:1px solid #e5e7eb;">تلفن</th><th style="padding:0.75rem;border-bottom:1px solid #e5e7eb;">زمان</th></tr></thead><tbody>' +
+            list.map(function (e) { return '<tr><td style="padding:0.75rem;border-bottom:1px solid #f3f4f6;">' + (e.name || '') + '</td><td style="padding:0.75rem;border-bottom:1px solid #f3f4f6;">' + (e.email || '') + '</td><td style="padding:0.75rem;border-bottom:1px solid #f3f4f6;">' + (e.phone || '') + '</td><td style="padding:0.75rem;border-bottom:1px solid #f3f4f6;">' + (e.at || '') + '</td></tr>'; }).join('') +
+            '</tbody></table></div>');
+      }).catch(function () {
+        loading.style.display = 'none';
+        errEl.textContent = 'خطا در بارگذاری. در نسخه تست از API سرور استفاده کنید.';
+        errEl.style.display = 'block';
+        content.innerHTML = '<p style="color:#6b7280;">برای مشاهده لیست ثبت‌نام‌ها به سرور متصل شوید.</p>';
+      });
+    })();
+  </script>
+  <script src="js/app.js"></script>
+</body>
+</html>

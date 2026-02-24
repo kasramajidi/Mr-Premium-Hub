@@ -1,4 +1,4 @@
-const API_BASE = "https://mrpremiumhub.org/api.ashx";
+import { getApiBase } from "@/lib/api-base";
 
 export interface ApiArticleRelatedService {
   title: string;
@@ -53,7 +53,7 @@ function normalizeArticle(raw: Record<string, unknown>): ApiArticle {
 
 export async function getArticles(): Promise<ApiArticle[]> {
   try {
-    const res = await fetch(`${API_BASE}?action=Article&_t=${Date.now()}`, {
+    const res = await fetch(`${getApiBase()}?action=Article&_t=${Date.now()}`, {
       method: "GET",
       headers: { "Content-Type": "application/json" },
       cache: "no-store",
@@ -101,7 +101,7 @@ export async function createArticle(payload: {
     headings: payload.headings,
     relatedService: payload.relatedService,
   };
-  const res = await fetch(`${API_BASE}?action=Article`, {
+  const res = await fetch(`${getApiBase()}?action=Article`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
@@ -150,7 +150,7 @@ export async function updateArticle(payload: {
 }
 
 export async function deleteArticle(id: number): Promise<void> {
-  const res = await fetch(`${API_BASE}?action=Article&id=${id}`, {
+  const res = await fetch(`${getApiBase()}?action=Article&id=${id}`, {
     method: "DELETE",
     headers: { "Content-Type": "application/json" },
   });

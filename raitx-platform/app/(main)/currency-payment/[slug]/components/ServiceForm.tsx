@@ -14,7 +14,9 @@ import {
 import { getAuthCookie } from "@/app/(main)/auth/lib/cookie";
 import { useInternationalSimSelection } from "../context/InternationalSimSelectionContext";
 
-const API_URL = "/api/auth-proxy?action=ExamRegister";
+import { getApiBase } from "@/lib/api-base";
+
+const getServiceFormApiUrl = () => `${getApiBase()}?action=ExamRegister`;
 
 function findProductForCard(
   cardLabel: string,
@@ -72,11 +74,13 @@ export default function ServiceForm({
   const useOrderFlow = initialProducts !== undefined;
   const selection = useInternationalSimSelection();
   const selectedSimProduct = selection?.selectedProduct ?? null;
+  const selectedCardLabel = selection?.selectedCardLabel ?? null;
   const labelMatchedProduct = useOrderFlow ? findProductForCard(service.label, initialProducts ?? []) : undefined;
   const labelMatchedEn = useOrderFlow ? findProductForCard(service.labelEn ?? "", initialProducts ?? []) : undefined;
   const matchedProduct = useOrderFlow
     ? (selection ? (selectedSimProduct ?? labelMatchedProduct ?? labelMatchedEn) : (labelMatchedProduct ?? labelMatchedEn))
     : undefined;
+  const hasSelectionWithoutProduct = useOrderFlow && !matchedProduct && !!selectedCardLabel;
 
   const handleRegisterOrder = async () => {
     if (!matchedProduct) return;
@@ -135,7 +139,7 @@ export default function ServiceForm({
         comment: formData.description,
         date: new Date().toISOString(),
       };
-      const res = await fetch(API_URL, {
+      const res = await fetch(getServiceFormApiUrl(), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -205,6 +209,24 @@ export default function ServiceForm({
               </Link>
             </div>
           )
+        ) : hasSelectionWithoutProduct ? (
+          <div className="space-y-4">
+            {selectedCardLabel && (
+              <p className="text-xs text-gray-600 text-right">
+                {selectedCardLabel}
+              </p>
+            )}
+            <p className="text-sm text-gray-600 text-right">
+              برای مشاهده قیمت و ثبت سفارش وارد حساب کاربری شوید.
+            </p>
+            <Link
+              href={`/auth?next=${encodeURIComponent(`/currency-payment/${service.id}`)}`}
+              className="block w-full text-white text-xs sm:text-sm font-medium py-2.5 sm:py-3 px-4 sm:px-6 rounded-lg transition-opacity hover:opacity-90 text-center cursor-pointer"
+              style={{ backgroundColor: "#ff5538" }}
+            >
+              ورود / ثبت‌نام
+            </Link>
+          </div>
         ) : (
           <div className="space-y-3 text-right">
             <p className="text-xs sm:text-sm text-gray-600">

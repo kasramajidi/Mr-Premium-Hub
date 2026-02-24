@@ -2,20 +2,30 @@ import { NextResponse } from "next/server";
 
 const EXTERNAL_API = "https://mrpremiumhub.org/api.ashx";
 
+const CORS_HEADERS: HeadersInit = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET, POST, PATCH, DELETE, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Cookie",
+};
+
+function jsonWithCors(data: unknown, status = 200) {
+  return NextResponse.json(data, { status, headers: CORS_HEADERS });
+}
+
 /**
  * پروکسی API به mrpremiumhub.org (GET, POST, PATCH, DELETE) برای رفع CORS.
  * مطابق تست API: GetData, PostData, PATCHData, DELETEData
  */
+export async function OPTIONS() {
+  return new NextResponse(null, { status: 204, headers: CORS_HEADERS });
+}
 
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const queryString = searchParams.toString();
     if (!queryString) {
-      return NextResponse.json(
-        { error: "پارامتر action لازم است" },
-        { status: 400 }
-      );
+      return jsonWithCors({ error: "پارامتر action لازم است" }, 400);
     }
     const url = `${EXTERNAL_API}?${queryString}`;
     const headers: HeadersInit = { "Content-Type": "application/json" };
@@ -23,11 +33,11 @@ export async function GET(request: Request) {
     if (cookie) headers["Cookie"] = cookie;
     const res = await fetch(url, { method: "GET", headers });
     const data = await res.json().catch(() => ({}));
-    return NextResponse.json(data);
+    return jsonWithCors(data);
   } catch (e) {
-    return NextResponse.json(
+    return jsonWithCors(
       { error: "خطا در ارتباط با سرور احراز هویت" },
-      { status: 502 }
+      502
     );
   }
 }
@@ -37,15 +47,14 @@ export async function POST(request: Request) {
     const { searchParams } = new URL(request.url);
     const action = searchParams.get("action");
     if (!action) {
-      return NextResponse.json(
-        { error: "پارامتر action لازم است" },
-        { status: 400 }
-      );
+      return jsonWithCors({ error: "پارامتر action لازم است" }, 400);
     }
+
     const body = await request.json().catch(() => ({}));
     const headers: HeadersInit = { "Content-Type": "application/json" };
     const cookie = request.headers.get("cookie");
     if (cookie) headers["Cookie"] = cookie;
+
     const res = await fetch(
       `${EXTERNAL_API}?action=${encodeURIComponent(action)}`,
       {
@@ -54,12 +63,13 @@ export async function POST(request: Request) {
         body: JSON.stringify(body),
       }
     );
+
     const data = await res.json().catch(() => ({}));
-    return NextResponse.json(data);
+    return jsonWithCors(data, res.status);
   } catch (e) {
-    return NextResponse.json(
+    return jsonWithCors(
       { error: "خطا در ارتباط با سرور احراز هویت" },
-      { status: 502 }
+      502
     );
   }
 }

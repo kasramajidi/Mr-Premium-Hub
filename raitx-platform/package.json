@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "build:static": "node scripts/export-static.js",
+    "build:static": "node scripts/export-static.js && node scripts/serve-static.js",
     "serve:static": "node scripts/serve-static.js",
     "preview:static": "node scripts/export-static.js && node scripts/serve-static.js",
     "start": "next start",

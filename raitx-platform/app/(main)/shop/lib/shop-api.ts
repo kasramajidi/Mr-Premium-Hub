@@ -1,10 +1,7 @@
-/** منبع رسمی: https://mrpremiumhub.org/api.ashx?action=shop — در کلاینت از پروکسی استفاده می‌شود تا CORS نشود */
-const SHOP_API_EXTERNAL = "https://mrpremiumhub.org/api.ashx?action=shop";
-
-function getShopApiUrl(): string {
-  if (typeof window !== "undefined") return "/api/auth-proxy?action=shop";
-  return SHOP_API_EXTERNAL;
-}
+/**
+ * درخواست‌های خواندن (لیست محصولات، یک محصول) از نقطهٔ ورود واحد API با action=shop زده می‌شود.
+ */
+import { getApiBase, fetchFromApi } from "@/lib/api-base";
 
 export type ApiShopItem = {
   id?: number | string;
@@ -150,13 +147,48 @@ export function mapApiItemToShopProduct(item: ApiShopItem, index: number): ShopP
   };
 }
 
-export async function fetchShopProducts(): Promise<ShopProduct[]> {
-  const res = await fetch(getShopApiUrl(), { method: "GET", next: { revalidate: 120 } });
-  const data = await res.json();
-  if (!res.ok) throw new Error(typeof data?.message === "string" ? data.message : "خطا در دریافت محصولات");
-  const raw = Array.isArray(data) ? data : data?.data ?? data?.list ?? data?.items ?? [];
+const isStaticBuild = process.env.BUILD_STATIC === "1";
+
+function parseShopProductsResponse(data: unknown): ShopProduct[] {
+  const raw = Array.isArray(data) ? data : (data && typeof data === "object" ? (data as Record<string, unknown>).data ?? (data as Record<string, unknown>).list ?? (data as Record<string, unknown>).items ?? [] : []);
   if (!Array.isArray(raw)) return [];
   return raw.map((item: ApiShopItem, i: number) => mapApiItemToShopProduct(item, i));
+}
+
+/** همیشه با fetch و آدرس کامل مستقیم — بدون فایل کش */
+export async function fetchShopProducts(): Promise<ShopProduct[]> {
+  const maxAttempts = isStaticBuild ? 3 : 1;
+  const timeoutMs = isStaticBuild ? 60000 : 30000;
+  let lastError: Error | null = null;
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    try {
+      if (isStaticBuild) {
+        console.log("[build:static] Shop API — attempt", attempt, "of", maxAttempts);
+      }
+      const data = await fetchFromApi("shop", undefined, { timeoutMs });
+      if (data == null) {
+        lastError = new Error("خطا در دریافت محصولات");
+        if (isStaticBuild && attempt < maxAttempts) await new Promise((r) => setTimeout(r, 3000));
+        continue;
+      }
+      const list = parseShopProductsResponse(data);
+      if (isStaticBuild) {
+        console.log("[build:static] Shop API — got", list.length, "products");
+      }
+      return list;
+    } catch (e) {
+      lastError = e instanceof Error ? e : new Error(String(e));
+      if (isStaticBuild) {
+        console.warn("[build:static] Shop API attempt", attempt, "failed:", e);
+        if (attempt < maxAttempts) await new Promise((r) => setTimeout(r, 3000));
+        else {
+          console.warn("[build:static] Shop API fetch failed after " + maxAttempts + " attempts.");
+        }
+      }
+    }
+  }
+  if (lastError && !isStaticBuild) throw lastError;
+  return [];
 }
 
 /** دریافت یک محصول با نظرات از API (برای صفحهٔ جزئیات) */
@@ -164,10 +196,9 @@ export async function fetchProductById(id: number | string): Promise<ShopProduct
   const productId = typeof id === "string" ? parseInt(id, 10) : id;
   if (Number.isNaN(productId)) return null;
   try {
-    const res = await fetch(`${getShopApiUrl()}&id=${productId}`, { method: "GET", next: { revalidate: 120 } });
-    const data = await res.json();
-    if (!res.ok) return null;
-    const raw = data?.data ?? data?.item ?? data;
+    const data = await fetchFromApi("shop", { id: productId }, { timeoutMs: 30000 });
+    if (data == null) return null;
+    const raw = (data as Record<string, unknown>)?.data ?? (data as Record<string, unknown>)?.item ?? data;
     const item = Array.isArray(raw) ? raw[0] : raw;
     if (!item || typeof item !== "object") return null;
     return mapApiItemToShopProduct(item as ApiShopItem, 0);
@@ -177,7 +208,6 @@ export async function fetchProductById(id: number | string): Promise<ShopProduct
 }
 
 /** ارسال نظر جدید مطابق API: PostData('shopcomments', { idshop, rating, commentText, userName, userEmail, status }) */
-const AUTH_PROXY = "/api/auth-proxy";
 
 export async function submitProductComment(
   productId: number | string,
@@ -193,7 +223,7 @@ export async function submitProductComment(
       userEmail: payload.email.trim(),
       status: "pending",
     };
-    const res = await fetch(`${AUTH_PROXY}?action=shopcomments`, {
+    const res = await fetch(`${getApiBase()}?action=shopcomments`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
@@ -220,7 +250,7 @@ export async function updateProductComment(
 ): Promise<{ ok: boolean; message?: string }> {
   try {
     const idshop = typeof productId === "string" ? parseInt(productId, 10) : productId;
-    const res = await fetch(`${AUTH_PROXY}?action=shopcomments`, {
+    const res = await fetch(`${getApiBase()}?action=shopcomments`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -249,7 +279,7 @@ export async function deleteProductComment(
 ): Promise<{ ok: boolean; message?: string }> {
   try {
     const idshop = typeof productId === "string" ? parseInt(productId, 10) : productId;
-    const url = `${AUTH_PROXY}?action=shopcomments&idshop=${encodeURIComponent(String(Number.isNaN(idshop) ? productId : idshop))}&id=${encodeURIComponent(String(commentId))}`;
+    const url = `${getApiBase()}?action=shopcomments&idshop=${encodeURIComponent(String(Number.isNaN(idshop) ? productId : idshop))}&id=${encodeURIComponent(String(commentId))}`;
     const res = await fetch(url, { method: "DELETE", headers: { "Content-Type": "application/json" } });
     const data = (await res.json().catch(() => ({}))) as Record<string, unknown>;
     const errMsg = typeof data?.error === "string" ? data.error : typeof data?.message === "string" ? data.message : null;

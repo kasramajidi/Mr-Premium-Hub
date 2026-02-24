@@ -5,8 +5,7 @@
  * PATCH: ویرایش کامنت
  * DELETE: حذف کامنت (query: idarticle, id)
  */
-
-const AUTH_PROXY = "/api/auth-proxy";
+import { getApiBase } from "@/lib/api-base";
 
 export interface ArticleCommentDisplayItem {
   id: number | string;
@@ -47,7 +46,7 @@ function normalizeForDisplay(raw: Record<string, unknown>): ArticleCommentDispla
 
 /** دریافت نظرات یک مقاله برای نمایش در صفحه عمومی */
 export async function getArticleComments(articleId: number | string): Promise<ArticleCommentDisplayItem[]> {
-  const url = `${AUTH_PROXY}?action=articlecomments&idarticle=${encodeURIComponent(String(articleId))}`;
+  const url = `${getApiBase()}?action=articlecomments&idarticle=${encodeURIComponent(String(articleId))}`;
   const res = await fetch(url, {
     method: "GET",
     headers: { "Content-Type": "application/json" },
@@ -77,7 +76,7 @@ export async function submitArticleComment(
       userEmail: payload.email.trim(),
       status: "pending",
     };
-    const res = await fetch(`${AUTH_PROXY}?action=articlecomments`, {
+    const res = await fetch(`${getApiBase()}?action=articlecomments`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
@@ -108,7 +107,7 @@ export async function updateArticleComment(
 ): Promise<{ ok: boolean; message?: string }> {
   try {
     const idarticle = typeof articleId === "string" ? parseInt(articleId, 10) : articleId;
-    const res = await fetch(`${AUTH_PROXY}?action=articlecomments`, {
+    const res = await fetch(`${getApiBase()}?action=articlecomments`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -139,7 +138,7 @@ export async function deleteArticleComment(
   _userEmail?: string
 ): Promise<{ ok: boolean; message?: string }> {
   try {
-    const url = `${AUTH_PROXY}?action=articlecomments&idarticle=${encodeURIComponent(String(articleId))}&id=${encodeURIComponent(String(commentId))}`;
+    const url = `${getApiBase()}?action=articlecomments&idarticle=${encodeURIComponent(String(articleId))}&id=${encodeURIComponent(String(commentId))}`;
     const res = await fetch(url, { method: "DELETE", headers: { "Content-Type": "application/json" } });
     const data = (await res.json().catch(() => ({}))) as Record<string, unknown>;
     const errMsg =
